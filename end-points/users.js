@@ -55,7 +55,6 @@ router.get('/:userId', async (req, res) => {
 module.exports = router;
 
 // Delete specific user
-
 router.delete('/:userId', async (req, res) => {
     try {
         const removedUser = await User.remove( { _id: req.params.userId } )
@@ -66,7 +65,6 @@ router.delete('/:userId', async (req, res) => {
 });
 
 // Update a user
-
 router.patch('/:userId', async (req, res) => {
     try {
         const updatedUser = await User.updateOne(

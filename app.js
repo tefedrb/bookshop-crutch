@@ -14,7 +14,7 @@ app.use(express.json());
 
 // Import routes
 const userRoute = require('./end-points/users');
-const authRoute = require('./end-points/auth');
+const authRoute = require('./end-points/userAuth');
 const customerRoute = require('./end-points/customers');
 
 // Route Middleware

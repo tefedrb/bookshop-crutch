@@ -33,7 +33,6 @@ router.post('/sign-up', async (req, res) => {
 })
 
 // LOGIN
-
 router.post('/login', async (req, res) => {
     const { error } = loginValidation(req.body);
     if(error) return res.status(400).send(error.details[0].message);
@@ -66,4 +65,6 @@ router.post('/login', async (req, res) => {
         res.status(400).send("Error: " + err);
     }
 })
+
+
 module.exports = router;
