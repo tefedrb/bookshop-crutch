@@ -19,7 +19,8 @@ router.post('/', async (req, res) => {
     console.log(req.body)
     const user = new User({
         username: req.body.username,
-        password: req.body.password
+        password: req.body.password,
+        email: req.body.email
     });
 
     // user.save()

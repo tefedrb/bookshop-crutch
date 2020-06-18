@@ -2,16 +2,26 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-require('dotenv/config');
+const cors = require('cors');
+const dotenv = require('dotenv');
 
-
-app.use(bodyParser.json());
-// Import routes
-const testRoute = require('./end-points/users');
-
-app.use('/test', testRoute);
+dotenv.config()
 
 // Middleware
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.json());
+
+// Import routes
+const userRoute = require('./end-points/users');
+const authRoute = require('./end-points/auth');
+const customerRoute = require('./end-points/customers');
+
+// Route Middleware
+app.use('/user', userRoute);
+app.use('/user/auth', authRoute);
+app.use('/customers', customerRoute);
+
 
 // app.use('/posts', () =>{
 //     console.log('This is a middleware running');
