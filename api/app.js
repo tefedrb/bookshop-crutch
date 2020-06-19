@@ -22,7 +22,6 @@ app.use('/user', userRoute);
 app.use('/user/auth', authRoute);
 app.use('/customers', customerRoute);
 
-
 // app.use('/posts', () =>{
 //     console.log('This is a middleware running');
 // })
