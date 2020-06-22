@@ -1,5 +1,6 @@
 // Log into ingram - lets create a way to hit search by PO number
 // Then save information about each books status, quantity, cost etc.
+// Consider breaking these steps up into files and exporting / importing them as modules
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -88,8 +89,10 @@ const loginToIngram = async (data) => {
                 ]
                 // Target each COLUMN and save to orders
                 for(let i = 0; i < row.children.length; i++){
-                    if(row.children[i].firstChild.href){
-                        saveOrder[labels[i]] = [row.children[i].innerText, row.children[i].firstChild.href]
+                    const entry = row.children[i];
+                    const entryHasHref = entry.firstChild.href || (entry.firstElementChild && entry.firstElementChild);
+                    if(entryHasHref){
+                        saveOrder[labels[i]] = [row.children[i].innerText, row.children[i].firstChild.href || entry.firstElementChild.href]
                     } else {
                         saveOrder[labels[i]] = row.children[i].innerText;
                     }
@@ -98,13 +101,30 @@ const loginToIngram = async (data) => {
             })
             return orders;
         })
-        .then(newOrders => {
-            orderData = newOrders;
+        .then(customerOrders => {
+            orderData = customerOrders;
         })
 
         console.log(orderData, "ORDERS")
     } catch(err){
         console.log("Error: ", err.message);
+    }
+    try{
+        /****** Dealing with PDF invoice *******/ 
+
+        // Consider creating multiple instances for different orders?
+        // Consider that there may be different invoices on one order
+        const pdfPage = await browser.newPage();
+
+        // Need to specify to continue ONLY IF "Invoice Number" isn't null
+        await pdfPage.goto(orderData[0]["Invoice Number"][1]);
+
+        pdfPage.evaluate(() => {
+            console.log("we made it!");
+            // PDF Parse time
+        })
+    }catch(err){
+        console.log("Error after scraping order page: ",  err.message)
     }
     // await browser.close();
 };

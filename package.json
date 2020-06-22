@@ -17,6 +17,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.19",
     "nodemon": "^2.0.4",
+    "pdf-parse": "^1.1.1",
     "puppeteer": "^4.0.0"
   }
 }
