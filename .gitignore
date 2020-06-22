@@ -1,4 +1,4 @@
 .env
 node_modules/
 /scraper/.env
-/scraper/testing.txt
+/scraper/.DS_Store

@@ -7,35 +7,35 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-
 // We'll use this object to hold information for now:
 let holdData = {
-    testing: "here we are"
+    ingramU: process.env.INGRAM_U,
+    ingramP: process.env.INGRAM_P
 }
 
-const loginToIngram = async () => {
+const loginToIngram = async (data) => {
     // Notes: I can pass parameters into the launch function - {headless: false} means show browser 
     const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
     await page.goto(ingramLogin);
-    
+    // console.log(data, "HOLD THAT")
     // Login to ingram
-    await page.evaluate(() => {
+    await page.evaluate((data) => {
         const loginForm = document.querySelector('#loginIdForm');
         const formElements = Array.from(loginForm.querySelectorAll('.form-group'));
         const userInput = formElements[0].firstChild.nextSibling;
         const passwordInput = formElements[1].firstChild.nextSibling;
         const loginBtn = formElements[2].firstChild.nextSibling;
-
-        // Enter login info
-        userInput.value = ""
-        passwordInput.value = ""
+        
+        //Enter login info
+        userInput.value = data.ingramU;
+        passwordInput.value = data.ingramP;
         loginBtn.click();
-    });
+    }, data);
 
     await page.screenshot({path: 'testing.png'});
 
     // await browser.close();
 };
 
-loginToIngram();
+loginToIngram(holdData);
