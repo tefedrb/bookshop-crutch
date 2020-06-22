@@ -80,15 +80,19 @@ const loginToIngram = async (data) => {
             // Insert date ordered - EAN - Product Name - Format - PO Number - QTY - Invoice# (w link) - DC
             orderRows.forEach(row => {
                 const saveOrder = {};
-                // Manually creating labels... should change this by grabbing the top row
+                // Manually creating labels...
                 const labels = [
-                    "date ordered", "status", "ean", "product name",
-                    "format", "pub date", "po number", "oe number", 
-                    "qty", "price", "invoice number", "DC"
+                    "Date Ordered", "Status", "Ean", "Product Name",
+                    "Format", "Pub Date", "Po Number", "OE Number", 
+                    "Qty", "price", "Invoice Number", "DC"
                 ]
-                // Target each column and save to orders
-                for(let i = 0; i<row.children.length; i++){
-                    saveOrder[labels[i]] = row.children[i].innerText;
+                // Target each COLUMN and save to orders
+                for(let i = 0; i < row.children.length; i++){
+                    if(row.children[i].firstChild.href){
+                        saveOrder[labels[i]] = [row.children[i].innerText, row.children[i].firstChild.href]
+                    } else {
+                        saveOrder[labels[i]] = row.children[i].innerText;
+                    }
                 }
                 orders.push(saveOrder);
             })
