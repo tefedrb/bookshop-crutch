@@ -1,39 +1,64 @@
-// Assuming we are logged into ingram - lets create a way to hit search by PO number
+// Log into ingram - lets create a way to hit search by PO number
 // Then save information about each books status, quantity, cost etc.
 
-const puppeteer = require('puppeteer');
-const ingramLogin = `https://ipage.ingramcontent.com/ipage/li001.jsp`;
 const dotenv = require('dotenv');
-
 dotenv.config();
+const puppeteer = require('puppeteer');
+const ingramLogin = process.env.INGRAM_LOGIN_URL;
+const ingramOrder = process.env.INGRAM_ORDER_PAGE;
 
 // We'll use this object to hold information for now:
 let holdData = {
     ingramU: process.env.INGRAM_U,
-    ingramP: process.env.INGRAM_P
+    ingramP: process.env.INGRAM_P,
+    po: process.env.INGRAM_CUSTOMER_PO
 }
 
 const loginToIngram = async (data) => {
     // Notes: I can pass parameters into the launch function - {headless: false} means show browser 
     const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
-    await page.goto(ingramLogin);
-    // console.log(data, "HOLD THAT")
-    // Login to ingram
-    await page.evaluate((data) => {
-        const loginForm = document.querySelector('#loginIdForm');
-        const formElements = Array.from(loginForm.querySelectorAll('.form-group'));
-        const userInput = formElements[0].firstChild.nextSibling;
-        const passwordInput = formElements[1].firstChild.nextSibling;
-        const loginBtn = formElements[2].firstChild.nextSibling;
-        
-        //Enter login info
-        userInput.value = data.ingramU;
-        passwordInput.value = data.ingramP;
-        loginBtn.click();
-    }, data);
+    try{
+        await page.goto(ingramLogin);
 
-    await page.screenshot({path: 'testing.png'});
+        // Login to ingram
+        await page.evaluate((data) => {
+            const loginForm = document.querySelector('#loginIdForm');
+            const formElements = Array.from(loginForm.querySelectorAll('.form-group'));
+            const userInput = formElements[0].firstChild.nextSibling;
+            const passwordInput = formElements[1].firstChild.nextSibling;
+            const loginBtn = formElements[2].firstChild.nextSibling;
+            
+            //Enter login info
+            userInput.value = data.ingramU;
+            passwordInput.value = data.ingramP;
+            loginBtn.click();
+            return data;
+        }, data)
+        
+        // Navigation work-around
+        await page.goto('about:blank');
+        // Go to order page
+        await page.goto(ingramOrder);
+        // Swtich to PO number field and enter PO
+        await page.evaluate((data) => {
+            const queryForm = document.querySelector("form[name='QueryForm']");
+            const selectDropDown = queryForm.querySelector('#TCW1');
+            const submitBtn = queryForm.querySelector("input[name='Submit']");
+            const input = selectDropDown.nextElementSibling;
+
+            // ENTERING PO NUMBER ACTIONS
+            selectDropDown.value = "PO";
+            input.value = data.po;
+            submitBtn.click();
+
+            // FROM HERE WE CAN GET INFORMATION AND ALWAYS GO BACK TO INGRAM ORDER
+        }, data)
+
+    } catch(err){
+        console.log("Error: ", err.message);
+    }
+
 
     // await browser.close();
 };
