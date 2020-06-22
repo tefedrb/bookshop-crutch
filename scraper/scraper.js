@@ -11,8 +11,10 @@ const ingramOrder = process.env.INGRAM_ORDER_PAGE;
 let holdData = {
     ingramU: process.env.INGRAM_U,
     ingramP: process.env.INGRAM_P,
-    po: process.env.INGRAM_CUSTOMER_PO
+    po: process.env.INGRAM_CUSTOMER_PO,
 }
+
+let orderData;
 
 const loginToIngram = async (data) => {
     // Notes: I can pass parameters into the launch function - {headless: false} means show browser 
@@ -34,7 +36,7 @@ const loginToIngram = async (data) => {
             passwordInput.value = data.ingramP;
             loginBtn.click();
             return data;
-        }, data)
+        }, data);
         
         // Navigation work-around
         await page.goto('about:blank');
@@ -51,16 +53,58 @@ const loginToIngram = async (data) => {
             selectDropDown.value = "PO";
             input.value = data.po;
             submitBtn.click();
-
             // FROM HERE WE CAN GET INFORMATION AND ALWAYS GO BACK TO INGRAM ORDER
-        }, data)
+        }, data);
 
+        // Need to wait for page to settle
+        await page.waitForNavigation();
+
+        await page.evaluate(() => {
+            const orders = [];
+            const filterOrders = (orderRows) => {
+                return orderRows.filter((row, idx) => {
+                    if(row.children[2].firstChild.text && idx != 0){
+                        return true;
+                    }
+                })
+            }
+            /**  Check to see if column 3 (2) has an EAN. If not, it's not an order, its probably 
+             shipping etc. **/
+             const orderTableContainer = document.querySelector("form[name=backorderedForm]");
+             const orderTable = orderTableContainer.firstElementChild.children[3];
+             const allRows = Array.from(orderTable.firstElementChild.children);
+
+            //  Filter out rows with no EAN
+            const orderRows = filterOrders(allRows);
+           
+            // Insert date ordered - EAN - Product Name - Format - PO Number - QTY - Invoice# (w link) - DC
+            orderRows.forEach(row => {
+                const saveOrder = {};
+                // Manually creating labels... should change this by grabbing the top row
+                const labels = [
+                    "date ordered", "status", "ean", "product name",
+                    "format", "pub date", "po number", "oe number", 
+                    "qty", "price", "invoice number", "DC"
+                ]
+                // Target each column and save to orders
+                for(let i = 0; i<row.children.length; i++){
+                    saveOrder[labels[i]] = row.children[i].innerText;
+                }
+                orders.push(saveOrder);
+            })
+            return orders;
+        })
+        .then(newOrders => {
+            orderData = newOrders;
+        })
+
+        console.log(orderData, "ORDERS")
     } catch(err){
         console.log("Error: ", err.message);
     }
-
-
     // await browser.close();
 };
+
+
 
 loginToIngram(holdData);
