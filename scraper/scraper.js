@@ -1,10 +1,16 @@
 // Log into ingram - lets create a way to hit search by PO number
 // Then save information about each books status, quantity, cost etc.
 // Consider breaking these steps up into files and exporting / importing them as modules
+// Consider having an open page running so you only need to loging to Ingram ONCE.
 
 const dotenv = require('dotenv');
 dotenv.config();
 const puppeteer = require('puppeteer');
+
+const pdf = require('pdf-parse');
+const crawler = require('crawler-request');
+const fs = require('fs');
+
 const ingramLogin = process.env.INGRAM_LOGIN_URL;
 const ingramOrder = process.env.INGRAM_ORDER_PAGE;
 
@@ -17,7 +23,7 @@ let holdData = {
 
 let orderData;
 
-const loginToIngram = async (data) => {
+const loginToIngram = async (data, crawler) => {
     // Notes: I can pass parameters into the launch function - {headless: false} means show browser 
     const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
@@ -119,9 +125,26 @@ const loginToIngram = async (data) => {
         // Need to specify to continue ONLY IF "Invoice Number" isn't null
         await pdfPage.goto(orderData[0]["Invoice Number"][1]);
 
-        pdfPage.evaluate(() => {
+        // await pdfPage.addScriptTag({ path: '../node_modules/crawler-request/crawler-request.js' })
+        
+
+        /** instead of evaluating page using puppeteer, we will just use crawler-request within node
+          and hopefully capture data in this namespace to do whatever with */
+        let dataBuffer = await fs.readFile('ibg.customer.credistatus.pdf');
+
+        await pdf(databuffer).then(res => {
+            console.log(res.numpages);
+        })
+        
+        await pdfPage.evaluate(() => {
             console.log("we made it!");
             // PDF Parse time
+            console.log(this.location.href, "THIS");
+            console.log(window, "WINDOW");
+            // window["crawler-request"].crawler_request_wrapper(this.location.href).then(res => {
+            //     console.log(res.text.length);
+            // })
+            
         })
     }catch(err){
         console.log("Error after scraping order page: ",  err.message)
@@ -131,4 +154,4 @@ const loginToIngram = async (data) => {
 
 
 
-loginToIngram(holdData);
+loginToIngram(holdData, crawler);
