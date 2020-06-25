@@ -3,11 +3,14 @@
 // Consider breaking these steps up into files and exporting / importing them as modules
 // Consider having an open page running so you only need to loging to Ingram ONCE.
 
+// IMPORT PARSE.GETTRACKINGNUMBER(poNum) into scraper...
+
 const dotenv = require('dotenv');
 dotenv.config();
 const puppeteer = require('puppeteer');
+const tracking = require('parse'); 
 
-const pdf = require('pdf-parse');
+// const pdf = require('pdf-parse');
 const crawler = require('crawler-request');
 const fs = require('fs');
 
