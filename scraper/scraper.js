@@ -4,6 +4,8 @@
 // Consider having an open page running so you only need to loging to Ingram ONCE.
 // Have to watch out for expired sessions.
 
+// SOMETIMES ORDERS DON'T EXIST ON INVOICES EVEN WHEN THERE IS AN INVOICE NEXT TO THEM?!
+
 // IMPORT PARSE.GETTRACKINGNUMBER(poNum) into scraper...
 
 const dotenv = require('dotenv');
@@ -182,7 +184,5 @@ const loginToIngram = async (data, crawler) => {
     }
     // await browser.close();
 };
-
-
 
 loginToIngram(holdData, crawler);
