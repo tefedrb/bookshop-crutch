@@ -13,10 +13,6 @@ dotenv.config();
 const puppeteer = require('puppeteer');
 const tracking = require('./parse'); 
 
-// const pdf = require('pdf-parse');
-const crawler = require('crawler-request');
-const fs = require('fs');
-
 const ingramLogin = process.env.INGRAM_LOGIN_URL;
 const ingramOrder = process.env.INGRAM_ORDER_PAGE;
 
@@ -29,7 +25,7 @@ let holdData = {
 
 let orderData;
 
-const loginToIngram = async (data, crawler) => {
+const loginToIngram = async (data) => {
     // Notes: I can pass parameters into the launch function - {headless: false} means show browser 
     const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
@@ -118,8 +114,8 @@ const loginToIngram = async (data, crawler) => {
                 for(let i = 0; i < row.children.length; i++){
                     const entry = row.children[i];
                     const entryHasHref = entry.firstChild.href || (entry.firstElementChild && entry.firstElementChild.href);
-                    if(entryHasHref){
-                        saveOrder[labels[i]] = [row.children[i].innerText, row.children[i].firstChild.href || entry.firstElementChild.href]
+                    if(entryHasHref && labels[i]){
+                        saveOrder[labels[i]] = [row.children[i].innerText.trim(), row.children[i].firstChild.href || entry.firstElementChild.href]
                     } else {
                         saveOrder[labels[i]] = row.children[i].innerText;
                     }
@@ -141,9 +137,9 @@ const loginToIngram = async (data, crawler) => {
 
         // Consider creating multiple instances for different orders?
         // Consider that there may be different invoices on one order
-        const pdfPage = await browser.newPage();
+        // const pdfPage = await browser.newPage();
 
-        console.log(orderData, "AGAIN NOW.")
+        // console.log(orderData, "AGAIN NOW.")
 
         // const getAllInvoices = [];
         // orderData.reduce((acc, order) => {
@@ -170,14 +166,28 @@ const loginToIngram = async (data, crawler) => {
             }
         })
 
-        // The question is to download invoices or try to parse them as is - on the page
-        await pdfPage.goto(orderData[0]["Invoice Number"][1]);
-
-        // await pdfPage.addScriptTag({ path: '../node_modules/crawler-request/crawler-request.js' })
+        // Here we are able to read the invoices just from their links
+        async function readPdf() {
+            return page.evaluate((orderData) => {
+                /**** TEST DATA ****/
+                const url = orderData[1]["Invoice Number"][1];
+                return new Promise(async resolve => {
+                    const reader = new FileReader();
+                    const res = await fetch(url);
+                    const data = await res.blob();
+                    reader.readAsBinaryString(data);
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = () => reject("Err: binary string reading failed");
+                })
+            }, orderData)
+        }
         
-
-        /** instead of evaluating page using puppeteer, we will just use crawler-request within node
-          and hopefully capture data in this namespace to do whatever with */
+        const pdfString = await readPdf();
+        const pdfBuffer = Buffer.from(pdfString, 'binary');
+        /**** TEST DATA INSIDE ****/
+        tracking.getTrackingNumber(orderData[1]["Po Number"][0], pdfBuffer, content => {
+            console.log(content, "HERE WE ARE");
+        })
 
     }catch(err){
         console.log("Error after scraping order page: ",  err.message)
@@ -185,4 +195,4 @@ const loginToIngram = async (data, crawler) => {
     // await browser.close();
 };
 
-loginToIngram(holdData, crawler);
+loginToIngram(holdData);
