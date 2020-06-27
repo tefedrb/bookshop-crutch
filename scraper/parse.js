@@ -14,7 +14,7 @@ function writeToTxtFile(data, fileName){
 }
 
 const getTrackingNumber = async (poInput, buffer, callBack) => {
-        pdf(buffer).then(res => {
+        await pdf(buffer).then(res => {
             // Find the PO - capture index number
             const testText = res.text;
             const capturedMatch = testText.match(poInput);
@@ -58,7 +58,7 @@ const getTrackingNumber = async (poInput, buffer, callBack) => {
         .catch(err => {
             console.log("PDF-Parse err: ", err);
         })
-    // console.log(output, 'output')
+    console.log('resolved?')
     // return output;
 };
 
