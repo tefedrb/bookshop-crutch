@@ -33,7 +33,7 @@ const loginToIngram = async (data) => {
         await page.goto(ingramLogin);
 
         // Login to ingram
-        await page.evaluate((data) => {
+        return await page.evaluate((data) => {
             const loginForm = document.querySelector('#loginIdForm');
             const formElements = Array.from(loginForm.querySelectorAll('.form-group'));
             const userInput = formElements[0].firstChild.nextSibling;
@@ -46,13 +46,20 @@ const loginToIngram = async (data) => {
             loginBtn.click();
             return data;
         }, data);
-        
-        // Navigation work-around
-        await page.goto('about:blank');
-        // Go to order page
-        await page.goto(ingramOrder);
-        // Slight Pause
-        
+    }catch(err){
+        console.log("Error loging into Ingram: " + err);
+    }
+}
+
+// const page = loginToIngram(holdData);
+
+
+//         // Navigation work-around
+//         await page.goto('about:blank');
+//         // Go to order page
+//         await page.goto(ingramOrder);
+//         // Slight Pause
+
         // Swtich to PO number field and enter PO
         await page.evaluate((data) => {
             window.setTimeout(()=> {
@@ -69,70 +76,127 @@ const loginToIngram = async (data) => {
             // FROM HERE WE CAN GET INFORMATION AND ALWAYS GO BACK TO INGRAM ORDER
         }, data);
 
-        // Need to wait for page to settle
-        await page.waitForNavigation();
+//         // Need to wait for page to settle
+//         await page.waitForNavigation();
 
-        /**** COLLECT ORDER INFO ****/
-        await page.evaluate(() => {
-            const orders = [];
-            const filterOrders = (orderRows, hasBackOrders) => {
-                return orderRows.filter((row, idx) => {
-                    if(row.children[hasBackOrders ? 3 : 2].firstChild.text && idx != 0){
-                        return true;
-                    }
+
+const scrapeOrder = async (page, orderData) => {
+    /**** COLLECT ORDER INFO ****/
+    await page.evaluate(() => {
+        const orders = [];
+        const filterOrders = (orderRows, hasBackOrders) => {
+            return orderRows.filter((row, idx) => {
+                if(row.children[hasBackOrders ? 3 : 2].firstChild.text && idx != 0){
+                    return true;
+                }
+            })
+        }
+        /**  Check to see if column 3 (2) has an EAN. If not, it's not an order, its probably 
+         shipping etc. **/
+
+        /*** UPDATE 6/25/20 need to account for backorder/preorder column ***/
+        // Manually creating labels...for orderRows.forEach loop
+        const labels = [
+            "Date Ordered", "Status", "Ean", "Product Name",
+            "Format", "Pub Date", "Po Number", "OE Number", 
+            "Qty", "price", "Invoice Number", "DC"
+        ]
+
+        const orderTableContainer = document.querySelector("form[name=backorderedForm]");
+        const orderTable = orderTableContainer.firstElementChild.children;
+
+        // If .innerBoundryBox contains 6 children elements - it has backorders (checkboxes)
+        const hasBackOrders = orderTable.length === 6 ? true : false;
+        let allRows = Array.from(orderTable[hasBackOrders ? 4 : 3].firstElementChild.children);
+    
+        if(hasBackOrders) {
+            allRows = Array.from(orderTable[4].firstElementChild.children)
+            labels.unshift("Select");
+        }
+
+        //  Filter out rows with no EAN
+        const orderRows = filterOrders(allRows, hasBackOrders);
+        
+        // Insert date ordered - EAN - Product Name - Format - PO Number - QTY - Invoice# (w link) - DC
+        orderRows.forEach(row => {
+            const saveOrder = {};
+            // Target each COLUMN and save to orders -
+            for(let i = 0; i < row.children.length; i++){
+                const entry = row.children[i];
+                const entryHasHref = entry.firstChild.href || (entry.firstElementChild && entry.firstElementChild.href);
+                if(entryHasHref && labels[i]){
+                    saveOrder[labels[i]] = [row.children[i].innerText.trim(), row.children[i].firstChild.href || entry.firstElementChild.href]
+                } else {
+                    saveOrder[labels[i]] = row.children[i].innerText;
+                }
+            }
+            orders.push(saveOrder);
+        }) 
+        return orders;
+    })
+    .then(customerOrders => {
+        orderData = customerOrders;
+    })
+    console.log(orderData, "orderData")
+    return orderData;
+}
+
+const runScript = async (orderData) => {
+    const page = await loginToIngram(holdData);
+    
+
+    // Navigation work-around
+    await page.goto('about:blank');
+    // Go to order page
+    await page.goto(ingramOrder);
+    // Slight Pause
+    console.log("here");
+    // Swtich to PO number field and enter PO
+    const newOrderData = await scrapeOrder(page, orderData)
+    
+    await page.evaluate((data) => {
+        window.setTimeout(()=> {
+            const queryForm = document.querySelector("form[name='QueryForm']");
+            const selectDropDown = queryForm.querySelector('#TCW1');
+            const submitBtn = queryForm.querySelector("input[name='Submit']");
+            const input = selectDropDown.nextElementSibling;
+
+            // ENTERING PO NUMBER ACTIONS
+            selectDropDown.value = "PO";
+            input.value = data.po;
+            submitBtn.click();
+        }, 500)
+        // FROM HERE WE CAN GET INFORMATION AND ALWAYS GO BACK TO INGRAM ORDER
+    }, data);
+
+    // Need to wait for page to settle
+    await page.waitForNavigation(); 
+
+    try {
+        /**  iterate over orderData, singling out orders that have invoices and
+        providing them tracking numbers **/
+       await orderData.reduce(async (cache, order, idx) => {
+            const invoice = order["Invoice Number"];
+            const invoiceLink = typeof invoice === "object" ? invoice[1] : false;
+            if(invoiceLink){
+                const pdfString = await readPdf(order);
+                const pdfBuffer = Buffer.from(pdfString, 'binary');
+                // Push here or push in getTrackingNum...
+                await tracking.getTrackingNumber(order["Po Number"][0], pdfBuffer, content => {
+                    // ... like maybe here push into cache
+                    console.log(content, "TRACKING");
+                    orderData[idx].tracking = content;
                 })
             }
-            /**  Check to see if column 3 (2) has an EAN. If not, it's not an order, its probably 
-             shipping etc. **/
+            return cache;
+        }, []);
 
-            /*** UPDATE 6/25/20 need to account for backorder/preorder column ***/
-            // Manually creating labels...for orderRows.forEach loop
-            const labels = [
-                "Date Ordered", "Status", "Ean", "Product Name",
-                "Format", "Pub Date", "Po Number", "OE Number", 
-                "Qty", "price", "Invoice Number", "DC"
-            ]
-
-             const orderTableContainer = document.querySelector("form[name=backorderedForm]");
-             const orderTable = orderTableContainer.firstElementChild.children;
-
-            // If .innerBoundryBox contains 6 children elements - it has backorders (checkboxes)
-             const hasBackOrders = orderTable.length === 6 ? true : false;
-             let allRows = Array.from(orderTable[hasBackOrders ? 4 : 3].firstElementChild.children);
-        
-            if(hasBackOrders) {
-                allRows = Array.from(orderTable[4].firstElementChild.children)
-                labels.unshift("Select");
-            }
-
-            //  Filter out rows with no EAN
-            const orderRows = filterOrders(allRows, hasBackOrders);
-           
-            // Insert date ordered - EAN - Product Name - Format - PO Number - QTY - Invoice# (w link) - DC
-            orderRows.forEach(row => {
-                const saveOrder = {};
-                // Target each COLUMN and save to orders -
-                for(let i = 0; i < row.children.length; i++){
-                    const entry = row.children[i];
-                    const entryHasHref = entry.firstChild.href || (entry.firstElementChild && entry.firstElementChild.href);
-                    if(entryHasHref && labels[i]){
-                        saveOrder[labels[i]] = [row.children[i].innerText.trim(), row.children[i].firstChild.href || entry.firstElementChild.href]
-                    } else {
-                        saveOrder[labels[i]] = row.children[i].innerText;
-                    }
-                }
-                orders.push(saveOrder);
-            })
-            return orders;
-        })
-        .then(customerOrders => {
-            orderData = customerOrders;
-        })
-
-        console.log(orderData, "orderData")
+        console.log(orderData, "BINGO?");
     } catch(err){
-        console.log("Error after scraping order page: ",  err.message)    
+        console.log("Error getting tracking number: " + err.message);
     }
+}
+
     /****** Dealing with PDF invoice *******/ 
 
     // Consider creating multiple instances for different orders?
@@ -153,31 +217,7 @@ const loginToIngram = async (data) => {
             })
         }, order)
     }
-    try {
-        /**  iterate over orderData, singling out orders that have invoices and
-        providing them tracking numbers **/
-       await orderData.reduce(async (cache, order, idx) => {
-            const invoice = order["Invoice Number"];
-            const invoiceLink = typeof invoice === "object" ? invoice[1] : false;
-            if(invoiceLink){
-                const pdfString = await readPdf(order);
-                const pdfBuffer = Buffer.from(pdfString, 'binary');
-                // Push here or push in getTrackingNum...
-                await tracking.getTrackingNumber(order["Po Number"][0], pdfBuffer, content => {
-                    // ... like maybe here push into cache
-                    console.log(content, "TRACKING");
-                    orderData[idx].tracking = content;
-                })
-            }
-            return cache;
-        }, []);
 
-        console.log(orderData, "BINGO?")
-    } catch(err){
-        console.log("Error getting tracking number: " + err.message);
-    }
-    
-    // await browser.close();
-};
 
-loginToIngram(holdData);
+runScript(orderData);
+// loginToIngram(holdData);
