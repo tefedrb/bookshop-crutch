@@ -55,6 +55,8 @@ const scrapeOrder = async (page) => {
             orders.push(saveOrder);
         }) 
         return orders;
+    }).catch(err => {
+        console.log("Error!: "  + err.message);
     })
     // .then(customerOrders => {
     //     return customerOrders

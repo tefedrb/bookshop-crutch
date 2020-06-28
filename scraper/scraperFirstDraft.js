@@ -185,10 +185,8 @@ const loginToIngram = async (data) => {
         const pdfString = await readPdf();
         const pdfBuffer = Buffer.from(pdfString, 'binary');
         /**** TEST DATA INSIDE ****/
-        tracking.getTrackingNumber(orderData[1]["Po Number"][0], pdfBuffer, content => {
-            console.log(content, "HERE WE ARE");
-        })
-
+        const trackingNum = await tracking.getTracking(orderData[1]["Po Number"][0], pdfBuffer);
+        console.log(trackingNum);
     }catch(err){
         console.log("Error after scraping order page: ",  err.message)
     }
