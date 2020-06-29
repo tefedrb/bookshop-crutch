@@ -1,7 +1,7 @@
 const { loginToIngram } = require('./login');
 const { scrapeOrder } = require('./scrapeOrder');
 const { searchPo } = require('./searchPo');
-const tracking = require('./parse');
+const tracking = require('./parseInvoice');
 
 const ingramOrder = process.env.INGRAM_ORDER_PAGE;
 
@@ -23,12 +23,16 @@ const runScript = async (userData) => {
 
     const orderData = await scrapeOrder(page);
 
-    const trackingNumbers = await tracking.getAllTracking(orderData, page);
+    const trackingAndAddresses = await tracking.getAllTracking(orderData, page, true);
 
     // Add tracking to orderData (mutating orderData)
-    trackingNumbers.forEach(num => orderData[num[1]].tracking = num[0]);
+    trackingAndAddresses.forEach(num => {
+        const orderByIndex = orderData[num[0]];
+        orderByIndex.tracking = num[1];
+        orderByIndex.address = num[2];
+    });
     console.log(orderData);
-    console.log(trackingNumbers, "TRACKING");
+    console.log(trackingAndAddresses, "TRACKING");
 }
 
 runScript(userData);

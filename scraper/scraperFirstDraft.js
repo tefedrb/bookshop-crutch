@@ -11,7 +11,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
 const puppeteer = require('puppeteer');
-const tracking = require('./parse'); 
+const tracking = require('./parseInvoice'); 
 
 const ingramLogin = process.env.INGRAM_LOGIN_URL;
 const ingramOrder = process.env.INGRAM_ORDER_PAGE;
