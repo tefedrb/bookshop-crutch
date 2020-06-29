@@ -10,11 +10,14 @@ const searchPo = async (orderPage, po) => {
 
             // ENTERING PO NUMBER ACTIONS
             selectDropDown.value = "PO";
+            console.log(poNum[0], "PO NUM");
             input.value = poNum[0];
+            debugger;
             submitBtn.click();
         }, 500)
         // FROM HERE WE CAN GET INFORMATION AND ALWAYS GO BACK TO INGRAM ORDER
     }, poNum);
+
     await orderPage.waitForNavigation();
     return orderPage;
 }

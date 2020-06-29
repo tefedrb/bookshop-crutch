@@ -11,7 +11,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
 const puppeteer = require('puppeteer');
-const tracking = require('./parse'); 
+const tracking = require('./parseInvoice'); 
 
 const ingramLogin = process.env.INGRAM_LOGIN_URL;
 const ingramOrder = process.env.INGRAM_ORDER_PAGE;
@@ -185,10 +185,8 @@ const loginToIngram = async (data) => {
         const pdfString = await readPdf();
         const pdfBuffer = Buffer.from(pdfString, 'binary');
         /**** TEST DATA INSIDE ****/
-        tracking.getTrackingNumber(orderData[1]["Po Number"][0], pdfBuffer, content => {
-            console.log(content, "HERE WE ARE");
-        })
-
+        const trackingNum = await tracking.getTracking(orderData[1]["Po Number"][0], pdfBuffer);
+        console.log(trackingNum);
     }catch(err){
         console.log("Error after scraping order page: ",  err.message)
     }
