@@ -45,7 +45,6 @@ const getTracking = async (poInput, buffer, getAddress) => {
         const poRegex = /R\d{9}/;
         if(capturedMatch){
             const poIndex = capturedMatch["index"];
-
             // Maybe cut from FOR DELIVERY TO instead from P.O. INDEX
             // addressRegex was the best I could do.
             // const addressRegex = /(FOR DELIVERY TO:)[\w\W]*(?=ITEMS BELOW FROM P\.O\.)/;
@@ -91,7 +90,6 @@ const getTracking = async (poInput, buffer, getAddress) => {
             const secondSlice = firstSlice.match(poRegex);
 
             const sliced = firstSlice.slice(0, secondSlice["index"]);
-
             /** 
                 regex formats
             **/
@@ -99,7 +97,6 @@ const getTracking = async (poInput, buffer, getAddress) => {
                 ups: /\b(1Z ?[0-9A-Z]{3} ?[0-9A-Z]{3} ?[0-9A-Z]{2} ?[0-9A-Z]{4} ?[0-9A-Z]{3} ?[0-9A-Z]|[\dT]\d\d\d ?\d\d\d\d ?\d\d\d)\b/,
                 usps: /\d{22}/
             };
-
             // Return usps or ups tracking
             return [sliced.match(trackingFormat.usps)[0], address] || [sliced.match(trackingFormat.ups)[0], address];
         } else {
@@ -110,7 +107,6 @@ const getTracking = async (poInput, buffer, getAddress) => {
         console.log("PDF-Parse err: ", err);
     })
 };
-
 /****** Dealing with PDF invoice *******/ 
 
     // Consider creating multiple instances for different orders?
@@ -134,15 +130,22 @@ async function readPdf(order, page) {
 
 const getAllTracking = async (orderData, page, getAddress) => {
     const trackingNumbers = [];
-    for(let i = 0; i < orderData.length; i++){
+    // Only check for address once
+    let address = getAddress;
+    for(let i=0 ,j=0; i < orderData.length; i++){
+        // Ensures we only find address once
         const order = orderData[i];
         const invoice = order["Invoice Number"];
         const invoiceLink = typeof invoice === "object" ? invoice[1] : false;
         if(invoiceLink){
+            // K variable tracks how many times we look for address
+            if(j === 1) address = !getAddress;
+            j++
             const pdfString = await readPdf(order, page);
             const pdfBuffer = Buffer.from(pdfString, 'binary');
             // Push here or push in getTrackingNum...
-           const tracking =  await getTracking(order["Po Number"][0], pdfBuffer, getAddress);
+           const tracking =  await getTracking(order["Po Number"][0], pdfBuffer, address);
+           console.log(address, "after await getTracking")
            console.log(tracking, "Tracking for order " + i);
            trackingNumbers.push([i, ...tracking]);
         }
@@ -150,13 +153,14 @@ const getAllTracking = async (orderData, page, getAddress) => {
     return trackingNumbers;
 }
 
-const getTrackingByOrder = async (order) => {
+// See if I can customize this to get address
+const getTrackingByOrder = async (order, getAddress) => {
     const invoice = order["Invoice Number"];
     const invoiceLink = typeof invoice === "object" ? invoice[1] : false;
     if(invoiceLink){
         const pdfString = await readPdf(order);
         const pdfBuffer = Buffer.from(pdfString, 'binary');
-        const trackingOutput = await getTracking(order["Po Number"][0], pdfBuffer);
+        const trackingOutput = await getTracking(order["Po Number"][0], pdfBuffer, getAddress);
         return trackingOutput;
     }
 }
