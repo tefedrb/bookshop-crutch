@@ -26,10 +26,11 @@ const runScript = async (userData) => {
     const trackingAndAddresses = await tracking.getAllTracking(orderData, page, true);
 
     // Add tracking to orderData (mutating orderData)
+    const address = trackingAndAddresses[0][2];
     trackingAndAddresses.forEach(num => {
         const orderByIndex = orderData[num[0]];
         orderByIndex.tracking = num[1];
-        orderByIndex.address = num[2];
+        orderByIndex.address = address;
     });
     console.log(orderData);
     console.log(trackingAndAddresses, "TRACKING");
