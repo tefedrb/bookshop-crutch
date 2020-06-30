@@ -17,11 +17,13 @@ app.use(express.json());
 const userRoute = require('./end-points/users');
 const authRoute = require('./end-points/userAuth');
 const customerRoute = require('./end-points/customers');
+const runScraper = require('./end-points/run-scraper');
 
 // Route Middleware
 app.use('/user', userRoute);
 app.use('/user/auth', authRoute);
 app.use('/customers', customerRoute);
+app.use('/run-scraper', runScraper);
 
 // app.use('/posts', () =>{
 //     console.log('This is a middleware running');
@@ -30,7 +32,7 @@ app.use('/customers', customerRoute);
 // NOW YOU HAVE THE ABILITY TO ADD ROUTES IN A VERY SIMPLE WAY
 
 // ROUTES
-app.get('/', (req,res) => {
+app.get('/', (req, res) => {
     res.send('We are on fire (home)');
 })
 
@@ -38,5 +40,5 @@ app.get('/', (req,res) => {
 mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, () => console.log("connected to db"));
 
 // How to start listening to the server
-app.listen(3000);
+app.listen(9000);
 
