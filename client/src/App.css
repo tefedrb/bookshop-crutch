@@ -1,0 +1,86 @@
+nav {
+    display: grid;
+    grid-template: 1fr / 1fr 1fr 1fr;
+    width: 100%;
+    background: rgb(194, 194, 255);
+}
+form {
+    display: grid;
+    grid-template: 1fr / 1fr 1fr 1fr;
+}
+li {
+    list-style: none;
+}
+input {
+    grid-column: 1 / span 2;
+}
+.link {
+    border: 1px solid black;
+    height: 100%;
+    background: rgb(163, 163, 223);
+    text-align: center;
+    text-decoration: none;
+    color: black;
+}
+.link:hover {
+    background: black;
+    color: white;
+}
+.link:active {
+    color: rgb(157, 157, 202);
+}
+#invalid {
+    background: maroon;
+    opacity: .8;
+    text-align: center;
+}
+#waiting {
+    border: 1px solid black;
+    text-align: center;
+}
+.loading {
+    text-align: center;
+}
+#loading {
+    padding-top: 50px;
+}
+table {
+    font-size: 10px;
+}
+.shipment {
+    font-size: 10px;
+    border: 1px solid black;
+    padding: 5px;
+    padding-left: 20px;
+}
+.shipment ul {
+    display: grid;
+    grid-template: 1fr / 1fr 1fr;
+}
+.shipment ul li {
+    display: flex;
+    flex-direction: column;
+}
+.shipment ul li span:nth-child(1) {
+    font-weight: bold;
+    text-decoration: underline;
+}
+.shipments {
+    display: grid;
+    grid-template: 1fr / 1fr 1fr;
+    margin-top: 20px;
+}
+.shipments ul {
+    justify-content: left;
+    margin: 0;
+    padding-left: 10px;
+}
+.shipments h3 {
+
+}
+td {
+    border: 1px solid black;
+}
+th {
+    border: 1px solid black;
+}
