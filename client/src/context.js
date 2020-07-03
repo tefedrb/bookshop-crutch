@@ -31,7 +31,6 @@ export class Provider extends Component {
                             isbn: '01034141941'
                         }
                     ]
-    
                 }
             })
         }
