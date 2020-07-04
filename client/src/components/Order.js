@@ -3,6 +3,7 @@ import React from 'react';
 import Shipment from './Shipment';
 import Backorder from './Backorder';
 
+// This should be able to correspond to data from getOrdersByPo
 function Order({ order }) {
     console.log(order)
     let testShipments = [1,2,3,4,5,6]

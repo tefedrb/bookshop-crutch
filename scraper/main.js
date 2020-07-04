@@ -1,7 +1,7 @@
 const { loginToIngram } = require('./login');
 const { scrapeOrder } = require('./scrapeOrder');
 const { searchPo } = require('./searchPo');
-const tracking = require('./parseInvoice');
+const parseInvoice = require('./parseInvoice');
 
 const ingramOrder = process.env.INGRAM_ORDER_PAGE;
 
@@ -11,18 +11,17 @@ let userData = {
     po: process.env.INGRAM_CUSTOMER_PO,
 }
 
+// This mutates objects
 const addTrackingAndAddress = async (trackingAndAddresses, orderData) => {
-    const copiedData = await Object.assign({}, orderData);
     // Add tracking to orderData (mutating orderData)
     const address = trackingAndAddresses[0][2];
     trackingAndAddresses.forEach(num => {
-        const orderByIndex = copiedData[num[0]];
+        const orderByIndex = orderData[num[0]];
         orderByIndex.tracking = num[1];
         orderByIndex.address = address;
     });
-    console.log(copiedData);
-    console.log(trackingAndAddresses, "TRACKING");
-    return copiedData;
+    console.log(orderData, "COPIED DATA");
+    return orderData;
 }
 
 // User data should be filled via the client - during login - just like po
@@ -38,7 +37,7 @@ const getOrderInfo = async (userData) => {
 
     const orderData = await scrapeOrder(page);
 
-    const trackingAndAddresses = await tracking.getAllTracking(orderData, page, true);
+    const trackingAndAddresses = await parseInvoice.getAllTracking(orderData, page, true);
 
     // const address = trackingAndAddresses[0][2];
    
