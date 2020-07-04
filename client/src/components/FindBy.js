@@ -3,7 +3,7 @@ import { Context } from '../context';
 import GetOrdersByPo from '../components/ApiCalls/GetOrdersByPo';
 import { StartLoadingBar, StopLoadingBar } from '../components/LoadingBar';
 
-import Order from './Order';
+import OrderDisplay from './OrderDisplay';
 
 function FindBy() {
     const context = useContext(Context)
@@ -19,21 +19,18 @@ function FindBy() {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (validPo(poInput)) {
             setCurrentOrderInfo(false);
             setIsLoading(true);
             const loadingBar = StartLoadingBar();
             await findOrderByPo(poInput).then(data => {
                 setIsLoading(false); 
-                // setCurrentOrderInfo(data);
-                setCurrentOrderInfo(true);
-                StopLoadingBar(loadingBar);
+                setCurrentOrderInfo(data);
                 console.log(data, "DATA IN FINDORDERBYPO")   
             }).catch(err => {
                 console.log("Error finding order by po: " + err.message);
-            })
-
+            }).finally(StopLoadingBar(loadingBar));
         }
         else alert('no')
     }
@@ -50,7 +47,7 @@ function FindBy() {
             </form>
             {isLoading ? <div className='loading' id='loading'>Loading</div> : ''}
             {isLoading ? <div className='loading' id='elapsed'></div> : ''}
-            {Object.keys(currentOrderInfo).length ? <Order order={currentOrderInfo}/> : ''}
+            {Object.keys(currentOrderInfo).length ? <OrderDisplay order={currentOrderInfo}/> : ''}
         </div>
     )
 }

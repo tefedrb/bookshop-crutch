@@ -57,7 +57,7 @@ const scrapeOrder = async (page) => {
         }) 
         return orders;
     }).catch(err => {
-        console.log("Error!: "  + err.message);
+        console.log("Error in scrapeOrder!: "  + err.message);
     })
 }
 

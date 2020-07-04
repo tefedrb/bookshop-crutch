@@ -1,14 +1,19 @@
 import React from 'react';
+import Book from './Book';
 
-function Shipment() {
+function Shipment(order) {
     return(
         <div className='shipment'>
-            <h3>Shipment 1: <a href='#'>Invoice</a></h3>
-            <h4>Tracking: 3495828281891283</h4>
+            <h3>Shipment 1: <a href={order?.['Invoice Number'][0]}>Invoice</a></h3>
+            <h4>Tracking: {order.tracking ? order.tracking : "Get Tracking Btn"}</h4>
             <ul>
                 <li>
                     <span>Books (3)</span>
-                    <span>White Flight</span>
+                    <p>
+                        <span>White Flight</span>
+                        <span>Ean: <a href={order.Ean[1]}>{order.Ean[0]}</a></span>
+                    </p>
+                    
                     <span>Invisible Man</span>
                     <span>King Kong</span>    
                 </li>
