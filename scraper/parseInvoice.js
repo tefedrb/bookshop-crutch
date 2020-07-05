@@ -34,6 +34,7 @@ const getAddress = async (poInput, buffer) => {
     })
 }
 
+// RETURNS ARRAY
 const getTracking = async (poInput, buffer, getAddress) => {
     return await pdf(buffer).then(res => {
         // Find the PO - capture index number
@@ -128,6 +129,7 @@ async function readPdf(order, page) {
     }, order)
 }
 
+// RETURNS ARRAY - ORDER INDEX AND TRACKING
 const getAllTracking = async (orderData, page, getAddress) => {
     const trackingNumbers = [];
     // Only check for address once
@@ -138,7 +140,7 @@ const getAllTracking = async (orderData, page, getAddress) => {
         const invoice = order["Invoice Number"];
         const invoiceLink = typeof invoice === "object" ? invoice[1] : false;
         if(invoiceLink){
-            // K variable tracks how many times we look for address
+            // j variable tracks how many times we look for address
             if(j === 1) address = !getAddress;
             j++
             const pdfString = await readPdf(order, page);

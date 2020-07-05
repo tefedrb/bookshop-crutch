@@ -1,22 +1,36 @@
 import React from 'react';
+import Book from './Book';
+import Order from './Order'
 
-function Shipment() {
-    return(
-        <div className='shipment'>
-            <h3>Shipment 1: <a href='#'>Invoice</a></h3>
-            <h4>Tracking: 3495828281891283</h4>
-            <ul>
-                <li>
-                    <span>Books (3)</span>
-                    <span>White Flight</span>
-                    <span>Invisible Man</span>
-                    <span>King Kong</span>    
-                </li>
-                <li>
-                    <span>Status</span>
-                    <span>Estimated Delivery 12/20 Accepted at facility</span>
-                </li>
-            </ul>
+// [{}, {}]
+function Shipment(props) {
+    const { data } = props;
+    console.log(data, "data")
+    
+    const individualOrders = data?.map((order, index) => 
+        <Order key={index} order={order} />
+    )
+    
+    return (
+        <div className="individual-shipment">
+            <h2>Invoice #: 
+                <a href={data?.[0]["Invoice Number"][1]}>
+                    {data?.[0]["Invoice Number"][0]}
+                </a>
+            </h2>
+            <div className="shipment-column-labels">
+                <div>Status</div>
+                <div>Title</div>
+                <div>Ean</div>
+                <div>Format</div>
+                <div>Pub Date</div>
+                <div>Qty</div>
+                <div>Price</div>
+                <div>DC</div>
+            </div>
+            <div className="individual-orders-container">
+                {individualOrders}
+            </div>
         </div>
     )
 }

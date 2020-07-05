@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
+// RETURNS ARRAY
 const scrapeOrder = async (page) => {
     /**** COLLECT ORDER INFO ****/
     return await page.evaluate(() => {
@@ -56,13 +57,8 @@ const scrapeOrder = async (page) => {
         }) 
         return orders;
     }).catch(err => {
-        console.log("Error!: "  + err.message);
+        console.log("Error in scrapeOrder!: "  + err.message);
     })
-    // .then(customerOrders => {
-    //     return customerOrders
-    // })
-    // console.log(orderData, "orderData")
-    // return orderData;
 }
 
 exports.scrapeOrder = scrapeOrder;

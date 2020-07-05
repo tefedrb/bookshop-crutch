@@ -5,8 +5,8 @@ const puppeteer = require('puppeteer');
 const ingramLogin = process.env.INGRAM_LOGIN_URL;
 
 const loginToIngram = async (login) => {
-    // Notes: I can pass parameters into the launch function - {headless: false} means show browser 
-    const browser = await puppeteer.launch({headless: false});
+    // Notes: I can pass parameters into the launch function - {headless: false} means browser gui will open 
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
     try{
         await page.goto(ingramLogin);
