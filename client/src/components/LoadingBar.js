@@ -3,9 +3,10 @@ export const StartLoadingBar = () => {
     let milli = 0
     let milliTen = 0
     let seconds = 0
-    
+    console.log("start loading bar");
     let dotsInterval = setInterval(() => {
         let loading = document.getElementById('loading');
+        console.log("dots interval");
         if (dots < 5) {
             loading.innerText += '.'
             dots++
@@ -17,6 +18,7 @@ export const StartLoadingBar = () => {
 
     let milliInterval = setInterval(() => {
         let elapsed = document.getElementById('elapsed');
+        console.log("Mili interval");
         if (milli > 9) {
             milliTen++
             milli = 0

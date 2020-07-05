@@ -4,6 +4,7 @@ import GetOrdersByPo from '../components/ApiCalls/GetOrdersByPo';
 import { StartLoadingBar, StopLoadingBar } from '../components/LoadingBar';
 import { parsedShipments } from '../components/ApiCalls/TestData';
 import OrderDisplay from './OrderDisplay';
+import Spinner from './Spinner';
 
 function FindBy() {
     const context = useContext(Context)
@@ -23,16 +24,18 @@ function FindBy() {
         if (validPo(poInput)) {
             setCurrentOrderInfo(false);
             setIsLoading(true);
-            const loadingBar = StartLoadingBar();
+            // const loadingBar = StartLoadingBar();
             await findOrderByPo(poInput).then(data => {
                 setIsLoading(false); 
                 setCurrentOrderInfo(data);
+                // StopLoadingBar(loadingBar)
                 console.log(data, "DATA IN FINDORDERBYPO")   
             }).catch(err => {
                 console.log("Error finding order by po: " + err.message);
-            }).finally(StopLoadingBar(loadingBar));
-        }
-        else alert('no');
+            }).finally();
+            // const loadingBar = StartLoadingBar();
+            // Might need to look into repaint hook  
+        } else alert('no');
     }
 
     const handleSubmitTestData = async (e) => {
@@ -58,12 +61,12 @@ function FindBy() {
 
     return (
         <div>
-            <form onSubmit={handleSubmitTestData}>
+            <form onSubmit={handleSubmit}>
                 <input onChange={handleChange} value={poInput}/>
                 {validPo(poInput) ? <button>FIND</button> : !poInput ? <div id='waiting'>Enter PO</div> : <div id='invalid'>INVALID</div>}
             </form>
             {isLoading ? <div className='loading' id='loading'>Loading</div> : ''}
-            {isLoading ? <div className='loading' id='elapsed'></div> : ''}
+            {isLoading ? <div className='loading' id='elapsed'></div> : ''}          
             {Object.keys(currentOrderInfo).length ? <OrderDisplay order={currentOrderInfo}/> : ''}
         </div>
     )
