@@ -5,7 +5,7 @@ export const StartLoadingBar = () => {
     let seconds = 0
     
     let dotsInterval = setInterval(() => {
-        let loading = document.getElementById('loading')
+        let loading = document.getElementById('loading');
         if (dots < 5) {
             loading.innerText += '.'
             dots++
@@ -16,7 +16,7 @@ export const StartLoadingBar = () => {
     }, 100)
 
     let milliInterval = setInterval(() => {
-        let elapsed = document.getElementById('elapsed')
+        let elapsed = document.getElementById('elapsed');
         if (milli > 9) {
             milliTen++
             milli = 0

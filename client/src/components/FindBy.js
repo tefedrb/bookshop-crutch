@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Context } from '../context';
 import GetOrdersByPo from '../components/ApiCalls/GetOrdersByPo';
 import { StartLoadingBar, StopLoadingBar } from '../components/LoadingBar';
-
+import { parsedShipments } from '../components/ApiCalls/TestData';
 import OrderDisplay from './OrderDisplay';
 
 function FindBy() {
@@ -32,16 +32,33 @@ function FindBy() {
                 console.log("Error finding order by po: " + err.message);
             }).finally(StopLoadingBar(loadingBar));
         }
-        else alert('no')
+        else alert('no');
     }
 
-    const handleChange = e => setPoInput(e.target.value)
+    const handleSubmitTestData = async (e) => {
+        e.preventDefault();
+        if(validPo(poInput)){
+            // setCurrentOrderInfo(false);
+            // setIsLoading(true);
+            // const loadingBar = StartLoadingBar();
+            setCurrentOrderInfo(parsedShipments);
+
+            // setTimeout(() => {
+            //     setIsLoading(false);
+            //     StopLoadingBar(loadingBar);
+            //     console.log("made it");
+            // }, 1000);
+        } 
+        else alert('no');
+    }
+
+    const handleChange = e => setPoInput(e.target.value);
 
     const validPo = (input) => (input?.length === 10 && input[0] === 'R' && !isNaN(input.split('R')[1])) || input?.includes('.') && input.split('.')[0].length === 10 ? true : false 
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmitTestData}>
                 <input onChange={handleChange} value={poInput}/>
                 {validPo(poInput) ? <button>FIND</button> : !poInput ? <div id='waiting'>Enter PO</div> : <div id='invalid'>INVALID</div>}
             </form>

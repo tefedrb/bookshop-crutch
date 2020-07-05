@@ -75,9 +75,25 @@ table {
     margin: 0;
     padding-left: 10px;
 }
+
 .shipments h3 {
 
 }
+
+.shipment-column-labels{
+    display: grid;
+    background-color: beige;
+    /* grid-template-rows: 1fr 20%; */
+    grid-template-columns: repeat(7, 1fr) 10%;
+}
+
+.individual-orders-container {
+    display: grid;
+    background-color: teal;
+    /* grid-template-rows: 1fr 20%; */
+    grid-template-columns: repeat(7, 1fr) 10%;
+}
+
 td {
     border: 1px solid black;
 }

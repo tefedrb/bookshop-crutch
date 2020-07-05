@@ -69,12 +69,12 @@ const getOrderInfo = async (userData) => {
     // const address = trackingAndAddresses[0][2];
    
     const newOrderData = await addTrackingAndAddress(parseTrackingAndAddress, orderData);
-
+    console.log(newOrderData, "data with addy & tracking");
     const parsedOutShipments = parseOutShipments(newOrderData);
-   
+    console.log(parsedOutShipments, "parsed out shipments");
     return parsedOutShipments;
 }
 
-// console.log(getOrderInfo(userData), "end of main");
+console.log(getOrderInfo(userData), "end of main");
 
 exports.getOrderInfo = getOrderInfo;
