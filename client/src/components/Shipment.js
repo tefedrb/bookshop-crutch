@@ -13,11 +13,14 @@ function Shipment(props) {
     
     return (
         <div className="individual-shipment">
-            <h2>Invoice #: 
-                <a href={data?.[0]["Invoice Number"][1]}>
+            <h2>Invoice #:
+                <a className="invoice-link" href={data?.[0]["Invoice Number"][1]}>
                     {data?.[0]["Invoice Number"][0]}
                 </a>
             </h2>
+            <h3>
+                Tracking #: <span>{data?.[0].tracking || <button>Get Tracking</button>}</span>
+            </h3>
             <div className="shipment-column-labels">
                 <div>Status</div>
                 <div>Title</div>

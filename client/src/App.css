@@ -4,16 +4,33 @@ nav {
     width: 100%;
     background: rgb(194, 194, 255);
 }
+
 form {
     display: grid;
     grid-template: 1fr / 1fr 1fr 1fr;
 }
+
 li {
     list-style: none;
 }
+
 input {
     grid-column: 1 / span 2;
 }
+
+span {
+    text-align: center;
+}
+
+h3 {
+    margin-top: .5em;
+    margin-bottom: .5em;
+}
+
+h2 {
+    margin-bottom: 0;
+}
+
 .link {
     border: 1px solid black;
     height: 100%;
@@ -22,54 +39,67 @@ input {
     text-decoration: none;
     color: black;
 }
+
 .link:hover {
     background: black;
     color: white;
 }
+
 .link:active {
     color: rgb(157, 157, 202);
 }
+
 #invalid {
     background: maroon;
     opacity: .8;
     text-align: center;
 }
+
 #waiting {
     border: 1px solid black;
     text-align: center;
 }
+
 .loading {
     text-align: center;
 }
+
 #loading {
     padding-top: 50px;
 }
+
 table {
     font-size: 10px;
 }
+
 .shipment {
     font-size: 10px;
     border: 1px solid black;
     padding: 5px;
     padding-left: 20px;
 }
+
 .shipment ul {
     display: grid;
     grid-template: 1fr / 1fr 1fr;
 }
+
 .shipment ul li {
     display: flex;
     flex-direction: column;
 }
+
 .shipment ul li span:nth-child(1) {
     font-weight: bold;
     text-decoration: underline;
 }
+
 .shipments {
     display: grid;
     grid-template: 1fr / 1fr 1fr;
     margin-top: 20px;
 }
+
 .shipments ul {
     justify-content: left;
     margin: 0;
@@ -80,23 +110,45 @@ table {
 
 }
 
-.shipment-column-labels{
+.shipment-column-labels {
     display: grid;
     background-color: beige;
     /* grid-template-rows: 1fr 20%; */
-    grid-template-columns: repeat(7, 1fr) 10%;
+    row-gap: 10px;
+    grid-template-columns: repeat(5, 1fr) .25fr .5fr .5fr;
+}
+
+.shipment-column-labels div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: .5em;
 }
 
 .individual-orders-container {
     display: grid;
     background-color: teal;
+    row-gap: 10px;
     /* grid-template-rows: 1fr 20%; */
-    grid-template-columns: repeat(7, 1fr) 10%;
+    grid-template-columns: repeat(5, 1fr) .25fr .5fr .5fr;
+}
+
+.individual-orders-container div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1em;
+    border: solid black;
+}
+
+.invoice-link {
+    padding: .5em;
 }
 
 td {
     border: 1px solid black;
 }
+
 th {
     border: 1px solid black;
 }
