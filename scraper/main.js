@@ -75,6 +75,6 @@ const getOrderInfo = async (userData) => {
     return parsedOutShipments;
 }
 
-console.log(getOrderInfo(userData), "end of main");
+// console.log(getOrderInfo(userData), "end of main");
 
 exports.getOrderInfo = getOrderInfo;

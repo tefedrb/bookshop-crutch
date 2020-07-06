@@ -33,11 +33,11 @@ const scrapeOrder = async (page) => {
         let allRows = Array.from(orderTable[hasBackOrders ? 4 : 3].firstElementChild.children);
     
         if(hasBackOrders) {
-            allRows = Array.from(orderTable[4].firstElementChild.children)
+            allRows = Array.from(orderTable[4].firstElementChild.children);
             labels.unshift("Select");
         }
 
-        //  Filter out rows with no EAN
+        // Filter out rows with no EAN
         const orderRows = filterOrders(allRows, hasBackOrders);
         
         // Insert date ordered - EAN - Product Name - Format - PO Number - QTY - Invoice# (w link) - DC

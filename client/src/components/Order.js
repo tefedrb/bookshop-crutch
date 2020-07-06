@@ -19,14 +19,14 @@ function Order(props) {
     */
     return (
         <>
-            <div>{order.Status}</div>
-            <div>{order['Product Name']}</div>
-            <div><a href={order.Ean[1]}>{order.Ean[0]}</a></div>
-            <div>{order.Format}</div>
-            <div>{order['Pub Date']}</div> 
-            <div>{order.Qty}</div>
-            <div>{order.price}</div>
-            <div>{order.DC}</div>
+            <div><span>{order.Status}</span></div>
+            <div><span>{order['Product Name']}</span></div>
+            <div><span><a href={order.Ean[1]}>{order.Ean[0].substring(0, 13)}</a></span></div>
+            <div><span>{order.Format}</span></div>
+            <div><span>{order['Pub Date']}</span></div> 
+            <div><span>{order.Qty}</span></div>
+            <div><span>{order.price}</span></div>
+            <div><span>{order.DC}</span></div>
         </>
     )
 }
