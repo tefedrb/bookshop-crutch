@@ -57,12 +57,12 @@ function FindBy() {
 
     const handleChange = e => setValue(e.target.value)
 
-    const validPo = () => (value.length === 10 && value[0] === 'R' && !isNaN(value.split('R')[1])) || value.includes('.') && value.split('.')[0].length === 10 ? true : false 
+    const validPo = () => (value.length === 10 && value[0] === 'R' && !isNaN(value.split('R')[1])) || (value.includes('.') && value.split('.')[0].length === 10) ? true : false 
 
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <input onChange={handleChange} value={value}/>
+                <input onChange={handleChange} value={value} id='input'/>
                 {validPo() ? <button>FIND</button> : !value ? <div id='waiting'>Enter PO</div> : <div id='invalid'>INVALID</div>}
             </form>
             {isLoading ? <div className='loading' id='loading'>Loading</div> : ''}

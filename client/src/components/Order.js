@@ -5,28 +5,9 @@ import Backorder from './Backorder';
 
 function Order({ order }) {
     console.log(order)
-    let testShipments = [1,2,3,4,5,6]
-    let testBackorders = [1,2,1,3]
-
-    let backorders = (
-            <div className='backorders'>
-                <h3>Backorders</h3>
-                <table>
-                    <tbody>
-                        <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Published</th>
-                            <th>ISBN</th>
-                            <th>On Hand</th>
-                            <th>On Order</th>
-                            <th>Arrival Date</th>
-                        </tr>
-                        {testBackorders.length ? testBackorders.map((b,i) => <Backorder key={i} data={b} />) : ''}
-                    </tbody>
-                </table>
-            </div>
-    )
+    let testShipments = [1,2,1,1,1,1,1,2]
+    let testBackorders = [1,1,1,1]
+    let testPreorders = [1,2,2]
 
     return (
         <div className='order'>
@@ -39,9 +20,13 @@ function Order({ order }) {
                     <li>Date Ordered: 2/9/20</li>
                 </ul>
             </div>
-            {testBackorders.length ? backorders : ''}
+            <div style={!testPreorders.length || ! testBackorders.length ? {gridTemplate: '1fr / 1fr'} : {}} className='not-shipped'>
+                {testBackorders.length ? <Backorder title={'Backorder'} data={testBackorders} />: ''}
+                {testPreorders.length ? <Backorder title={'Preorder'} data={testPreorders} />: ''}
+            </div>
+            {testShipments.length ? <h3 id='ship-head'>Shipment{testShipments.length > 1 ? `s (${testShipments.length})` : ''}</h3> : ''}
             <div className='shipments'>
-                {testShipments.length ? testShipments.map((s,i) => <Shipment key={i} data={s} />) : ''}
+                {testShipments.length ? testShipments.map((s,i) => <Shipment key={i} num={i+1} data={s} />) : ''}
             </div>
             
         </div>
