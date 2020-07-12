@@ -1,13 +1,16 @@
-import React from 'react';
-import { Provider, Context } from './context';
+import React, { useContext } from 'react';
+import { Provider, Context } from '../context';
+import LoggedIn from './LoggedIn';
+import LoginIngram from './LoginIngram';
 
 const EnterApp = () => {
     const context = useContext(Context);
     const { loggedIn } = context;
+    const display = loggedIn ? <LoggedIn /> : <LoginIngram />
     return (
-        <Provider className="big">
-            {loggedIn ? <LoggedIn /> : <LoginIngram />}
-        </Provider>
+        <>
+            { display }
+        </>
     )
 }
 

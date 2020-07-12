@@ -9,7 +9,7 @@ const LoginIngram = (props) => {
     const [user, updateUser] = useState("");
     const [password, updatePassword] = useState("");
     const context = useContext(Context);
-    const { setBrowserInstance } = context;
+    const { setBrowserInstance, setLoggedIn } = context;
 
     const handleChange = (event) => {
         event.persist();
@@ -29,6 +29,7 @@ const LoginIngram = (props) => {
         const [wsEndpoint, currentUrl] = savePage;
         if(currentUrl.includes("administration")){
             setBrowserInstance(wsEndpoint);
+            setLoggedIn();
         } else alert("Bad User/Pass");
         
     }

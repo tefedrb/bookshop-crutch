@@ -1,12 +1,13 @@
 import React from 'react';
 import './App.css';
 import LoginIngram from './components/LoginIngram';
-import {Provider} from './context'
+import EnterApp from './components/EnterApp'
+import { Provider } from './context'
 
 function App() {
   return (
-    <Provider>
-        <LoginIngram />
+    <Provider className="big">
+      <EnterApp />
     </Provider>
   );
 }

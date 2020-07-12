@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { Provider } from './context';
+import { Provider } from '../context';
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 
-import FindBy from './components/FindBy';
-import OrdersWatch from './components/OrdersWatch';
-import Other from './components/Other';
+import FindBy from './FindBy'
+import OrdersWatch from './OrdersWatch';
+import Other from './Other';
 
 const LoggedIn = () => {
     return (
