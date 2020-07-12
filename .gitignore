@@ -1,5 +1,6 @@
 .env
-node_modules/
+/api/node_modules
+/scraper/node_modules
 /scraper/.env
 /scraper/.DS_Store
 .DS_Store

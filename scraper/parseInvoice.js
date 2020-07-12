@@ -118,6 +118,7 @@ async function readPdf(order, page) {
     return page.evaluate((order) => {
         /**** TEST DATA ****/
         const url = order["Invoice Number"][1];
+        console.log(url, "URL?")
         return new Promise(async resolve => {
             const reader = new FileReader();
             const res = await fetch(url);

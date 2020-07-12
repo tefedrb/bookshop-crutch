@@ -7,16 +7,16 @@ import OrderDisplay from './OrderDisplay';
 import Spinner from './Spinner';
 
 function FindBy() {
-    const context = useContext(Context)
-    let { state, setCurrentOrderInfo } = context
+    const context = useContext(Context);
+    let { state, setCurrentOrderInfo } = context;
 
-    let [poInput, setPoInput] = useState('')
-    let [isLoading, setIsLoading] = useState(false)
-    let { currentOrderInfo } = state
+    let [poInput, setPoInput] = useState('');
+    let [isLoading, setIsLoading] = useState(false);
+    let { currentOrderInfo } = state;
 
     const findOrderByPo = async (po) => {
         const orderData = await GetOrdersByPo(po);
-        return orderData
+        return orderData;
     }
 
     const handleSubmit = async (e) => {
@@ -44,6 +44,7 @@ function FindBy() {
             // setCurrentOrderInfo(false);
             // setIsLoading(true);
             // const loadingBar = StartLoadingBar();
+
             setCurrentOrderInfo(parsedShipments);
 
             // setTimeout(() => {

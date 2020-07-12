@@ -1,14 +1,17 @@
-const dotenv = require('dotenv');
-dotenv.config();
+    
 const puppeteer = require('puppeteer');
 
 const ingramLogin = process.env.INGRAM_LOGIN_URL;
 
 const loginToIngram = async (login) => {
+    console.log(ingramLogin, "INGRAM LOGIN")
+    console.log(login, "LOGIN!! BEFORE EVAL")
+
     // Notes: I can pass parameters into the launch function - {headless: false} means browser gui will open 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
-    try{
+
+    try {
         await page.goto(ingramLogin);
 
         // Login to ingram
@@ -18,7 +21,7 @@ const loginToIngram = async (login) => {
             const userInput = formElements[0].firstChild.nextSibling;
             const passwordInput = formElements[1].firstChild.nextSibling;
             const loginBtn = formElements[2].firstChild.nextSibling;
-            
+            console.log(login, "LOGIN!!");
             //Enter login info
             userInput.value = login.ingramU;
             passwordInput.value = login.ingramP;
@@ -26,10 +29,11 @@ const loginToIngram = async (login) => {
             return login;
         }, login);
         // Let page settle
-        await page.waitForNavigation(); 
-    }catch(err){
+        await page.waitForNavigation();
+    } catch(err){
         console.log("Error loging into Ingram: " + err);
     }
+
     return browser;
 }
 

@@ -5,7 +5,13 @@ export const Context = React.createContext();
 export class Provider extends Component {
     state = { 
         string: 'wow',
-        currentOrderInfo: {}
+        loggedIn: false,
+        currentOrderInfo: {},
+        currentBrowserInstance: null
+    }
+
+    setBrowserInstance = (wsEndpoint) => {
+        this.setState({currentBrowserInstance: wsEndpoint})
     }
 
     setCurrentOrderInfo = data => {
@@ -14,6 +20,10 @@ export class Provider extends Component {
         } else {
             this.setState({currentOrderInfo: data});
         }
+    }
+
+    setLoggedIn = () => {
+        this.setState({loggedIn: !this.state.loggedIn});
     }
 
     // {
@@ -39,10 +49,10 @@ export class Provider extends Component {
     // }
 
     render() {
-        let { state, setCurrentOrderInfo } = this
+        const { state, setCurrentOrderInfo, setLoggedIn, setBrowserInstance} = this;
 
         return(
-            <Context.Provider value={{state, setCurrentOrderInfo}}>
+            <Context.Provider value={{state, setCurrentOrderInfo, setLoggedIn, setBrowserInstance}}>
                 {this.props.children}
             </Context.Provider>
         )

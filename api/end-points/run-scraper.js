@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const verify = require('./tokenVerification');
-const main = require('../scraper/main');
+const main = require('../../scraper/main');
 
 // Need to add verify as middleware for token authentication
 router.get('/:poNum', async (req, res) => {
     // Here instead of using an environment var, we are trying to use
     // a URL parameter
+    console.log(process.env.INGRAM_U, "USER")
     try{
         const orderData = await main.getOrderInfo({
             ingramU: process.env.INGRAM_U,
