@@ -1,3 +1,13 @@
+const ingramOrder = process.env.INGRAM_ORDER_PAGE;
+
+const navigateToOrderSearch = async (page) => {
+    await page.goto('about:blank');
+    // Go to order page
+    await page.goto(ingramOrder);
+    // Switch over to....
+    await searchPo(page, userData.po);
+}
+
 // Swtich to PO number field and enter PO
 const searchPo = async (orderPage, po) => {
     const poNum = [po];
@@ -23,3 +33,6 @@ const searchPo = async (orderPage, po) => {
 }
 
 exports.searchPo = searchPo;
+exports.navigateToOrderSearch = navigateToOrderSearch;
+exports.addTrackingAndAddress = addTrackingAndAddress;
+exports.parseOutShipments = parseOutShipments;

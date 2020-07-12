@@ -7,11 +7,11 @@ export class Provider extends Component {
         string: 'wow',
         loggedIn: false,
         currentOrderInfo: {},
-        currentBrowserInstance: null
+        browserEndpoint: null
     }
 
-    setBrowserInstance = (wsEndpoint) => {
-        this.setState({currentBrowserInstance: wsEndpoint})
+    saveBrowserEndpoint = (wsEndpoint) => {
+        this.setState({browserEndpoint: wsEndpoint})
     }
 
     setCurrentOrderInfo = data => {
@@ -49,10 +49,10 @@ export class Provider extends Component {
     // }
 
     render() {
-        const { state, setCurrentOrderInfo, setLoggedIn, setBrowserInstance} = this;
+        const { state, setCurrentOrderInfo, setLoggedIn, saveBrowserEndpoint} = this;
 
-        return(
-            <Context.Provider value={{state, setCurrentOrderInfo, setLoggedIn, setBrowserInstance}}>
+        return (
+            <Context.Provider value={{state, setCurrentOrderInfo, setLoggedIn, saveBrowserEndpoint}}>
                 {this.props.children}
             </Context.Provider>
         )

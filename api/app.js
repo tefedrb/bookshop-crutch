@@ -19,6 +19,7 @@ const authRoute = require('./end-points/userAuth');
 const customerRoute = require('./end-points/customers');
 const runScraper = require('./end-points/run-scraper');
 const loginToIngram = require('./end-points/app-login');
+const browserInteraction = require('./end-points/interact-with-browser');
 
 // Route Middleware
 app.use('/user', userRoute);
@@ -26,6 +27,7 @@ app.use('/user/auth', authRoute);
 app.use('/customers', customerRoute);
 app.use('/run-scraper', runScraper);
 app.use('/login-ingram', loginToIngram);
+app.use('/browser', browserInteraction);
 
 // app.use('/posts', () =>{
 //     console.log('This is a middleware running');

@@ -5,7 +5,7 @@ import LoginIngram from './LoginIngram';
 
 const EnterApp = () => {
     const context = useContext(Context);
-    const { loggedIn } = context;
+    const { loggedIn } = context.state;
     const display = loggedIn ? <LoggedIn /> : <LoginIngram />
     return (
         <>

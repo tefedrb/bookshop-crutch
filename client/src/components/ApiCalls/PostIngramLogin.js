@@ -1,6 +1,6 @@
 const PostIngramLogin = async (body) => {
     try {
-        console.log("Get orders by po")
+        console.log("Ingram Login")
         console.log(body, "body")
         const res = 
             await fetch('http://localhost:9000/login-ingram/', {

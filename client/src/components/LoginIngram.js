@@ -1,15 +1,15 @@
 import React from 'react';
 import { useState, useContext } from 'react';
 import PostIngramLogin from './ApiCalls/PostIngramLogin';
+import ConnectToBrowser from './ApiCalls/ConnectToBrowser';
 import { Context } from '../context';
 
 // Create api call here
-
 const LoginIngram = (props) => {
     const [user, updateUser] = useState("");
     const [password, updatePassword] = useState("");
     const context = useContext(Context);
-    const { setBrowserInstance, setLoggedIn } = context;
+    const { saveBrowserEndpoint, setLoggedIn, state } = context;
 
     const handleChange = (event) => {
         event.persist();
@@ -25,11 +25,12 @@ const LoginIngram = (props) => {
         // Here we will check to see if things went accordingly.
         console.log("update")
         event.preventDefault();
-        const savePage = await PostIngramLogin({ingramU: user, ingramP: password});
-        const [wsEndpoint, currentUrl] = savePage;
+        const saveBrowser = await PostIngramLogin({ingramU: user, ingramP: password});
+        const [wsEndpoint, currentUrl] = saveBrowser;
         if(currentUrl.includes("administration")){
-            setBrowserInstance(wsEndpoint);
+            saveBrowserEndpoint(wsEndpoint);
             setLoggedIn();
+            ConnectToBrowser(wsEndpoint);
         } else alert("Bad User/Pass");
         
     }
