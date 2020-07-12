@@ -26,8 +26,11 @@ const LoginIngram = (props) => {
         console.log("update")
         event.preventDefault();
         const savePage = await PostIngramLogin({ingramU: user, ingramP: password});
-        setBrowserInstance(savePage);
-        console.log(savePage, "savePage");
+        const [wsEndpoint, currentUrl] = savePage;
+        if(currentUrl.includes("administration")){
+            setBrowserInstance(wsEndpoint);
+        } else alert("Bad User/Pass");
+        
     }
 
     return (

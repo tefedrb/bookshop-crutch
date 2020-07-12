@@ -16,8 +16,9 @@ router.post('/', async (req, res) => {
         const ingramLogin = await login.loginToIngram(req.body)
             .then(async browser => {
                 const page = (await browser.pages())[1]
-                console.log(page, "PAGE")
-                return browser.wsEndpoint()}
+                const pageUrl = page.url();
+                
+                return [browser.wsEndpoint(), pageUrl]}
             );
         
         console.log(ingramLogin, "INGRAM LOGIN")
