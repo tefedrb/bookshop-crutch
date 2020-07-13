@@ -34,5 +34,3 @@ const searchPo = async (orderPage, po) => {
 
 exports.searchPo = searchPo;
 exports.navigateToOrderSearch = navigateToOrderSearch;
-exports.addTrackingAndAddress = addTrackingAndAddress;
-exports.parseOutShipments = parseOutShipments;

@@ -135,6 +135,7 @@ const getAllTracking = async (orderData, page, getAddress) => {
     const trackingNumbers = [];
     // Only check for address once
     let address = getAddress;
+    console.log(orderData, "ORDER DATA IN get all tracking")
     for(let i=0 ,j=0; i < orderData.length; i++){
         // Ensures we only find address once
         const order = orderData[i];

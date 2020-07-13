@@ -7,7 +7,6 @@ const main = require('../../scraper/main');
 router.get('/:poNum', async (req, res) => {
     // Here instead of using an environment var, we are trying to use
     // a URL parameter
-    console.log(process.env.INGRAM_U, "USER")
     try{
         const orderData = await main.getOrderInfo({
             ingramU: process.env.INGRAM_U,

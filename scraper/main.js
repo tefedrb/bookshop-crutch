@@ -19,8 +19,8 @@ const getOrderInfo = async (userData) => {
     const page = await loginToIngram(userData)
                         .then(async browser => (await browser.pages())[1]);
     // Navigation work-around
-    await page.goto('about:blank');
-    // Go to order page
+    // await page.goto('about:blank');
+    // // Go to order page
     await page.goto(ingramOrder);
     // Switch over to....
     await searchPo(page, userData.po);
@@ -33,8 +33,10 @@ const getOrderInfo = async (userData) => {
    
     const newOrderData = await addTrackingAndAddress(parseTrackingAndAddress, orderData);
     console.log(newOrderData, "data with addy & tracking");
+    
     const parsedOutShipments = parseOutShipments(newOrderData);
     console.log(parsedOutShipments, "parsed out shipments");
+    
     return parsedOutShipments;
 }
 
