@@ -6,13 +6,18 @@ import { parsedShipments } from '../components/ApiCalls/TestData';
 import OrderDisplay from './OrderDisplay';
 import Spinner from './Spinner';
 
+import SearchByPo from './ApiCalls/SearchByPo';
+import ScrapePoPage from './ApiCalls/ScrapePoPage';
+import GetAllInvoiceInfo from './ApiCalls/GetAllInvoiceInfo';
+
 function FindBy() {
     const context = useContext(Context);
-    let { state, setCurrentOrderInfo } = context;
+    const { state, setCurrentOrderInfo } = context;
+    const { browserEndpoint } = state;
 
-    let [poInput, setPoInput] = useState('');
-    let [isLoading, setIsLoading] = useState(false);
-    let { currentOrderInfo } = state;
+    const [poInput, setPoInput] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const { currentOrderInfo } = state;
 
     const findOrderByPo = async (po) => {
         const orderData = await GetOrdersByPo(po);
@@ -35,6 +40,23 @@ function FindBy() {
             }).finally();
             // const loadingBar = StartLoadingBar();
             // Might need to look into repaint hook  
+        } else alert('no');
+    }
+
+    const handleSubmitSteps = async (e) => {
+        e.preventDefault();
+        if(validPo(poInput)){
+            setCurrentOrderInfo(false);
+            setIsLoading(true);
+            const loadingBar = StartLoadingBar();
+            await SearchByPo(poInput, browserEndpoint);
+            const orderData = await ScrapePoPage(browserEndpoint);
+            console.log(orderData, "ORDER DATA?!");
+            StopLoadingBar(loadingBar);
+            setIsLoading(false);
+            setCurrentOrderInfo(orderData);
+            const invoiceInfo = await GetAllInvoiceInfo(orderData, browserEndpoint);
+            console.log(invoiceInfo, "invoice Info");
         } else alert('no');
     }
 
@@ -62,7 +84,7 @@ function FindBy() {
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmitSteps}>
                 <input onChange={handleChange} value={poInput}/>
                 {validPo(poInput) ? <button>FIND</button> : !poInput ? <div id='waiting'>Enter PO</div> : <div id='invalid'>INVALID</div>}
             </form>

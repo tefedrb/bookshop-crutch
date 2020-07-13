@@ -30,7 +30,7 @@ const LoginIngram = (props) => {
         if(currentUrl.includes("administration")){
             saveBrowserEndpoint(wsEndpoint);
             setLoggedIn();
-            ConnectToBrowser(wsEndpoint);
+            // ConnectToBrowser(wsEndpoint);
         } else alert("Bad User/Pass");
         
     }

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const verify = require('./tokenVerification');
 const main = require('../../scraper/main');
+const connect = require('../../scraper/connect-to-browser');
+const { searchPo } = require('../../scraper/orderPageActions');
 
 // Need to add verify as middleware for token authentication
 router.get('/:poNum', async (req, res) => {

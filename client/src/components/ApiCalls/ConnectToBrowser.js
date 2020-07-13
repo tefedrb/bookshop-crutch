@@ -1,6 +1,6 @@
 const ConnectToBrowser = async (wsEndpoint) => {
     try {
-        console.log("Connect to browser...")
+        console.log("Connect to browser...");
         const res = 
             await fetch('http://localhost:9000/browser/connect', {
                 method: 'post',

@@ -170,11 +170,13 @@ const getTrackingByOrder = async (page, order, getAddress) => {
     }
 }
 
+// returns [[tracking, address, shipment_idx], [tracking, address, shipment_idx] ...]
 const getAllShipmentInvoiceInfo = async (page, orderData, getAddress) => {
     const trackingAndShipmentIdx = [];
     let address = getAddress;
-    for(let i = 0; i < order.shipments.length; i++){
+    for(let i = 0; i < orderData.shipments.length; i++){
         const shipment = orderData.shipments[i];
+        console.log(shipment, "SHIPMENT!!!!!!!!!!!!!")
         const trackingOutput = await getTrackingByOrder(page, shipment[0], address);
         /* 
            Here I am adding the idx of the shipment within orderData.shipments to our
@@ -193,6 +195,3 @@ exports.getTracking = getTracking;
 exports.getTrackingByOrder = getTrackingByOrder;
 exports.writeToTxtFromPdf = writeToTxtFromPdf;
 exports.getAllShipmentInvoiceInfo = getAllShipmentInvoiceInfo;
-
-
-
