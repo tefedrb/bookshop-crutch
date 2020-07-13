@@ -4,6 +4,7 @@ const verify = require('./tokenVerification');
 const connect = require('../../scraper/connect-to-browser');
 const { scrapeOrder } = require('../../scraper/scrapeOrder');
 const { parseOutShipments } = require('../../scraper/mutateOrderData');
+const { getAllShipmentInvoiceInfo } = require('../../scraper/parseInvoice');
 
 router.post('/connect', async (req, res) => {
     // Here instead of using an environment var, we are trying to use
@@ -42,6 +43,18 @@ router.post('/get-po-info', async (req, res) => {
 
         const parsedShipments = parseOutShipments(orderData);
         res.json(orderData);
+    } catch(err){
+        res.json({ message: err });
+    }
+})
+
+router.post('/get-all-invoice-info', async (req, res) => {
+    try {
+        const page = await connect.connectToBrowser(req.body.wsUrl)
+            .then(browser => (browser.pages())[1]);
+        const invoiceInfoForShipments = 
+            await getAllShipmentInvoiceInfo(page, req.body.orderData, true);
+        res.json(invoiceInfoForShipments);
     } catch(err){
         res.json({ message: err });
     }

@@ -149,7 +149,8 @@ const getAllTracking = async (orderData, page, getAddress) => {
             const pdfBuffer = Buffer.from(pdfString, 'binary');
             // Push here or push in getTrackingNum...
            const tracking =  await getTracking(order["Po Number"][0], pdfBuffer, address);
-           console.log(address, "after await getTracking")
+
+           console.log(address, "after await getTracking");
            console.log(tracking, "Tracking for order " + i);
            trackingNumbers.push([i, ...tracking]);
         }
@@ -158,21 +159,40 @@ const getAllTracking = async (orderData, page, getAddress) => {
 }
 
 // See if I can customize this to get address
-const getTrackingByOrder = async (order, getAddress) => {
+const getTrackingByOrder = async (page, order, getAddress) => {
     const invoice = order["Invoice Number"];
     const invoiceLink = typeof invoice === "object" ? invoice[1] : false;
     if(invoiceLink){
-        const pdfString = await readPdf(order);
+        const pdfString = await readPdf(order, page);
         const pdfBuffer = Buffer.from(pdfString, 'binary');
         const trackingOutput = await getTracking(order["Po Number"][0], pdfBuffer, getAddress);
         return trackingOutput;
     }
 }
 
+const getAllShipmentInvoiceInfo = async (page, orderData, getAddress) => {
+    const trackingAndShipmentIdx = [];
+    let address = getAddress;
+    for(let i = 0; i < order.shipments.length; i++){
+        const shipment = orderData.shipments[i];
+        const trackingOutput = await getTrackingByOrder(page, shipment[0], address);
+        /* 
+           Here I am adding the idx of the shipment within orderData.shipments to our
+           output 
+        */
+        trackingOutput.push(i);
+        trackingAndShipmentIdx.push(trackingOutput);
+        // setting address to false in order to only parse it once
+        address = false;
+    }
+    return trackingAndShipmentIdx;
+}
+
 exports.getAllTracking = getAllTracking;
 exports.getTracking = getTracking;
 exports.getTrackingByOrder = getTrackingByOrder;
 exports.writeToTxtFromPdf = writeToTxtFromPdf;
+exports.getAllShipmentInvoiceInfo = getAllShipmentInvoiceInfo;
 
 
 
