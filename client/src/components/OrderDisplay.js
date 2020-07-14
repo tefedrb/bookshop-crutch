@@ -19,7 +19,7 @@ const OrderDisplay = (props) => {
     */
    console.log(shipments, "shipments")
    const shipmentsArr = shipments?.map((shipment, index) => 
-        <Shipment key={index} data={shipment} />
+        <Shipment key={index} invoiceInfo={invoiceInfo?.[index]} data={shipment} />
    )
     /* 
         const shipments = <Shipment data={orderArray} />
