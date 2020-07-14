@@ -29,20 +29,25 @@ const OrderDisplay = (props) => {
             <Order key={index} data={order} />
         ) 
     */
-    const getName = /^[^\d]+/;
+    const nameAndAddyStr = invoiceInfo ? invoiceInfo[0][1] : null;
+    const nameRegEx = /^[^\d]+/;
+    
+    const name = nameAndAddyStr ? nameRegEx.exec(invoiceInfo[0][1])[0].trim() : "Loading...";
+    const address = nameAndAddyStr ? nameAndAddyStr.substring(name.length, nameAndAddyStr.length) : "Loading";
     const poNumber = shipments ? shipments[0][0]["Po Number"][0] : "Loading...";
+    const shipmentHeader = shipments?.length ? <h3 id='ship-head'>Shipment{shipments?.length > 1 ? `s (${shipments?.length})` : ''}</h3> : '';
     
     return (  
         <div className='order'>
             <div className='general-info'>
                 <h1>{poNumber}</h1>
                 <ul>
-                    <li>Name: {invoiceInfo ? invoiceInfo[0][1] : "Loading..."}</li>
-                    <li>Address: 910 Riverside Dr Apt 6E NY NY 10032</li>
-                    <li>Date Ordered: 2/9/20</li>
+                    <li>Name: {name}</li>
+                    <li>Address: {address}</li>
+                    <li>Date Ordered: </li>
                 </ul>
             </div>
-            {shipments?.length ? <h3 id='ship-head'>Shipment{shipments?.length > 1 ? `s (${shipments?.length})` : ''}</h3> : ''}
+            {shipmentHeader}
             <div className='shipments'>
                 {shipmentsArr}
             </div>
