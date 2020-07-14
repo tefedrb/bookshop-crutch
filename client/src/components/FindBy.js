@@ -56,7 +56,8 @@ function FindBy() {
             setIsLoading(false);
             setCurrentOrderInfo(orderData);
             const invoiceInfo = await GetAllInvoiceInfo(orderData, browserEndpoint);
-            console.log(invoiceInfo, "invoice Info");
+            orderData.invoiceInfo = invoiceInfo;
+            setCurrentOrderInfo(orderData);
         } else alert('no');
     }
 

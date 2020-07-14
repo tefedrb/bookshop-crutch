@@ -11,7 +11,7 @@ import Shipment from './Shipment';
 
 // shipments: [[{},{}], [{},{}]]
 const OrderDisplay = (props) => {
-    const { shipments, unshipped } = props.order;
+    const { shipments, unshipped, invoiceInfo } = props.order;
     // Function that iterates and sets orders up
     
     /*
@@ -29,32 +29,23 @@ const OrderDisplay = (props) => {
             <Order key={index} data={order} />
         ) 
     */
-
-    // HEADER
-//    <div className='order'>
-
-//    <div className='general-info'>
-//        <h1>R135252679</h1>
-//        <ul>
-//            <li>Name: George Jefferson</li>
-//            <li>Address: 910 Riverside Dr Apt 6E NY NY 10032</li>
-//            <li>Date Ordered: 2/9/20</li>
-//        </ul>
-//    </div>
-//    {testBackorders.length ? backorders : ''}
-//    <div className='shipments'>
-//        {testShipments.length ? testShipments.map((s,i) => <Shipment key={i} data={s} />) : ''}
-//    </div>
-   
-//  </div>
-    return (
-        <div>
-            <section id="shipments">
+    const getName = /^[^\d]+/;
+    const poNumber = shipments ? shipments[0][0]["Po Number"][0] : "Loading...";
+    
+    return (  
+        <div className='order'>
+            <div className='general-info'>
+                <h1>{poNumber}</h1>
+                <ul>
+                    <li>Name: {invoiceInfo ? invoiceInfo[0][1] : "Loading..."}</li>
+                    <li>Address: 910 Riverside Dr Apt 6E NY NY 10032</li>
+                    <li>Date Ordered: 2/9/20</li>
+                </ul>
+            </div>
+            {shipments?.length ? <h3 id='ship-head'>Shipment{shipments?.length > 1 ? `s (${shipments?.length})` : ''}</h3> : ''}
+            <div className='shipments'>
                 {shipmentsArr}
-            </section>
-            <section id="not-shipped">
-
-            </section>
+            </div>
         </div>
     )
 }
