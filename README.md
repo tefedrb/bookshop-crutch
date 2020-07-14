@@ -21,3 +21,10 @@ npm i @hapi/joi
 npm i bcryptjs
 
 npm i jsonwebtoken
+
+
+OTHER DELETE:
+crawler-request
+
+Puppeteer Methods:
+browser.wsEndpoint() -> Browser websocket endpoint
