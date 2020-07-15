@@ -88,8 +88,21 @@ router.post('/get-all-book-info', async (req, res) => {
         const page = await connect.connectToBrowser(req.body.wsUrl)
             .then(async browser => (await browser.pages()[0]));
         const orderData = req.body.orderData;
+        for(let i = 0; i < orderData.shipments[i]; i++){
+            for(let j = 0; j < orderData.shipments[i][j]; j++){
+                const bookInfo = 
+                    await navigateToBookInfo(page, orderData.shipments[i][j].Ean[1]);
+                orderData.shipments[i][j].modalInfo = bookInfo;
+            }
+        }
+        for(let i = 0; i < orderData.unshipped[i]; i++){
+            const bookInfo = 
+                await navigateToBookInfo(page, orderData.unshipped[i].Ean[1]);
+            orderData.unshipped[i].modalInfo = bookInfo;
+        }
+        return orderData;
     } catch(err){
-
+        res.json({ message: "get-all-book-info: " + err.message })
     }
 })
 

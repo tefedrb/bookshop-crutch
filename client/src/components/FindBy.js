@@ -9,6 +9,7 @@ import Spinner from './Spinner';
 import SearchByPo from './ApiCalls/SearchByPo';
 import ScrapePoPage from './ApiCalls/ScrapePoPage';
 import GetAllInvoiceInfo from './ApiCalls/GetAllInvoiceInfo';
+import AddAllBookInfo from './ApiCalls/AddAllBookInfo';
 
 function FindBy() {
     const context = useContext(Context);
@@ -57,6 +58,8 @@ function FindBy() {
             setCurrentOrderInfo(orderData);
             const invoiceInfo = await GetAllInvoiceInfo(orderData, browserEndpoint);
             orderData.invoiceInfo = invoiceInfo;
+            setCurrentOrderInfo(orderData);
+            await AddAllBookInfo(orderData, browserEndpoint);
             setCurrentOrderInfo(orderData);
         } else alert('no');
     }
