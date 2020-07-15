@@ -32,5 +32,23 @@ const searchPo = async (orderPage, po) => {
     return orderPage;
 }
 
+const navigateToBookInfo = async (page, link) => {
+    const bookInfo = {};
+    await page.goto(link, {waitUntil: 'networkidle0'});
+
+    await page.evaluate(bookInfo => {
+        const productDetails = Array.from(document.querySelectorAll(".productDetailElements"));
+        bookInfo.author = document.querySelector(".doContributorSearch span").innerText;
+        bookInfo.pubDate = productDetails.filter( detail => {
+            return detail.innerText.includes("Pub Date") && !detail.innerText.includes("Copyright Date");
+        })[0].innerText.substring(10);
+        const getStockTable = document.querySelector(".newStockCheckTable");
+        const stockTableCells = Array.from(getStockTable.querySelectorAll("tr"));
+        bookInfo.onOrder = stockTableCells[1].innerText;
+        return bookInfo;
+    }, bookInfo);
+}
+
 exports.searchPo = searchPo;
 exports.navigateToOrderSearch = navigateToOrderSearch;
+exports.navigateToBookInfo = navigateToBookInfo;

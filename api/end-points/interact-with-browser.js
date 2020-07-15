@@ -5,7 +5,7 @@ const connect = require('../../scraper/connect-to-browser');
 const { scrapeOrder } = require('../../scraper/scrapeOrder');
 const { parseOutShipments } = require('../../scraper/mutateOrderData');
 const { getAllShipmentInvoiceInfo } = require('../../scraper/parseInvoice');
-const { searchPo } = require('../../scraper/orderPageActions');
+const { searchPo, navigateToBookInfo } = require('../../scraper/orderPageActions');
 
 router.post('/connect', async (req, res) => {
     // Here instead of using an environment var, we are trying to use
@@ -80,6 +80,16 @@ router.post('/get-all-invoice-info', async (req, res) => {
         res.json(invoiceInfoForShipments);
     } catch(err){
         res.json({ message: err.message });
+    }
+})
+
+router.post('/get-all-book-info', async (req, res) => {
+    try {
+        const page = await connect.connectToBrowser(req.body.wsUrl)
+            .then(async browser => (await browser.pages()[0]));
+        const orderData = req.body.orderData;
+    } catch(err){
+
     }
 })
 

@@ -1,4 +1,4 @@
-const GetAllInvoiceInfo = async (orderData, wsEndpoint) => {
+const GetBookInfo = async (page, ) => {
     try {
         console.log("Get AllInvoiceInfo...");
         const invoiceInfo = 
@@ -18,4 +18,4 @@ const GetAllInvoiceInfo = async (orderData, wsEndpoint) => {
     }
 }
 
-export default GetAllInvoiceInfo;
+export default GetBookInfo;

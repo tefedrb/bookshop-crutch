@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 function Modal(props) {
 
-    const { ean, format, qty} = props.modalInfo;
+    const { ean, format, qty} = props.data;
 
     const el = document.createElement('div')
     const modal = document.getElementById('modal-root')
@@ -20,7 +20,7 @@ function Modal(props) {
                 <ul>
                     <li>Author: </li>
                     <li>Versions: {format}</li>
-                    <li>ISBN-13: {ean}</li>
+                    <li>ISBN-13: {ean[0]}</li>
                     <li>On Order: </li>
                     <li>On Hand: </li>
                     <li>Qty on order: {qty}</li>
