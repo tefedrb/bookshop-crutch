@@ -35,8 +35,8 @@ const searchPo = async (orderPage, po) => {
 const navigateToBookInfo = async (page, link) => {
     const bookInfo = {};
     await page.goto(link, {waitUntil: 'networkidle0'});
-
-    await page.evaluate(bookInfo => {
+    console.log("WITHIN NAVIGATE TO BOOK INFO");
+    const data = await page.evaluate(bookInfo => {
         const productDetails = Array.from(document.querySelectorAll(".productDetailElements"));
         bookInfo.author = document.querySelector(".doContributorSearch span").innerText;
         bookInfo.pubDate = productDetails.filter( detail => {
@@ -47,6 +47,8 @@ const navigateToBookInfo = async (page, link) => {
         bookInfo.onOrder = stockTableCells[1].innerText;
         return bookInfo;
     }, bookInfo);
+    console.log(data, "Data IN BOOKINFO");
+    return data;
 }
 
 exports.searchPo = searchPo;

@@ -1,7 +1,7 @@
 const AddAllBookInfo = async (orderData, wsEndpoint) => {
     try {
         // Mutates orderData
-        console.log("Get AllInvoiceInfo...");
+        console.log("Get AddAllBookInfo...");
         const newOrderData = 
             await fetch('http://localhost:9000/browser/get-all-book-info', {
                 method: 'post',
@@ -15,7 +15,7 @@ const AddAllBookInfo = async (orderData, wsEndpoint) => {
             })
         return newOrderData.json();
     } catch (err){
-        console.log("Error in GetAllInvoiceInfo: ", err.message);
+        console.log("Error in AddAllBookInfo: ", err.message);
     }
 }
 

@@ -29,6 +29,7 @@ const OrderDisplay = (props) => {
             <Order key={index} data={order} />
         ) 
     */
+    console.log(invoiceInfo, "INVOICE INFO")
     const nameAndAddyStr = invoiceInfo ? invoiceInfo[0][1] : null;
     const nameRegEx = /^[^\d]+/;
     

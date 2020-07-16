@@ -86,21 +86,25 @@ router.post('/get-all-invoice-info', async (req, res) => {
 router.post('/get-all-book-info', async (req, res) => {
     try {
         const page = await connect.connectToBrowser(req.body.wsUrl)
-            .then(async browser => (await browser.pages()[0]));
+            .then(async browser => (await browser.pages())[1]);
+        console.log("In getAllBooks");
         const orderData = req.body.orderData;
-        for(let i = 0; i < orderData.shipments[i]; i++){
-            for(let j = 0; j < orderData.shipments[i][j]; j++){
+        console.log(orderData.shipments[0][0].Ean[1], "ORDER DATA IN ALLBOOKS")
+        for(let i = 0; i < orderData.shipments.length; i++){
+            for(let j = 0; j < orderData.shipments[i].length; j++){
+                console.log("made it into loop...")
+                console.log(orderData.shipments[i][j].Ean[1], "this link....")
                 const bookInfo = 
                     await navigateToBookInfo(page, orderData.shipments[i][j].Ean[1]);
                 orderData.shipments[i][j].modalInfo = bookInfo;
             }
         }
-        for(let i = 0; i < orderData.unshipped[i]; i++){
+        for(let i = 0; i < orderData.unshipped.length; i++){
             const bookInfo = 
                 await navigateToBookInfo(page, orderData.unshipped[i].Ean[1]);
             orderData.unshipped[i].modalInfo = bookInfo;
         }
-        return orderData;
+        res.json(orderData);
     } catch(err){
         res.json({ message: "get-all-book-info: " + err.message })
     }
