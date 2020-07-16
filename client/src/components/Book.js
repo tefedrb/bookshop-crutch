@@ -15,12 +15,13 @@ const Book = (props) => {
         Qty: qty,
         Select: select,
         Status: status,
-        price
+        price,
+        modalInfo
     } = props.bookData;
 
     const handleClick = () => {
         toggleInfo();
-        setModalInfo({format, ean, productName, pubDate, price});
+        setModalInfo({format, ean, productName, pubDate, price, modalInfo});
     }
 
     return (
