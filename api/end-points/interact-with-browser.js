@@ -5,7 +5,7 @@ const connect = require('../../scraper/connect-to-browser');
 const { scrapeOrder } = require('../../scraper/scrapeOrder');
 const { parseOutShipments } = require('../../scraper/mutateOrderData');
 const { getAllShipmentInvoiceInfo } = require('../../scraper/parseInvoice');
-const { searchPo } = require('../../scraper/orderPageActions');
+const { searchPo, navigateToAndScrapeBookInfo } = require('../../scraper/orderPageActions');
 
 router.post('/connect', async (req, res) => {
     // Here instead of using an environment var, we are trying to use
@@ -80,6 +80,34 @@ router.post('/get-all-invoice-info', async (req, res) => {
         res.json(invoiceInfoForShipments);
     } catch(err){
         res.json({ message: err.message });
+    }
+})
+
+router.post('/get-all-book-info', async (req, res) => {
+    // HERE WE ARE ADDING A .MODALINFO TO EACH BOOK OBJECT - EACH BOOK IS GETTING THE SCRAPE - navigateToAndScrapeBookInfo
+    try {
+        const page = await connect.connectToBrowser(req.body.wsUrl)
+            .then(async browser => (await browser.pages())[1]);
+        console.log("In getAllBooks");
+        const orderData = req.body.orderData;
+        console.log(orderData.shipments[0][0].Ean[1], "ORDER DATA IN ALLBOOKS")
+        for(let i = 0; i < orderData.shipments.length; i++){
+            for(let j = 0; j < orderData.shipments[i].length; j++){
+                console.log("made it into loop...");
+                console.log(orderData.shipments[i][j].Ean[1], "this link....")
+                const bookInfo = 
+                    await navigateToAndScrapeBookInfo(page, orderData.shipments[i][j].Ean[1]);
+                orderData.shipments[i][j].modalInfo = bookInfo;
+            }
+        }
+        for(let i = 0; i < orderData.unshipped.length; i++){
+            const bookInfo = 
+                await navigateToAndScrapeBookInfo(page, orderData.unshipped[i].Ean[1]);
+            orderData.unshipped[i].modalInfo = bookInfo;
+        }
+        res.json(orderData);
+    } catch(err){
+        res.json({ message: "get-all-book-info: " + err.message });
     }
 })
 

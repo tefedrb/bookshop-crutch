@@ -9,15 +9,16 @@ import Spinner from './Spinner';
 import SearchByPo from './ApiCalls/SearchByPo';
 import ScrapePoPage from './ApiCalls/ScrapePoPage';
 import GetAllInvoiceInfo from './ApiCalls/GetAllInvoiceInfo';
+import AddAllBookInfo from './ApiCalls/AddAllBookInfo';
 
 function FindBy() {
     const context = useContext(Context);
     const { state, setCurrentOrderInfo } = context;
-    const { browserEndpoint } = state;
+    const { browserEndpoint, currentOrderInfo } = state;
 
     const [poInput, setPoInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const { currentOrderInfo } = state;
+    
 
     const findOrderByPo = async (po) => {
         const orderData = await GetOrdersByPo(po);
@@ -58,6 +59,10 @@ function FindBy() {
             const invoiceInfo = await GetAllInvoiceInfo(orderData, browserEndpoint);
             orderData.invoiceInfo = invoiceInfo;
             setCurrentOrderInfo(orderData);
+            const bookDataAdded = await AddAllBookInfo(orderData, browserEndpoint);
+            // setCurrentOrderInfo(bookDataAdded);
+            console.log(bookDataAdded, "ALL DATA MATTERS!!!");
+            setCurrentOrderInfo(bookDataAdded);
         } else alert('no');
     }
 
@@ -91,7 +96,7 @@ function FindBy() {
             </form>
             {isLoading ? <div className='loading' id='loading'>Loading</div> : ''}
             {isLoading ? <div className='loading' id='elapsed'></div> : ''}          
-            {Object.keys(currentOrderInfo).length ? <OrderDisplay order={currentOrderInfo}/> : ''}
+            {currentOrderInfo?.shipments ? <OrderDisplay order={currentOrderInfo}/> : ''}
         </div>
     )
 }

@@ -1,4 +1,4 @@
-const GetAllInvoiceInfo = async (orderData, wsEndpoint,) => {
+const GetAllInvoiceInfo = async (orderData, wsEndpoint) => {
     try {
         console.log("Get AllInvoiceInfo...");
         const invoiceInfo = 

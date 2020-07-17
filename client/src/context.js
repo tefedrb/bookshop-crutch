@@ -1,62 +1,52 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const Context = React.createContext();
 
-export class Provider extends Component {
-    state = { 
+export const usePersistedState = (key, defaultValue) => {
+    const [state, setState] = useState(
+        () => JSON.parse(localStorage.getItem(key)) || defaultValue
+    );
+    useEffect(() => {
+        localStorage.setItem(key, JSON.stringify(state));
+    }, [key, state]);
+    return [state, setState];
+}
+
+export const Provider = (props) => {
+    
+    const contextState = usePersistedState("context", { 
         string: 'wow',
         loggedIn: false,
         currentOrderInfo: {},
         browserEndpoint: null
+    })
+
+    const [state, setState] = contextState;
+
+    console.log(state, "STATE")
+
+    const saveBrowserEndpoint = (wsEndpoint) => {
+        setState({...state, browserEndpoint: wsEndpoint})
     }
 
-    saveBrowserEndpoint = (wsEndpoint) => {
-        this.setState({browserEndpoint: wsEndpoint})
-    }
-
-    setCurrentOrderInfo = data => {
+    const setCurrentOrderInfo = data => {
         if (!data) {
-            this.setState({currentOrderInfo: {}})
+            setState({...state, currentOrderInfo: {}})
         } else {
-            this.setState({currentOrderInfo: data});
+            setState({...state, currentOrderInfo: data});
         }
     }
 
-    setLoggedIn = () => {
-        this.setState({loggedIn: !this.state.loggedIn});
+    const setLoggedIn = () => {
+        setState({...state, loggedIn: !state.loggedIn});
     }
 
-    // {
-    //     currentOrderInfo: {
-    //         po: 'R314123123',
-    //         dateOrdered: '1/3/20',
-    //         address: '910 Riverside Drive Apt 6E NY NY 10032',
-    //         invoices: ['34124', '123213', '123415'],
-    //         books: [
-    //             {
-    //                 title: 'George of the Jungle',
-    //                 invoice: '34124',
-    //                 status: 'shipped',
-    //                 tracking: '93414123123941',
-    //                 published: '3/4/15',
-    //                 onOrder: '100',
-    //                 onHand: '0',
-    //                 stockArrival: '5/20',
-    //                 isbn: '01034141941'
-    //             }
-    //         ]
-    //     }
-    // }
-
-    render() {
-        const { state, setCurrentOrderInfo, setLoggedIn, saveBrowserEndpoint} = this;
-
-        return (
-            <Context.Provider value={{state, setCurrentOrderInfo, setLoggedIn, saveBrowserEndpoint}}>
-                {this.props.children}
-            </Context.Provider>
-        )
-    }
+    return (
+        <Context.Provider value={{state, setCurrentOrderInfo, setLoggedIn, saveBrowserEndpoint, }}>
+            {props.children}
+        </Context.Provider>
+    )
+    
 }
 
 export const Consumer = Context.Consumer;

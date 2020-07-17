@@ -1,11 +1,38 @@
 import React, { useState, useEffect } from 'react';
 
 import Modal from './Modal';
+import Book from './Book';
+
 
 function Shipment(props) {
-    let [copyTracking, setCopyTracking] = useState(false)
-    let [trackingColor, setTrackingColor] = useState(null)
-    let [moreInfo, setMoreInfo] = useState(false)
+    const [copyTracking, setCopyTracking] = useState(false)
+    const [trackingColor, setTrackingColor] = useState(null)
+    const [moreInfo, setMoreInfo] = useState(false)
+    const [modalInfo, setModalInfo] = useState(null);
+    // [{},{}]
+    // EACH ORDER DESTRUCTURED BELOW
+    // const { 
+    //     DC, 'Date Ordered': dateOrdered, 
+    //     Ean: ean, 
+    //     Format: format, 
+    //     'Invoice Number': invoiceNumber,
+    //     'OE Number': oeNumber,
+    //     'Po Number': poNumber,
+    //     'Product Name': productName,
+    //     'Pub Date': pubDate,
+    //     Qty: qty,
+    //     Select: select,
+    //     Status: status,
+    //     price
+    // } = props.data
+    // Iterate over books -> 
+    const toggleInfo = () => setMoreInfo(!moreInfo)
+
+    const books = props.data?.map((book, idx) => 
+        <Book key={idx} toggleInfo={toggleInfo} setModalInfo={setModalInfo} bookData={book}></Book>
+    );
+
+    // const [ tracking ] = props.invoiceInfo;
 
     const clipboard = () => {
         let id = `shipment-${props.num}`
@@ -20,13 +47,11 @@ function Shipment(props) {
         setTrackingColor(setTimeout(() => setCopyTracking(false), 5000))
     }
 
-    const toggleInfo = () => setMoreInfo(!moreInfo)
-
     useEffect(() => {
         return () => clearTimeout(trackingColor)
     })
 
-    return(
+    return (
         <div className='shipment'>
             <h3>Shipment {props.num}: <a href='#'>Invoice</a></h3>
             <h4>Tracking: 
@@ -35,22 +60,20 @@ function Shipment(props) {
                     style={copyTracking ? {color: 'lime', fontWeight: 'bolder'} : {}} 
                     id={`shipment-${props.num}`} 
                     onClick={clipboard}>
-                        3495828281891283
+                        {props.invoiceInfo ? props.invoiceInfo[0] : "Loading..."}
                 </span>
             </h4>
             <ul>
                 <li>
-                    <span>Books (3)</span>
-                    <span className='more-info' onClick={toggleInfo}>White Flight</span>
-                    <span className='more-info' onClick={toggleInfo}>Invisible Man</span>
-                    <span className='more-info' onClick={toggleInfo}>King Kong</span>    
+                    <span>Books </span>
+                    {books}    
                 </li>
                 <li>
                     <span>Status</span>
                     <span>Estimated Delivery 12/20 Accepted at facility</span>
                 </li>
             </ul>
-            {moreInfo ? <Modal data={props.num} toggleInfo={toggleInfo} /> : ''}
+            {moreInfo ? <Modal data={modalInfo} toggleInfo={toggleInfo} /> : ''}
         </div>
     )
 }
