@@ -32,7 +32,7 @@ const searchPo = async (orderPage, po) => {
     return orderPage;
 }
 
-const navigateToBookInfo = async (page, link) => {
+const navigateToAndScrapeBookInfo = async (page, link) => {
     const bookInfo = {};
     await page.goto(link, {waitUntil: 'networkidle0'});
     console.log("WITHIN NAVIGATE TO BOOK INFO");
@@ -44,7 +44,19 @@ const navigateToBookInfo = async (page, link) => {
         })[0].innerText.substring(10);
         const getStockTable = document.querySelector(".newStockCheckTable");
         const stockTableCells = Array.from(getStockTable.querySelectorAll("tr"));
-        bookInfo.onOrder = stockTableCells[1].innerText;
+        const getStockNumbers = (innerTextStr) => {
+            const firstNumber = /([^\s]+)/;
+            const onHand = parseInt(innerTextStr.match(firstNumber)[0].replace(/,/g,''));
+            const onOrder = parseInt(innerTextStr.substring(innerTextStr.match(firstNumber).length).replace(/,/g,''));
+            return [onHand, onOrder];
+        }
+        const primaryDCStr = stockTableCells[1].innerText.substring(2).trim();
+        const primaryDC = getStockNumbers(primaryDCStr);
+        const secondaryDCStr = stockTableCells[2].innerText.substring(2).trim();
+        const secondaryDC = getStockNumbers(secondaryDCStr);
+        
+        bookInfo.onHand = (primaryDC[0] + secondaryDC[0]);
+        bookInfo.onOrder = (primaryDC[1] + secondaryDC[1]);
         return bookInfo;
     }, bookInfo);
     console.log(data, "Data IN BOOKINFO");
@@ -53,4 +65,4 @@ const navigateToBookInfo = async (page, link) => {
 
 exports.searchPo = searchPo;
 exports.navigateToOrderSearch = navigateToOrderSearch;
-exports.navigateToBookInfo = navigateToBookInfo;
+exports.navigateToAndScrapeBookInfo = navigateToAndScrapeBookInfo;
