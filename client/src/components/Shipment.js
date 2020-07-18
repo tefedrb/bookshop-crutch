@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
 import Modal from './Modal';
 import Book from './Book';
-
 
 function Shipment(props) {
     const [copyTracking, setCopyTracking] = useState(false)

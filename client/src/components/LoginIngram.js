@@ -22,8 +22,6 @@ const LoginIngram = (props) => {
     }
     
     const executeLogin = async (event) => {
-        // Here we will check to see if things went accordingly.
-        console.log("update")
         event.preventDefault();
         const saveBrowser = await PostIngramLogin({ingramU: user, ingramP: password});
         const [wsEndpoint, currentUrl] = saveBrowser;
@@ -32,7 +30,6 @@ const LoginIngram = (props) => {
             setLoggedIn();
             // ConnectToBrowser(wsEndpoint);
         } else alert("Bad User/Pass");
-        
     }
 
     return (
