@@ -1,5 +1,6 @@
 import React from 'react';
 import Shipment from './Shipment';
+import Backorder from './Backorder';
 
 /*
     const orderArray = (orders) => {
@@ -21,6 +22,8 @@ const OrderDisplay = (props) => {
    const shipmentsArr = shipments?.map((shipment, index) => 
         <Shipment key={index} invoiceInfo={invoiceInfo?.[index]} data={shipment} />
    )
+
+   const notOnShipment = unshipped?.length > 0 ? <Backorder unshipped={unshipped} /> : <div>All Items Shipped</div>;
     /* 
         const shipments = <Shipment data={orderArray} />
     */
@@ -49,6 +52,9 @@ const OrderDisplay = (props) => {
                 </ul>
             </div>
             {shipmentHeader}
+            <div>
+            {notOnShipment}
+            </div>
             <div className='shipments'>
                 {shipmentsArr}
             </div>
