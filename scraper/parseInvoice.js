@@ -13,6 +13,13 @@ function writeToTxtFile(data, fileName){
     });
 }
 
+const writeFileFromString= (yourString, fileName) => {
+    fs.writeFile(`${fileName}.txt`, yourString, (err) => {
+        if(err) throw err;
+        console.log("saved");
+    })
+}
+
 function writeToTxtFromPdf(path, newFileName){
     const dataBuffer = fs.readFileSync(path);
     pdf(dataBuffer).then(data => {
@@ -28,7 +35,6 @@ const getAddress = async (poInput, buffer) => {
         // Find the PO - capture index number
         const testText = res.text;
         const capturedMatch = testText.match(poInput);
-
         // Develop regex for address
         // const
     })
@@ -38,12 +44,16 @@ const getAddress = async (poInput, buffer) => {
 const getTracking = async (poInput, buffer, getAddress) => {
     return await pdf(buffer).then(res => {
         // Find the PO - capture index number
-
         const testText = res.text;
         const capturedMatch = testText.match(poInput);
         
         // lets also develop a regex for po numbers
         const poRegex = /R\d{9}/;
+
+        // Regex for ship date (meter date)
+        const meterDateReg = /\d{2}\/\d{2}\/\d{4}/;
+        const meterDate = res.text.match(meterDateReg)[0];
+
         if(capturedMatch){
             const poIndex = capturedMatch["index"];
             // Maybe cut from FOR DELIVERY TO instead from P.O. INDEX
@@ -97,9 +107,13 @@ const getTracking = async (poInput, buffer, getAddress) => {
             const trackingFormat = {
                 ups: /\b(1Z ?[0-9A-Z]{3} ?[0-9A-Z]{3} ?[0-9A-Z]{2} ?[0-9A-Z]{4} ?[0-9A-Z]{3} ?[0-9A-Z]|[\dT]\d\d\d ?\d\d\d\d ?\d\d\d)\b/,
                 usps: /\d{22}/
-            };
+            }
             // Return usps or ups tracking
-            return [sliced.match(trackingFormat.usps)[0], address] || [sliced.match(trackingFormat.ups)[0], address];
+            let tracking = sliced.match(trackingFormat.usps)[0];
+            if(!tracking){
+                tracking = sliced.match(trackingFormat.ups)[0];
+            }
+            return [tracking, address, meterDate];
         } else {
             return false;
         }
@@ -126,8 +140,8 @@ async function readPdf(order, page) {
             reader.readAsBinaryString(data);
             reader.onload = () => resolve(reader.result);
             reader.onerror = () => reject("Err: binary string reading failed");
-        })
-    }, order)
+        });
+    }, order);
 }
 
 // RETURNS ARRAY - ORDER INDEX AND TRACKING

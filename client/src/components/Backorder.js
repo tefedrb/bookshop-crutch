@@ -49,15 +49,13 @@ function Backorder(props) {
     // }, [unshipped])
 
     const rows = unshipped?.map((book, idx) => {
-        const { 'Product Name': productName, 'Pub Date': pubDate} = book;
-        console.log(book.modalInfo, "MODAL INFO SHOWING UP?!")
+        const { 'Product Name': productName, 'Pub Date': pubDate, "Status": status} = book;
         const { onHand, onOrder } = book.modalInfo || {};
-        console.log(onHand, "ON HAND?!")
-        console.log(onHand != undefined ? "yes" : "no", "WITHIN THIS THANG");
-        console.log(typeof onHand, "WHAT IS IT?!");
+    
         return (
             <tr key={idx}>
                 <td className='more-info' onClick={toggleInfo}>{productName}</td>
+                <td>{status}</td>
                 <td>{pubDate}</td>
                 <td>{onHand != undefined ? onHand : "Loading..."}</td>
                 <td>{onOrder != undefined ? onOrder : "Loading..."}</td>
@@ -73,6 +71,7 @@ function Backorder(props) {
                 <tbody>
                     <tr>
                         <th>Title</th>
+                        <th>Status</th>
                         <th>Published</th>
                         <th>On Hand</th>
                         <th>On Order</th>
