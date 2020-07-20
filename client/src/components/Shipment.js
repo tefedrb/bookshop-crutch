@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
 import Modal from './Modal';
 import Book from './Book';
-
 
 function Shipment(props) {
     const [copyTracking, setCopyTracking] = useState(false)
@@ -59,13 +57,19 @@ function Shipment(props) {
                     className='tracking'
                     style={copyTracking ? {color: 'lime', fontWeight: 'bolder'} : {}} 
                     id={`shipment-${props.num}`} 
-                    onClick={clipboard}>
-                        {props.invoiceInfo ? props.invoiceInfo[0] : "Loading..."}
+                    onClick={clipboard}
+                >
+                    {" " + props.invoiceInfo ? props.invoiceInfo[0] : "Loading..."}
                 </span>
             </h4>
+            <h5>Ship Date:
+                <span>
+                    {" " + props.invoiceInfo ? props.invoiceInfo[2] : "Loading..."}
+                </span>
+            </h5>
             <ul>
                 <li>
-                    <span>Books </span>
+                    <span>Books</span>
                     {books}    
                 </li>
                 <li>

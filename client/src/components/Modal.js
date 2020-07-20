@@ -3,11 +3,27 @@ import ReactDOM from 'react-dom';
 
 function Modal(props) {
 
-    const { ean, format, qty, price, modalInfo, pubDate } = props.data;
+    // const { ean, format, qty, price, modalInfo, pubDate } = props.data;
 
     const el = document.createElement('div')
     const modal = document.getElementById('modal-root')
-    console.log(modalInfo, "MODAL INFO!")
+
+    const { 
+        DC, 'Date Ordered': dateOrdered, 
+        Ean: ean, 
+        Format: format, 
+        'Invoice Number': invoiceNumber,
+        'OE Number': oeNumber,
+        'Po Number': poNumber,
+        'Product Name': productName,
+        'Pub Date': pubDate,
+        Qty: qty,
+        Select: select,
+        Status: status,
+        price,
+        modalInfo
+    } = props.data;
+
     useEffect(() => {
         modal.appendChild(el)
         return () => modal.removeChild(el)

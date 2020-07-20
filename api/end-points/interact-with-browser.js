@@ -23,7 +23,12 @@ router.post('/connect', async (req, res) => {
         //         return [browser.wsEndpoint(), pageUrl]}
         //     );
         // console.log(ingramLogin, "INGRAM LOGIN")
-        res.send(browser);
+        console.log(browser);
+        if(browser){
+            res.send({message: "connected to browser"});
+        } else {
+            res.send({message: "not connected"});
+        }
         // return res.json(orderData);
     } catch(err){
         res.json({ message: err });
@@ -34,17 +39,9 @@ router.post('/connect', async (req, res) => {
 router.post('/search-by-po', async (req, res) => {
     // I need to make sure I am navigating to the order page b4 moving on
     try { 
-        // const testCB = async (browser) => {
-        //     const page = await (browser.pages())[1];
-        //     await page.goto("https://ipage.ingramcontent.com/ipage/or101.jsp?ipsInd=N");
-        // }
-         console.log(req.body.wsUrl, "URL")
-         const page = await connect.connectToBrowser(req.body.wsUrl)
+         const page = await connect.connectToBrowser(req.body.wsUrl, )
                  .then(async browser => (await browser.pages())[0]);
-        // const pages = await page.pages();
-        // const page1 = pages[0]
-        // console.log(page, "TESTING")
-
+     
          await page.goto(process.env.INGRAM_ORDER_PAGE, { waitUntil: 'networkidle0' });
         
          await searchPo(page, req.body.poNum);

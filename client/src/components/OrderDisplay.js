@@ -1,5 +1,6 @@
 import React from 'react';
 import Shipment from './Shipment';
+import Backorder from './Backorder';
 
 /*
     const orderArray = (orders) => {
@@ -17,10 +18,17 @@ const OrderDisplay = (props) => {
     /*
         { shipments: [{},{}], unshipped: [{}] }
     */
+
    console.log(shipments, "shipments")
    const shipmentsArr = shipments?.map((shipment, index) => 
-        <Shipment key={index} invoiceInfo={invoiceInfo?.[index]} data={shipment} />
+        <Shipment 
+            key={index} 
+            invoiceInfo={invoiceInfo?.[index]} 
+            data={shipment} 
+        />
    )
+
+   const notOnShipment = unshipped?.length > 0 ? <Backorder unshipped={unshipped} /> : <div>All Items Shipped</div>;
     /* 
         const shipments = <Shipment data={orderArray} />
     */
@@ -29,15 +37,16 @@ const OrderDisplay = (props) => {
             <Order key={index} data={order} />
         ) 
     */
-    console.log(invoiceInfo, "INVOICE INFO")
+    console.log(invoiceInfo, "INVOICE INFO");
     const nameAndAddyStr = invoiceInfo ? invoiceInfo[0][1] : null;
     const nameRegEx = /^[^\d]+/;
     
+    const dateOrdered = shipments ? shipments[0][0]["Date Ordered"] : unshipped ? unshipped[0]["Date Ordered"] : "Loading..."
     const name = nameAndAddyStr ? nameRegEx.exec(invoiceInfo[0][1])[0].trim() : "Loading...";
-    const address = nameAndAddyStr ? nameAndAddyStr.substring(name.length, nameAndAddyStr.length) : "Loading";
+    const address = nameAndAddyStr ? nameAndAddyStr.substring(name.length, nameAndAddyStr.length) : "Loading...";
     const poNumber = shipments ? shipments[0][0]["Po Number"][0] : "Loading...";
     const shipmentHeader = shipments?.length ? <h3 id='ship-head'>Shipment{shipments?.length > 1 ? `s (${shipments?.length})` : ''}</h3> : '';
-    
+
     return (  
         <div className='order'>
             <div className='general-info'>
@@ -45,10 +54,13 @@ const OrderDisplay = (props) => {
                 <ul>
                     <li>Name: {name}</li>
                     <li>Address: {address}</li>
-                    <li>Date Ordered: </li>
+                    <li>Date Ordered: {dateOrdered}</li>
                 </ul>
             </div>
-            {shipmentHeader}
+            <div>
+                {notOnShipment}
+            </div>
+                {shipmentHeader}
             <div className='shipments'>
                 {shipmentsArr}
             </div>

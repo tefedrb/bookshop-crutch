@@ -15,7 +15,6 @@ export const usePersistedState = (key, defaultValue) => {
 export const Provider = (props) => {
     
     const contextState = usePersistedState("context", { 
-        string: 'wow',
         loggedIn: false,
         currentOrderInfo: {},
         browserEndpoint: null
@@ -23,26 +22,38 @@ export const Provider = (props) => {
 
     const [state, setState] = contextState;
 
-    console.log(state, "STATE")
+    console.log(state, "STATE");
 
     const saveBrowserEndpoint = (wsEndpoint) => {
-        setState({...state, browserEndpoint: wsEndpoint})
+        setState(prevState => {
+                return {...prevState, browserEndpoint: wsEndpoint}
+            }
+        );
     }
 
     const setCurrentOrderInfo = data => {
         if (!data) {
-            setState({...state, currentOrderInfo: {}})
+            setState(prevState => {
+                    return {...prevState, currentOrderInfo: {}}
+                }
+            );
         } else {
-            setState({...state, currentOrderInfo: data});
+            setState(prevState => {
+                    return {...prevState, currentOrderInfo: data}
+                }
+            );
         }
     }
 
     const setLoggedIn = () => {
-        setState({...state, loggedIn: !state.loggedIn});
+        setState(prevState => {
+                return {...prevState, loggedIn: !state.loggedIn}
+            }
+        );
     }
 
     return (
-        <Context.Provider value={{state, setCurrentOrderInfo, setLoggedIn, saveBrowserEndpoint, }}>
+        <Context.Provider value={{state, setCurrentOrderInfo, setLoggedIn, saveBrowserEndpoint}}>
             {props.children}
         </Context.Provider>
     )

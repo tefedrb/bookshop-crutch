@@ -2,12 +2,19 @@ const puppeteer = require('puppeteer');
 
 const connectToBrowser = async (wsEndpoint, cb) => {
     console.log("in connect-to-browser");
-    const browser = await puppeteer.connect({ browserWSEndpoint: wsEndpoint });
-    if(cb){
-        console.log("using cb...")
-        await cb(browser);
+    try {
+        const browser = await puppeteer.connect({ browserWSEndpoint: wsEndpoint });
+        
+        console.log(browser, "BROWSER");
+        return browser;
+    } catch(err) {
+        if(cb & err.type){
+            console.log("using cb...")
+            await cb();
+        } else {
+            console.log("Error in connect-to-browser: ", err.message);
+        }
     }
-    return browser;
 }
 
 exports.connectToBrowser = connectToBrowser;
