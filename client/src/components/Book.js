@@ -9,7 +9,7 @@ const Book = (props) => {
     }
 
     return (
-        <span onClick={handleClick}>{productName}</span>
+        <span onClick={handleClick}>- {productName}</span>
     )
 }
 

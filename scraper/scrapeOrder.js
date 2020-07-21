@@ -12,7 +12,7 @@ const scrapeOrder = async (page) => {
                 if(row.children[hasBackOrders ? 3 : 2].firstChild.text && idx != 0){
                     return true;
                 }
-            })
+            });
         }
         /**  Check to see if column 3 (2) has an EAN. If not, it's not an order, its probably 
          shipping etc. **/
@@ -44,7 +44,7 @@ const scrapeOrder = async (page) => {
         orderRows.forEach(row => {
             const saveOrder = {};
             // Target each COLUMN and save to orders -
-            for(let i = 0; i < row.children.length; i++){
+            // for(let i = 0; i < row.children.length; i++){
                 const entry = row.children[i];
                 const entryHasHref = entry.firstChild.href || (entry.firstElementChild && entry.firstElementChild.href);
                 if(entryHasHref && labels[i]){
@@ -52,7 +52,7 @@ const scrapeOrder = async (page) => {
                 } else {
                     saveOrder[labels[i]] = row.children[i].innerText;
                 }
-            }
+            // }
             orders.push(saveOrder);
         }) 
         return orders;

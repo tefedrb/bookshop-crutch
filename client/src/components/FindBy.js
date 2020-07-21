@@ -13,7 +13,7 @@ import AddAllBookInfo from './ApiCalls/AddAllBookInfo';
 
 function FindBy() {
     const context = useContext(Context);
-    const { state, setCurrentOrderInfo } = context;
+    const { state, setCurrentOrderInfo, setLoggedIn } = context;
     const { browserEndpoint, currentOrderInfo } = state;
 
     const [poInput, setPoInput] = useState('');
@@ -47,12 +47,14 @@ function FindBy() {
     const handleSubmitSteps = async (e) => {
         e.preventDefault();
         if(validPo(poInput)){
+            
             setCurrentOrderInfo(false);
             setIsLoading(true);
             const loadingBar = StartLoadingBar();
             await SearchByPo(poInput, browserEndpoint);
+            
             const orderData = await ScrapePoPage(browserEndpoint);
-            console.log(orderData, "ORDER DATA?!");
+            console.log(orderData, "ORDER DATA");
             StopLoadingBar(loadingBar);
             setIsLoading(false);
             setCurrentOrderInfo(orderData);
@@ -61,7 +63,6 @@ function FindBy() {
             setCurrentOrderInfo(orderData);
             const bookDataAdded = await AddAllBookInfo(orderData, browserEndpoint);
             // setCurrentOrderInfo(bookDataAdded);
-            console.log(bookDataAdded, "ALL DATA MATTERS!!!");
             setCurrentOrderInfo(bookDataAdded);
         } else alert('no');
     }

@@ -6,6 +6,7 @@ const { scrapeOrder } = require('../../scraper/scrapeOrder');
 const { parseOutShipments } = require('../../scraper/mutateOrderData');
 const { getAllShipmentInvoiceInfo } = require('../../scraper/parseInvoice');
 const { searchPo, navigateToAndScrapeBookInfo } = require('../../scraper/orderPageActions');
+const { verifyStillLoggedIn } = require('../../scraper/check-if-logged-out');
 
 router.post('/connect', async (req, res) => {
     // Here instead of using an environment var, we are trying to use
@@ -23,7 +24,7 @@ router.post('/connect', async (req, res) => {
         //         return [browser.wsEndpoint(), pageUrl]}
         //     );
         // console.log(ingramLogin, "INGRAM LOGIN")
-        console.log(browser);
+        // console.log(browser);
         if(browser){
             res.send({message: "connected to browser"});
         } else {
@@ -44,9 +45,14 @@ router.post('/search-by-po', async (req, res) => {
      
          await page.goto(process.env.INGRAM_ORDER_PAGE, { waitUntil: 'networkidle0' });
         
-         await searchPo(page, req.body.poNum);
-
-         res.json("ok");
+        //  const verified = await verifyStillLoggedIn(page);
+        //  console.log(verified, "VERIFIED")
+        //  if(verified.loggedIn){
+            await searchPo(page, req.body.poNum);
+            res.json({ message: "ok" });
+        //  } else {
+        //     res.json({ message:"Logged Out Of Ingram" })
+        //  }
      } catch(err){
          res.json({ message: err });
      }
@@ -57,7 +63,8 @@ router.post('/scrape-po-info', async (req, res) => {
     try {
         const page = await connect.connectToBrowser(req.body.wsUrl)
             .then(async browser => (await browser.pages())[0]);
-        
+        // Create a method that checks if logged out
+
         const orderData = await scrapeOrder(page);
 
         const parsedShipments = parseOutShipments(orderData);
@@ -87,14 +94,16 @@ router.post('/get-all-book-info', async (req, res) => {
             .then(async browser => (await browser.pages())[1]);
         console.log("In getAllBooks");
         const orderData = req.body.orderData;
-        console.log(orderData.shipments[0][0].Ean[1], "ORDER DATA IN ALLBOOKS")
-        for(let i = 0; i < orderData.shipments.length; i++){
-            for(let j = 0; j < orderData.shipments[i].length; j++){
-                console.log("made it into loop...");
-                console.log(orderData.shipments[i][j].Ean[1], "this link....")
-                const bookInfo = 
-                    await navigateToAndScrapeBookInfo(page, orderData.shipments[i][j].Ean[1]);
-                orderData.shipments[i][j].modalInfo = bookInfo;
+        // console.log(orderData.shipments[0][0].Ean[1], "ORDER DATA IN ALLBOOKS")
+        if(orderData.shipments.length > 0){
+            for(let i = 0; i < orderData.shipments.length; i++){
+                for(let j = 0; j < orderData.shipments[i].length; j++){
+                    console.log("made it into loop...");
+                    console.log(orderData.shipments[i][j].Ean[1], "this link....");
+                    const bookInfo = 
+                        await navigateToAndScrapeBookInfo(page, orderData.shipments[i][j].Ean[1]);
+                    orderData.shipments[i][j].modalInfo = bookInfo;
+                }
             }
         }
         for(let i = 0; i < orderData.unshipped.length; i++){

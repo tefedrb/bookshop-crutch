@@ -24,7 +24,7 @@ function Shipment(props) {
     //     price
     // } = props.data
     // Iterate over books -> 
-    const toggleInfo = () => setMoreInfo(!moreInfo)
+    const toggleInfo = () => setMoreInfo(!moreInfo);
 
     const books = props.data?.map((book, idx) => 
         <Book key={idx} toggleInfo={toggleInfo} setModalInfo={setModalInfo} bookData={book}></Book>
@@ -33,16 +33,16 @@ function Shipment(props) {
     // const [ tracking ] = props.invoiceInfo;
 
     const clipboard = () => {
-        let id = `shipment-${props.num}`
-        let spanEl = document.getElementById(id)
-        let inputEl = document.getElementById('input')
-        let inputElOrigVal = inputEl.value
-        inputEl.value = spanEl.innerText
-        inputEl.select()
-        document.execCommand('Copy')
-        inputEl.value = inputElOrigVal
-        setCopyTracking(true)
-        setTrackingColor(setTimeout(() => setCopyTracking(false), 5000))
+        let id = `shipment-${props.num}`;
+        let spanEl = document.getElementById(id);
+        let inputEl = document.getElementById('input');
+        let inputElOrigVal = inputEl.value;
+        inputEl.value = spanEl.innerText;
+        inputEl.select();
+        document.execCommand('Copy');
+        inputEl.value = inputElOrigVal;
+        setCopyTracking(true);
+        setTrackingColor(setTimeout(() => setCopyTracking(false), 5000));
     }
 
     useEffect(() => {
@@ -59,17 +59,17 @@ function Shipment(props) {
                     id={`shipment-${props.num}`} 
                     onClick={clipboard}
                 >
-                    {" " + props.invoiceInfo ? props.invoiceInfo[0] : "Loading..."}
+                    {` ${props.invoiceInfo ? props.invoiceInfo[0] : "Loading..."}`}
                 </span>
             </h4>
             <h5>Ship Date:
                 <span>
-                    {" " + props.invoiceInfo ? props.invoiceInfo[2] : "Loading..."}
+                    {` ${props.invoiceInfo ? props.invoiceInfo[2] : "Loading..."}`}
                 </span>
             </h5>
             <ul>
                 <li>
-                    <span>Books</span>
+                    <span>Books ({props.data?.length})</span>
                     {books}    
                 </li>
                 <li>
