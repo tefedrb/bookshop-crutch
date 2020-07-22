@@ -30,6 +30,18 @@ function Shipment(props) {
         <Book key={idx} toggleInfo={toggleInfo} setModalInfo={setModalInfo} bookData={book}></Book>
     );
 
+    const formatDeliveryInfo = () => {
+        if(props.invoiceInfo?.[4].deliveryStatus){
+            const deliveryStatusInfo = props.invoiceInfo[4].deliveryStatusInfo;
+            return deliveryStatusInfo.map((line, idx) => {
+                let styled;
+                idx === 0 ? styled = {fontWeight: "bold"} : styled = {color: "teal"};
+                return <span style={styled} key={idx}>{line}</span> 
+            });
+        } else {
+            return false;
+        }
+    }
     // const [ tracking ] = props.invoiceInfo;
 
     const clipboard = () => {
@@ -74,7 +86,7 @@ function Shipment(props) {
                 </li>
                 <li>
                     <span>Status</span>
-                    <span>Estimated Delivery 12/20 Accepted at facility</span>
+                    {formatDeliveryInfo() || "Loading..."}
                 </li>
             </ul>
             {moreInfo ? <Modal data={modalInfo} toggleInfo={toggleInfo} /> : ''}
