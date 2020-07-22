@@ -10,6 +10,7 @@ import SearchByPo from './ApiCalls/SearchByPo';
 import ScrapePoPage from './ApiCalls/ScrapePoPage';
 import GetAllInvoiceInfo from './ApiCalls/GetAllInvoiceInfo';
 import AddAllBookInfo from './ApiCalls/AddAllBookInfo';
+import ScrapeUSPSTracking from './ApiCalls/ScrapeUSPSTracking';
 
 function FindBy() {
     const context = useContext(Context);
@@ -59,6 +60,13 @@ function FindBy() {
             setIsLoading(false);
             setCurrentOrderInfo(orderData);
             const invoiceInfo = await GetAllInvoiceInfo(orderData, browserEndpoint);
+            console.log(invoiceInfo, "INVOICE INFO");
+            // NEED TO ITERATE OVER INVOICE INFO GRABBING EACH TRACKING NUMBER
+            for(let i = 0; i < invoiceInfo.length; i++){
+                const trackingData = await ScrapeUSPSTracking(invoiceInfo[i][0], browserEndpoint);
+                console.log(trackingData, "TRACKING DATA IN FINDBY");
+                invoiceInfo[i].push(trackingData);
+            }
             orderData.invoiceInfo = invoiceInfo;
             setCurrentOrderInfo(orderData);
             const bookDataAdded = await AddAllBookInfo(orderData, browserEndpoint);

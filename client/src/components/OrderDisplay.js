@@ -37,13 +37,13 @@ const OrderDisplay = (props) => {
             <Order key={index} data={order} />
         ) 
     */
-    const nameAndAddyStr = invoiceInfo?[0][1] : null;
+    const nameAndAddyStr = invoiceInfo?.[0]?.[1] || null;
     const nameRegEx = /^[^\d]+/;
     
     const dateOrdered = shipments?.length > 0 ? shipments[0][0]["Date Ordered"] : unshipped ? unshipped[0]["Date Ordered"] : "Loading...";
-    const name = nameAndAddyStr ? nameRegEx.exec(invoiceInfo[0][1])[0].trim() : "Loading...";
-    const address = nameAndAddyStr?.substring(name.length, nameAndAddyStr.length) || "Loading...";
-    const poNumber = shipments?.length > 0 ? shipments[0][0]["Po Number"][0] : "Loading...";
+    const name = nameAndAddyStr ? nameRegEx.exec(invoiceInfo[0][1])[0].trim() : "Invoice Info Pending";
+    const address = nameAndAddyStr?.substring(name.length, nameAndAddyStr.length) || "Invoice Info Pending";
+    const poNumber = shipments?.length > 0 ? shipments[0][0]["Po Number"][0] : unshipped[0]["Po Number"][0];
     const shipmentHeader = shipments?.length ? <h3 id='ship-head'>Shipment{shipments?.length > 1 ? `s (${shipments?.length})` : ''}</h3> : '';
 
     return (  

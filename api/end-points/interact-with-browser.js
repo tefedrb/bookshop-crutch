@@ -5,8 +5,9 @@ const connect = require('../../scraper/connect-to-browser');
 const { scrapeOrder } = require('../../scraper/scrapeOrder');
 const { parseOutShipments } = require('../../scraper/mutateOrderData');
 const { getAllShipmentInvoiceInfo } = require('../../scraper/parseInvoice');
-const { searchPo, navigateToAndScrapeBookInfo } = require('../../scraper/orderPageActions');
+const { searchPo, navigateToAndScrapeBookInfo,  } = require('../../scraper/orderPageActions');
 const { verifyStillLoggedIn } = require('../../scraper/check-if-logged-out');
+const { scrapeUSPSTracking } = require('../../scraper/postal-service-scrape');
 
 router.post('/connect', async (req, res) => {
     // Here instead of using an environment var, we are trying to use
@@ -114,6 +115,23 @@ router.post('/get-all-book-info', async (req, res) => {
         res.json(orderData);
     } catch(err){
         res.json({ message: "get-all-book-info: " + err.message });
+    }
+})
+
+router.post('/get-data-from-usps-tracking', async (req, res) => {
+    // Create a new page, go to page and scrape. close page.
+    try {
+        const browser = await connect.connectToBrowser(req.body.wsUrl);
+        const newPage = await browser.newPage();
+        const uspsUrl = "https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=";
+        const trackingNumber = req.body.uspsTracking;
+        await newPage.goto(uspsUrl + trackingNumber, { waitUntil: 'networkidle0' });
+        const uspsTrackingData = await scrapeUSPSTracking(newPage);
+        console.log(uspsTrackingData, "TRACKING DATA");
+        await newPage.close();
+        res.json(uspsTrackingData);
+    } catch(err){
+        res.json({ message: 'ERROR in get-data-from-usps-tracking: ' + err.message })
     }
 })
 
