@@ -12,7 +12,7 @@ const scrapeOrder = async (page) => {
                 if(row.children[hasBackOrders ? 3 : 2].firstChild.text && idx != 0){
                     return true;
                 }
-            })
+            });
         }
         /**  Check to see if column 3 (2) has an EAN. If not, it's not an order, its probably 
          shipping etc. **/

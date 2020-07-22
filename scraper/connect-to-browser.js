@@ -5,7 +5,7 @@ const connectToBrowser = async (wsEndpoint, cb) => {
     try {
         const browser = await puppeteer.connect({ browserWSEndpoint: wsEndpoint });
         
-        console.log(browser, "BROWSER");
+        // console.log(browser, "BROWSER");
         return browser;
     } catch(err) {
         if(cb & err.type){

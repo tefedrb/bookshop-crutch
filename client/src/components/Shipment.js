@@ -24,25 +24,37 @@ function Shipment(props) {
     //     price
     // } = props.data
     // Iterate over books -> 
-    const toggleInfo = () => setMoreInfo(!moreInfo)
+    const toggleInfo = () => setMoreInfo(!moreInfo);
 
     const books = props.data?.map((book, idx) => 
         <Book key={idx} toggleInfo={toggleInfo} setModalInfo={setModalInfo} bookData={book}></Book>
     );
 
+    const formatDeliveryInfo = () => {
+        if(props.invoiceInfo?.[4].deliveryStatus){
+            const deliveryStatusInfo = props.invoiceInfo[4].deliveryStatusInfo;
+            return deliveryStatusInfo.map((line, idx) => {
+                let styled;
+                idx === 0 ? styled = {fontWeight: "bold"} : styled = {color: "teal"};
+                return <span style={styled} key={idx}>{line}</span> 
+            });
+        } else {
+            return false;
+        }
+    }
     // const [ tracking ] = props.invoiceInfo;
 
     const clipboard = () => {
-        let id = `shipment-${props.num}`
-        let spanEl = document.getElementById(id)
-        let inputEl = document.getElementById('input')
-        let inputElOrigVal = inputEl.value
-        inputEl.value = spanEl.innerText
-        inputEl.select()
-        document.execCommand('Copy')
-        inputEl.value = inputElOrigVal
-        setCopyTracking(true)
-        setTrackingColor(setTimeout(() => setCopyTracking(false), 5000))
+        let id = `shipment-${props.num}`;
+        let spanEl = document.getElementById(id);
+        let inputEl = document.getElementById('input');
+        let inputElOrigVal = inputEl.value;
+        inputEl.value = spanEl.innerText;
+        inputEl.select();
+        document.execCommand('Copy');
+        inputEl.value = inputElOrigVal;
+        setCopyTracking(true);
+        setTrackingColor(setTimeout(() => setCopyTracking(false), 5000));
     }
 
     useEffect(() => {
@@ -59,22 +71,22 @@ function Shipment(props) {
                     id={`shipment-${props.num}`} 
                     onClick={clipboard}
                 >
-                    {" " + props.invoiceInfo ? props.invoiceInfo[0] : "Loading..."}
+                    {` ${props.invoiceInfo ? props.invoiceInfo[0] : "Loading..."}`}
                 </span>
             </h4>
             <h5>Ship Date:
                 <span>
-                    {" " + props.invoiceInfo ? props.invoiceInfo[2] : "Loading..."}
+                    {` ${props.invoiceInfo ? props.invoiceInfo[2] : "Loading..."}`}
                 </span>
             </h5>
             <ul>
                 <li>
-                    <span>Books</span>
+                    <span>Books ({props.data?.length})</span>
                     {books}    
                 </li>
                 <li>
                     <span>Status</span>
-                    <span>Estimated Delivery 12/20 Accepted at facility</span>
+                    {formatDeliveryInfo() || "Loading..."}
                 </li>
             </ul>
             {moreInfo ? <Modal data={modalInfo} toggleInfo={toggleInfo} /> : ''}

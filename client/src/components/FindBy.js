@@ -10,10 +10,11 @@ import SearchByPo from './ApiCalls/SearchByPo';
 import ScrapePoPage from './ApiCalls/ScrapePoPage';
 import GetAllInvoiceInfo from './ApiCalls/GetAllInvoiceInfo';
 import AddAllBookInfo from './ApiCalls/AddAllBookInfo';
+import ScrapeUSPSTracking from './ApiCalls/ScrapeUSPSTracking';
 
 function FindBy() {
     const context = useContext(Context);
-    const { state, setCurrentOrderInfo } = context;
+    const { state, setCurrentOrderInfo, setLoggedIn } = context;
     const { browserEndpoint, currentOrderInfo } = state;
 
     const [poInput, setPoInput] = useState('');
@@ -47,21 +48,29 @@ function FindBy() {
     const handleSubmitSteps = async (e) => {
         e.preventDefault();
         if(validPo(poInput)){
+            
             setCurrentOrderInfo(false);
             setIsLoading(true);
             const loadingBar = StartLoadingBar();
             await SearchByPo(poInput, browserEndpoint);
+            
             const orderData = await ScrapePoPage(browserEndpoint);
-            console.log(orderData, "ORDER DATA?!");
+            console.log(orderData, "ORDER DATA");
             StopLoadingBar(loadingBar);
             setIsLoading(false);
             setCurrentOrderInfo(orderData);
             const invoiceInfo = await GetAllInvoiceInfo(orderData, browserEndpoint);
+            console.log(invoiceInfo, "INVOICE INFO");
+            // NEED TO ITERATE OVER INVOICE INFO GRABBING EACH TRACKING NUMBER
+            for(let i = 0; i < invoiceInfo.length; i++){
+                const trackingData = await ScrapeUSPSTracking(invoiceInfo[i][0], browserEndpoint);
+                console.log(trackingData, "TRACKING DATA IN FINDBY");
+                invoiceInfo[i].push(trackingData);
+            }
             orderData.invoiceInfo = invoiceInfo;
             setCurrentOrderInfo(orderData);
             const bookDataAdded = await AddAllBookInfo(orderData, browserEndpoint);
             // setCurrentOrderInfo(bookDataAdded);
-            console.log(bookDataAdded, "ALL DATA MATTERS!!!");
             setCurrentOrderInfo(bookDataAdded);
         } else alert('no');
     }

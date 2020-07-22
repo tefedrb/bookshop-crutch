@@ -49,6 +49,10 @@ h2 {
     color: rgb(157, 157, 202);
 }
 
+.order {
+    padding: 2em;
+}
+
 #invalid {
     background: maroon;
     opacity: .8;
@@ -88,6 +92,16 @@ table {
 .shipment ul li {
     display: flex;
     flex-direction: column;
+    margin: 0 5px;
+}
+
+.shipment ul span {
+    margin: 4px 0;
+}
+
+.shipment ul span:hover {
+    cursor: pointer;
+    color: grey;
 }
 
 .shipment ul li span:nth-child(1) {
@@ -97,7 +111,8 @@ table {
 
 .shipments {
     display: grid;
-    grid-template: 1fr / 1fr 1fr;
+    justify-items: center;
+    grid-template: 1fr / repeat(3, 1fr);
     margin-top: 20px;
 }
 
@@ -152,12 +167,6 @@ td {
 
 th {
     border: 1px solid black;
-}
-
-.shipments {
-    display: grid;
-    grid-template: 1fr / 1fr 1fr 1fr 1fr;
-    margin-top: 20px;
 }
 .backorders {
     display: flex;

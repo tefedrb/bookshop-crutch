@@ -55,6 +55,8 @@ const navigateToAndScrapeBookInfo = async (page, link) => {
         const secondaryDCStr = stockTableCells[2].innerText.substring(2).trim();
         const secondaryDC = getStockNumbers(secondaryDCStr);
         
+        // Check if item has an arrival date - 
+        
         bookInfo.onHand = (primaryDC[0] + secondaryDC[0]);
         bookInfo.onOrder = (primaryDC[1] + secondaryDC[1]);
         return bookInfo;
