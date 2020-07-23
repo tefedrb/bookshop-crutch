@@ -2,14 +2,6 @@ import React from 'react';
 import Shipment from './Shipment';
 import Backorder from './Backorder';
 
-/*
-    const orderArray = (orders) => {
-        return orders.map((order, index) => (
-            <Order key={index} data={order} />
-        )
-    }
-*/
-
 // shipments: [[{},{}], [{},{}]]
 const OrderDisplay = (props) => {
     const { shipments, unshipped, invoiceInfo } = props.order;
@@ -19,28 +11,21 @@ const OrderDisplay = (props) => {
         { shipments: [{},{}], unshipped: [{}] }
     */
 
-   const shipmentsArr = shipments?.map((shipment, index) => 
+    const shipmentsArr = shipments?.map((shipment, index) => 
         <Shipment 
             key={index} 
             invoiceInfo={invoiceInfo?.[index]} 
             data={shipment}
             num={index}
         />
-   )
+    )
 
-   const notOnShipment = unshipped?.length > 0 ? <Backorder unshipped={unshipped} /> : <div style={{color: "red"}}>All Items Shipped</div>;
-    /* 
-        const shipments = <Shipment data={orderArray} />
-    */
-    /* 
-        const unshipped = unshipped.map((order, index) => 
-            <Order key={index} data={order} />
-        ) 
-    */
+    const notOnShipment = unshipped?.length > 0 ? <Backorder unshipped={unshipped} /> : <div style={{color: "red"}}>All Items Shipped</div>;
+    
     const nameAndAddyStr = invoiceInfo?.[0]?.[1] || null;
     const nameRegEx = /^[^\d]+/;
     
-    const dateOrdered = shipments?.length > 0 ? shipments[0][0]["Date Ordered"] : unshipped ? unshipped[0]["Date Ordered"] : "Loading...";
+    const orderDate = shipments?.length > 0 ? shipments[0][0]["Date Ordered"] : unshipped ? unshipped[0]["Date Ordered"] : "Loading...";
     const name = nameAndAddyStr ? nameRegEx.exec(invoiceInfo[0][1])[0].trim() : "Invoice Info Pending";
     const address = nameAndAddyStr?.substring(name.length, nameAndAddyStr.length) || "Invoice Info Pending";
     const poNumber = shipments?.length > 0 ? shipments[0][0]["Po Number"][0] : unshipped[0]["Po Number"][0];
@@ -53,7 +38,7 @@ const OrderDisplay = (props) => {
                 <ul>
                     <li>Name: {name}</li>
                     <li>Address: {address}</li>
-                    <li>Date Ordered: {dateOrdered}</li>
+                    <li>Date Ordered: {orderDate}</li>
                 </ul>
             </div>
             <div>

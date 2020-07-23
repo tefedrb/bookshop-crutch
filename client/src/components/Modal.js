@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
-function Modal(props) {
+const Modal = (props) => {
 
     // const { ean, format, qty, price, modalInfo, pubDate } = props.data;
 
@@ -24,9 +24,20 @@ function Modal(props) {
         modalInfo
     } = props.data;
 
+    const copyToClipboard = (event) => {
+        const isbnText = event.target.parentNode.children[0].innerText.substring(9);
+        navigator.clipboard.writeText(isbnText);
+    }
+
+    const testKeyPress = (event) => event.key === "Escape" ? props.toggleInfo() : null;
+
     useEffect(() => {
-        modal.appendChild(el)
-        return () => modal.removeChild(el)
+        modal.appendChild(el);
+        window.addEventListener('keydown', testKeyPress);
+        return () => {
+            modal.removeChild(el)
+            window.removeEventListener('keydown', testKeyPress);
+        };
     }, [])
 
     const formatNum = (num) => {
@@ -40,13 +51,14 @@ function Modal(props) {
 
     return ReactDOM.createPortal(
         <div id='modal-body'>
+            <div className='clickable-background' onClick={props.toggleInfo}></div>
             <div id='modal-div'>
                 Modal Body for Shipment
                 <ul>
                     <li>Author: {author}</li>
                     <li>Pub date: {pubDate}</li>
                     <li>Versions: {format}</li>
-                    <li>ISBN-13: {adjustedEan}</li>
+                    <li className={"clipBoard"}><span>ISBN-13: {adjustedEan}</span><img onClick={copyToClipboard}src="https://img.icons8.com/windows/32/000000/clipboard--v1.png"/></li>
                     <li>Price: {price}</li>
                     <li>On Order: {onOrder}</li>
                     <li>On Hand: {onHand}</li>
@@ -55,7 +67,7 @@ function Modal(props) {
                 <div id='exit' onClick={props.toggleInfo}>X</div>
             </div>
         </div>
-    , el)
+    , el);
 }
 
 export default Modal;

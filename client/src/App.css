@@ -194,6 +194,9 @@ th {
 #ship-head {
     text-align: center;
 }
+#unshipped-header {
+    text-align: center;
+}
 #modal-body {
     height: 100vh;
     width: 100vw;
@@ -205,13 +208,33 @@ th {
 }
 #modal-div {
     position: relative;
-    height: 50vh;
-    width: 50vw;
     border: 3px solid black;
     border-radius: 15px;
     align-self: center;
     background-color: white;
-    padding: 10px;
+    padding: 4em;
+}
+.clickable-background {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    background-color:rgba(163, 163, 223, 0.125);
+}
+.clipBoard {
+    display: flex;
+    align-items: center;
+}
+.clipBoard img {
+    padding-left: 1em;
+    height: 1.5em;
+}
+.clipBoard img:hover {
+    cursor: pointer;
+    opacity: .8;
+}
+.clipBoard img:active {
+    opacity: .2;
+    color: red;
 }
 #exit {
     position: absolute;
@@ -259,8 +282,6 @@ th {
     }
 }
 
-
-
 #spinner {
     border: 5px solid rgb(235, 235, 235);
     border-radius: 50%;
@@ -303,4 +324,47 @@ th {
     align-items: center;
     justify-content: center;
     height: 100%;
+}
+
+.trackingNum {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1em 0;
+}
+
+.trackingNum img {
+    height: 18px;
+}
+
+.trackingNum img:hover {
+    cursor: pointer;
+    opacity: .8;
+}
+
+.trackingNum img:active {
+    opacity: .2;
+}
+
+.trackingNum h4 {
+    margin: 0;
+}
+
+#tracking-modal-div{
+    max-height: 50vh;
+    overflow: auto;
+    position: relative;
+    border: 3px solid black;
+    border-radius: 15px;
+    align-self: center;
+    background-color: white;
+    padding: 4em;
+}
+
+.tracking-entry {
+    display: flex;
+    flex-direction: column;
+    padding: 1em 0;
+    align-items: center;
+    border: solid rgba(163, 163, 223, 0.5) 1px;
 }

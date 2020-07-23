@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
+import TrackingModal from './TrackingModal';
 import Book from './Book';
 
 function Shipment(props) {
     const [copyTracking, setCopyTracking] = useState(false)
     const [trackingColor, setTrackingColor] = useState(null)
-    const [moreInfo, setMoreInfo] = useState(false)
-    const [modalInfo, setModalInfo] = useState(null);
+    const [moreBookInfo, setMoreBookInfo] = useState(false)
+    const [modalBookInfo, setModalBookInfo] = useState(null);
+
+    const [modalTracking, setModalTracking] = useState(null);
+    const [moreTrackingInfo, setMoreTrackingInfo] = useState(false);
     // [{},{}]
     // EACH ORDER DESTRUCTURED BELOW
     // const { 
@@ -24,10 +28,11 @@ function Shipment(props) {
     //     price
     // } = props.data
     // Iterate over books -> 
-    const toggleInfo = () => setMoreInfo(!moreInfo);
+    const toggleInfo = () => setMoreBookInfo(!moreBookInfo);
+    const toggleTrackingInfo = () => setMoreTrackingInfo(!moreTrackingInfo);
 
     const books = props.data?.map((book, idx) => 
-        <Book key={idx} toggleInfo={toggleInfo} setModalInfo={setModalInfo} bookData={book}></Book>
+        <Book key={idx} toggleInfo={toggleInfo} setModalInfo={setModalBookInfo} bookData={book}></Book>
     );
 
     const formatDeliveryInfo = () => {
@@ -44,36 +49,40 @@ function Shipment(props) {
     }
     // const [ tracking ] = props.invoiceInfo;
 
-    const clipboard = () => {
-        let id = `shipment-${props.num}`;
-        let spanEl = document.getElementById(id);
-        let inputEl = document.getElementById('input');
-        let inputElOrigVal = inputEl.value;
-        inputEl.value = spanEl.innerText;
-        inputEl.select();
-        document.execCommand('Copy');
-        inputEl.value = inputElOrigVal;
-        setCopyTracking(true);
-        setTrackingColor(setTimeout(() => setCopyTracking(false), 5000));
-    }
+    // const clipboard = () => {
+    //     let id = `shipment-${props.num}`;
+    //     let spanEl = document.getElementById(id);
+    //     let inputEl = document.getElementById('input');
+    //     let inputElOrigVal = inputEl.value;
+    //     inputEl.value = spanEl.innerText;
+    //     inputEl.select();
+    //     document.execCommand('Copy');
+    //     inputEl.value = inputElOrigVal;
+    //     setCopyTracking(true);
+    //     setTrackingColor(setTimeout(() => setCopyTracking(false), 5000));
+    // }
 
     useEffect(() => {
         return () => clearTimeout(trackingColor)
     })
 
+    const copyToClipboard = (event) => {
+        const tracking = event.target.parentNode.children[1].innerText;
+        navigator.clipboard.writeText(tracking);
+    }
+    
+    const trackingNum = props?.invoiceInfo?.[0] ? (
+        <div className="trackingNum">
+            <h4>Tracking:</h4>
+            <span>{props.invoiceInfo[0]}</span>
+            <img onClick={copyToClipboard} src="https://img.icons8.com/windows/32/000000/clipboard--v1.png"/>
+        </div>
+    ) : "Loading... "
+
     return (
         <div className='shipment'>
             <h3>Shipment {props.num}: <a href='#'>Invoice</a></h3>
-            <h4>Tracking: 
-                <span 
-                    className='tracking'
-                    style={copyTracking ? {color: 'lime', fontWeight: 'bolder'} : {}} 
-                    id={`shipment-${props.num}`} 
-                    onClick={clipboard}
-                >
-                    {` ${props.invoiceInfo ? props.invoiceInfo[0] : "Loading..."}`}
-                </span>
-            </h4>
+                {trackingNum}
             <h5>Ship Date:
                 <span>
                     {` ${props.invoiceInfo ? props.invoiceInfo[2] : "Loading..."}`}
@@ -85,11 +94,12 @@ function Shipment(props) {
                     {books}    
                 </li>
                 <li>
-                    <span>Status</span>
+                    <span onClick={toggleTrackingInfo}>Status</span>
                     {formatDeliveryInfo() || "Loading..."}
                 </li>
             </ul>
-            {moreInfo ? <Modal data={modalInfo} toggleInfo={toggleInfo} /> : ''}
+            {moreTrackingInfo ? <TrackingModal data={props?.invoiceInfo?.[4].feed} toggleInfo={toggleTrackingInfo} /> : ''}
+            {moreBookInfo ? <Modal data={modalBookInfo} toggleInfo={toggleInfo} /> : ''}
         </div>
     )
 }
@@ -133,5 +143,12 @@ import Order from './Order' */
 //         </div>
 //     )
 // }
+
+{/* <span 
+                    className='tracking'
+                    style={copyTracking ? {color: 'lime', fontWeight: 'bolder'} : {}} 
+                    id={`shipment-${props.num}`} 
+                    onClick={clipboard}
+                ></span> */}
 
 export default Shipment;

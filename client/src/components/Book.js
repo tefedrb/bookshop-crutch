@@ -3,7 +3,7 @@ import React from 'react';
 const Book = (props) => {
     const { toggleInfo, setModalInfo, bookData } = props;
     const { 'Product Name': productName } = props.bookData;
-    const handleClick = () => {
+    const handleClick = (event) => {
         toggleInfo();
         setModalInfo(bookData);
     }
