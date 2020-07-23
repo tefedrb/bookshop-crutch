@@ -194,6 +194,9 @@ th {
 #ship-head {
     text-align: center;
 }
+#unshipped-header {
+    text-align: center;
+}
 #modal-body {
     height: 100vh;
     width: 100vw;
@@ -212,6 +215,12 @@ th {
     align-self: center;
     background-color: white;
     padding: 10px;
+}
+.clickable-background {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    background-color:rgba(163, 163, 223, 0.125);
 }
 #exit {
     position: absolute;

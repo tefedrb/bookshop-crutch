@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
-function Modal(props) {
+const Modal = (props) => {
 
     // const { ean, format, qty, price, modalInfo, pubDate } = props.data;
 
@@ -23,10 +23,15 @@ function Modal(props) {
         price,
         modalInfo
     } = props.data;
+    const testKeyPress = (event) => event.key === "Escape" ? props.toggleInfo() : null;
 
     useEffect(() => {
-        modal.appendChild(el)
-        return () => modal.removeChild(el)
+        modal.appendChild(el);
+        window.addEventListener('keydown', testKeyPress);
+        return () => {
+            modal.removeChild(el)
+            window.removeEventListener('keydown', testKeyPress);
+        };
     }, [])
 
     const formatNum = (num) => {
@@ -40,6 +45,7 @@ function Modal(props) {
 
     return ReactDOM.createPortal(
         <div id='modal-body'>
+            <div className='clickable-background' onClick={props.toggleInfo}></div>
             <div id='modal-div'>
                 Modal Body for Shipment
                 <ul>
@@ -55,7 +61,7 @@ function Modal(props) {
                 <div id='exit' onClick={props.toggleInfo}>X</div>
             </div>
         </div>
-    , el)
+    , el);
 }
 
 export default Modal;
