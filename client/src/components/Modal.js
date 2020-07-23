@@ -23,6 +23,11 @@ const Modal = (props) => {
         price,
         modalInfo
     } = props.data;
+
+    const copyToClipboard = () => {
+        const el = this.innerText
+    }
+
     const testKeyPress = (event) => event.key === "Escape" ? props.toggleInfo() : null;
 
     useEffect(() => {
@@ -52,7 +57,7 @@ const Modal = (props) => {
                     <li>Author: {author}</li>
                     <li>Pub date: {pubDate}</li>
                     <li>Versions: {format}</li>
-                    <li>ISBN-13: {adjustedEan}</li>
+                    <li className={"clipBoard"}><span>ISBN-13: {adjustedEan}</span><img src="https://img.icons8.com/windows/32/000000/clipboard--v1.png"/></li>
                     <li>Price: {price}</li>
                     <li>On Order: {onOrder}</li>
                     <li>On Hand: {onHand}</li>
