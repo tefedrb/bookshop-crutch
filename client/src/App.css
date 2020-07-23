@@ -282,8 +282,6 @@ th {
     }
 }
 
-
-
 #spinner {
     border: 5px solid rgb(235, 235, 235);
     border-radius: 50%;
@@ -327,3 +325,37 @@ th {
     justify-content: center;
     height: 100%;
 }
+
+.trackingNum {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1em 0;
+}
+
+.trackingNum img {
+    height: 18px;
+}
+
+.trackingNum img:hover {
+    cursor: pointer;
+    opacity: .8;
+}
+
+.trackingNum img:active {
+    opacity: .2;
+}
+
+.trackingNum h4 {
+    margin: 0;
+}
+
+#tracking-modal-div{
+    position: relative;
+    border: 3px solid black;
+    border-radius: 15px;
+    align-self: center;
+    background-color: white;
+    padding: 4em;
+}
+

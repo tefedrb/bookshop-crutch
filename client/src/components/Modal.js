@@ -24,8 +24,9 @@ const Modal = (props) => {
         modalInfo
     } = props.data;
 
-    const copyToClipboard = () => {
-        const el = this.innerText
+    const copyToClipboard = (event) => {
+        const isbnText = event.target.parentNode.children[0].innerText.substring(9);
+        navigator.clipboard.writeText(isbnText);
     }
 
     const testKeyPress = (event) => event.key === "Escape" ? props.toggleInfo() : null;
@@ -57,7 +58,7 @@ const Modal = (props) => {
                     <li>Author: {author}</li>
                     <li>Pub date: {pubDate}</li>
                     <li>Versions: {format}</li>
-                    <li className={"clipBoard"}><span>ISBN-13: {adjustedEan}</span><img src="https://img.icons8.com/windows/32/000000/clipboard--v1.png"/></li>
+                    <li className={"clipBoard"}><span>ISBN-13: {adjustedEan}</span><img onClick={copyToClipboard}src="https://img.icons8.com/windows/32/000000/clipboard--v1.png"/></li>
                     <li>Price: {price}</li>
                     <li>On Order: {onOrder}</li>
                     <li>On Hand: {onHand}</li>
