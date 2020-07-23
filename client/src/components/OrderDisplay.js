@@ -30,7 +30,6 @@ const OrderDisplay = (props) => {
     const address = nameAndAddyStr?.substring(name.length, nameAndAddyStr.length) || "Invoice Info Pending";
     const poNumber = shipments?.length > 0 ? shipments[0][0]["Po Number"][0] : unshipped[0]["Po Number"][0];
     const shipmentHeader = shipments?.length ? <h3 id='ship-head'>Shipment{shipments?.length > 1 ? `s (${shipments?.length})` : ''}</h3> : '';
-    const unshippedHeader = unshipped?.length ? <h3 id='unshipped-header'>Unshipped{unshipped?.length > 1 ? `(${unshipped?.length}` : ''}</h3> : '';
 
     return (  
         <div className='order'>
@@ -42,7 +41,6 @@ const OrderDisplay = (props) => {
                     <li>Date Ordered: {orderDate}</li>
                 </ul>
             </div>
-                {unshippedHeader}
             <div>
                 {notOnShipment}
             </div>

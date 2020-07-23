@@ -29,6 +29,7 @@ function Shipment(props) {
     // } = props.data
     // Iterate over books -> 
     const toggleInfo = () => setMoreBookInfo(!moreBookInfo);
+    const toggleTrackingInfo = () => setMoreTrackingInfo(!moreTrackingInfo);
 
     const books = props.data?.map((book, idx) => 
         <Book key={idx} toggleInfo={toggleInfo} setModalInfo={setModalBookInfo} bookData={book}></Book>
@@ -70,7 +71,7 @@ function Shipment(props) {
         navigator.clipboard.writeText(tracking);
     }
     
-    const trackingNum = props?.invoiceInfo[0] ? (
+    const trackingNum = props?.invoiceInfo?.[0] ? (
         <div className="trackingNum">
             <h4>Tracking:</h4>
             <span>{props.invoiceInfo[0]}</span>
@@ -81,7 +82,7 @@ function Shipment(props) {
     return (
         <div className='shipment'>
             <h3>Shipment {props.num}: <a href='#'>Invoice</a></h3>
-            {trackingNum}
+                {trackingNum}
             <h5>Ship Date:
                 <span>
                     {` ${props.invoiceInfo ? props.invoiceInfo[2] : "Loading..."}`}
@@ -93,11 +94,11 @@ function Shipment(props) {
                     {books}    
                 </li>
                 <li>
-                    <span>Status</span>
+                    <span onClick={toggleTrackingInfo}>Status</span>
                     {formatDeliveryInfo() || "Loading..."}
                 </li>
             </ul>
-            {moreTrackingInfo ? <TrackingModal data={modalTracking} /> : ''}
+            {moreTrackingInfo ? <TrackingModal data={props?.invoiceInfo?.[4].feed} toggleInfo={toggleTrackingInfo} /> : ''}
             {moreBookInfo ? <Modal data={modalBookInfo} toggleInfo={toggleInfo} /> : ''}
         </div>
     )

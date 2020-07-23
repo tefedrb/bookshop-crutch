@@ -26,7 +26,8 @@ const scrapeUSPSTracking = async (page) => {
                 if(statusFeed[i].nodeName === "SPAN"){
                     attributeIterator === 0 ? buildEntry.date = statusFeed[i].innerText.trim() :
                     attributeIterator === 1 ? buildEntry.status = statusFeed[i].innerText.trim() :
-                    attributeIterator === 2 ? buildEntry.other = statusFeed[i].innerText.trim() :
+                    attributeIterator === 2 ? buildEntry.location = statusFeed[i].innerText.trim() :
+                    attributeIterator === 3 ? buildEntry.other = statusFeed[i].innerText.trim() :
                     null;
                     attributeIterator++;
                 }
