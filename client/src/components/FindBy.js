@@ -70,7 +70,6 @@ function FindBy() {
             orderData.invoiceInfo = invoiceInfo;
             setCurrentOrderInfo(orderData);
             const bookDataAdded = await AddAllBookInfo(orderData, browserEndpoint);
-            // setCurrentOrderInfo(bookDataAdded);
             setCurrentOrderInfo(bookDataAdded);
         } else alert('no');
     }

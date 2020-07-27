@@ -39,9 +39,15 @@ const navigateToAndScrapeBookInfo = async (page, link) => {
     const data = await page.evaluate(bookInfo => {
         const productDetails = Array.from(document.querySelectorAll(".productDetailElements"));
         bookInfo.author = document.querySelector(".doContributorSearch span").innerText;
-        bookInfo.pubDate = productDetails.filter( detail => {
-            return detail.innerText.includes("Pub Date") && !detail.innerText.includes("Copyright Date");
-        })[0].innerText.substring(10);
+        
+        const parsePubDate = productDetails.filter( detail => {
+            const text = detail.innerText;
+            return text.includes("Pub Date") && !text.includes("Copyright Date") || text.includes("Release Date");
+        })
+        const afterColonReg = /(?<=(: )).*$/g;
+        bookInfo.pubDate = parsePubDate[0].innerText.match(afterColonReg)[0];
+
+
         const getStockTable = document.querySelector(".newStockCheckTable");
         const stockTableCells = Array.from(getStockTable.querySelectorAll("tr"));
         const getStockNumbers = (innerTextStr) => {
