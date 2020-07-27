@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Context } from '../context';
 import GetOrdersByPo from '../components/ApiCalls/GetOrdersByPo';
 import { StartLoadingBar, StopLoadingBar } from '../components/LoadingBar';
-import { parsedShipments } from '../components/ApiCalls/TestData';
+// import { parsedShipments } from '../components/ApiCalls/TestData';
 import OrderDisplay from './OrderDisplay';
 import Spinner from './Spinner';
 
@@ -70,7 +70,6 @@ function FindBy() {
             orderData.invoiceInfo = invoiceInfo;
             setCurrentOrderInfo(orderData);
             const bookDataAdded = await AddAllBookInfo(orderData, browserEndpoint);
-            // setCurrentOrderInfo(bookDataAdded);
             setCurrentOrderInfo(bookDataAdded);
         } else alert('no');
     }
@@ -82,7 +81,7 @@ function FindBy() {
             // setIsLoading(true);
             // const loadingBar = StartLoadingBar();
 
-            setCurrentOrderInfo(parsedShipments);
+            // setCurrentOrderInfo(parsedShipments);
 
             // setTimeout(() => {
             //     setIsLoading(false);
