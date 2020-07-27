@@ -5,19 +5,19 @@ import Modal from './Modal';
 function Backorder(props) {
     const [moreInfo, setMoreInfo] = useState(false);
     const [selectedModal, setSelectedModalInfo] = useState("");
+    const { unshipped } = props;
+
     
     const toggleInfo = (event) => {
-        console.log(event, "event with a click")
+        // Find book in unshipped that event relates to 
+        let target = event.target.innerText;
+        const selectedBook = unshipped.filter( book => book["Product Name"] === target)[0];
+        setSelectedModalInfo(selectedBook);
         setMoreInfo(!moreInfo);
-        if(moreInfo){
-            setSelectedModalInfo()
-        }
     }
 
-    const { unshipped } = props;
     // This will be taking in books not on any shipment
     // [{}, {}]
-    console.log(unshipped[0], "UNSHIPPED")
     // const { 
     //     DC, 'Date Ordered': dateOrdered, 
     //     Ean: ean, 
@@ -80,7 +80,7 @@ function Backorder(props) {
                     {rows}
                 </tbody>
             </table>
-            {moreInfo ? <Modal data={unshipped[0]} toggleInfo={toggleInfo} /> : ''}
+            {moreInfo ? <Modal data={selectedModal} toggleInfo={toggleInfo} /> : ''}
         </div>
     )
 }

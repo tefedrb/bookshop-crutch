@@ -34,8 +34,8 @@ const searchPo = async (orderPage, po) => {
 
 const navigateToAndScrapeBookInfo = async (page, link) => {
     const bookInfo = {};
-    await page.goto(link, {waitUntil: 'networkidle0'});
-    console.log("WITHIN NAVIGATE TO BOOK INFO");
+    await page.goto(link, { waitUntil: 'networkidle0' });
+    console.log("WITHIN NAVIGATE TO BOOK INFO", link);
     const data = await page.evaluate(bookInfo => {
         const productDetails = Array.from(document.querySelectorAll(".productDetailElements"));
         bookInfo.author = document.querySelector(".doContributorSearch span").innerText;
