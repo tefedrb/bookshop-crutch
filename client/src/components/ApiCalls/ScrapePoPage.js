@@ -11,6 +11,7 @@ const ScrapePoPage = async (wsUrl) => {
                     wsUrl: wsUrl
                 })
             })
+        console.log(res)
         return res.json();
     } catch (err){
         console.log("Error in ScrapePoPage ", err.message);
