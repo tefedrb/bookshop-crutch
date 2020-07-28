@@ -55,22 +55,25 @@ function FindBy() {
             await SearchByPo(poInput, browserEndpoint);
             
             const orderData = await ScrapePoPage(browserEndpoint);
-            console.log(orderData, "ORDER DATA");
             StopLoadingBar(loadingBar);
             setIsLoading(false);
+            console.log(orderData,)
             setCurrentOrderInfo(orderData);
-            const invoiceInfo = await GetAllInvoiceInfo(orderData, browserEndpoint);
-            console.log(invoiceInfo, "INVOICE INFO");
-            // NEED TO ITERATE OVER INVOICE INFO GRABBING EACH TRACKING NUMBER
-            for(let i = 0; i < invoiceInfo.length; i++){
-                const trackingData = await ScrapeUSPSTracking(invoiceInfo[i][0], browserEndpoint);
-                console.log(trackingData, "TRACKING DATA IN FINDBY");
-                invoiceInfo[i].push(trackingData);
+            if(!orderData.error){
+                const invoiceInfo = await GetAllInvoiceInfo(orderData, browserEndpoint);
+                console.log(invoiceInfo, "INVOICE INFO");
+                // NEED TO ITERATE OVER INVOICE INFO GRABBING EACH TRACKING NUMBER
+                for(let i = 0; i < invoiceInfo.length; i++){
+                    const trackingData = await ScrapeUSPSTracking(invoiceInfo[i][0], browserEndpoint);
+                    console.log(trackingData, "TRACKING DATA IN FINDBY");
+                    invoiceInfo[i].push(trackingData);
+                }
+                orderData.invoiceInfo = invoiceInfo;
+                setCurrentOrderInfo(orderData);
+                const bookDataAdded = await AddAllBookInfo(orderData, browserEndpoint);
+                setCurrentOrderInfo(bookDataAdded);
             }
-            orderData.invoiceInfo = invoiceInfo;
-            setCurrentOrderInfo(orderData);
-            const bookDataAdded = await AddAllBookInfo(orderData, browserEndpoint);
-            setCurrentOrderInfo(bookDataAdded);
+            
         } else alert('no');
     }
 
@@ -93,15 +96,16 @@ function FindBy() {
     }
 
     const handleChange = e => setPoInput(e.target.value);
-
+    const errorMessage = currentOrderInfo?.error ? <div id='errorMessage'>{currentOrderInfo.error}</div> : "";
     const validPo = (input) => (input?.length === 10 && input[0] === 'R' && !isNaN(input.split('R')[1])) || input?.includes('.') && input.split('.')[0].length === 10 ? true : false 
-
+    
     return (
         <div>
             <form onSubmit={handleSubmitSteps}>
                 <input onChange={handleChange} value={poInput}/>
                 {validPo(poInput) ? <button>FIND</button> : !poInput ? <div id='waiting'>Enter PO</div> : <div id='invalid'>INVALID</div>}
             </form>
+            {errorMessage}
             {isLoading ? <div className='loading' id='loading'>Loading</div> : ''}
             {isLoading ? <div className='loading' id='elapsed'></div> : ''}          
             {currentOrderInfo?.shipments ? <OrderDisplay order={currentOrderInfo}/> : ''}

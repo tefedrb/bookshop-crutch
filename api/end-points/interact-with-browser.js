@@ -8,6 +8,7 @@ const { getAllShipmentInvoiceInfo } = require('../../scraper/parseInvoice');
 const { searchPo, navigateToAndScrapeBookInfo,  } = require('../../scraper/orderPageActions');
 const { verifyStillLoggedIn } = require('../../scraper/check-if-logged-out');
 const { scrapeUSPSTracking } = require('../../scraper/postal-service-scrape');
+const { json } = require('express');
 
 router.post('/connect', async (req, res) => {
     // Here instead of using an environment var, we are trying to use
@@ -49,8 +50,8 @@ router.post('/search-by-po', async (req, res) => {
         //  const verified = await verifyStillLoggedIn(page);
         //  console.log(verified, "VERIFIED")
         //  if(verified.loggedIn){
-            await searchPo(page, req.body.poNum);
-            res.json({ message: "ok" });
+        await searchPo(page, req.body.poNum);
+        res.json({ message: "ok" });
         //  } else {
         //     res.json({ message:"Logged Out Of Ingram" })
         //  }
@@ -65,11 +66,14 @@ router.post('/scrape-po-info', async (req, res) => {
         const page = await connect.connectToBrowser(req.body.wsUrl)
             .then(async browser => (await browser.pages())[0]);
         // Create a method that checks if logged out
-
         const orderData = await scrapeOrder(page);
-
-        const parsedShipments = parseOutShipments(orderData);
-        res.json(parsedShipments);
+        console.log(orderData, "ORDER DATA IN INTERACT WITH BROWSAAHH")
+        if(orderData.error){
+            res.json(orderData);
+        } else {
+            const parsedShipments = parseOutShipments(orderData);
+            res.json(parsedShipments);
+        }
     } catch(err){
         res.json({ message: err });
     }

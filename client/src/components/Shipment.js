@@ -38,11 +38,10 @@ function Shipment(props) {
     const formatDeliveryInfo = () => {
         if(props.invoiceInfo?.[4].deliveryStatus){
             const deliveryStatusInfo = props.invoiceInfo[4].deliveryStatusInfo;
-            return deliveryStatusInfo.map((line, idx) => {
-                let styled;
-                idx === 0 ? styled = {fontWeight: "bold"} : styled = {color: "teal"};
-                return <span style={styled} key={idx}>{line}</span> 
-            });
+            const styled = { color: "teal" };
+            return deliveryStatusInfo.length > 0 ? deliveryStatusInfo.map((line, idx) => {
+                return <span style={idx === 0 ? styled : { fontWeight: "bold" }} key={idx}>{line}</span> 
+            }) : <span style={styled}>{props.invoiceInfo[4].deliveryStatus}</span>
         } else {
             return false;
         }

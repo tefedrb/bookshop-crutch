@@ -198,10 +198,13 @@ th {
     text-align: center;
 }
 #modal-body {
+    position: fixed;
+    top: 0;
+    left: 0;
     height: 100vh;
     width: 100vw;
-    position: absolute;
-    top: 0;
+    margin: 0;
+    padding: 0;
     background-color: transparent;
     display: flex;
     justify-content: center;
@@ -314,7 +317,7 @@ th {
 }
 
 .login-form {
-    background-color: purple;
+    background-color: rgb(163, 163, 223);
     height: 100vh;
     width: 100vw;
 }
@@ -367,4 +370,10 @@ th {
     padding: 1em 0;
     align-items: center;
     border: solid rgba(163, 163, 223, 0.5) 1px;
+}
+
+#errorMessage {
+    color: red;
+    padding: 2em;
+    text-align: center;
 }

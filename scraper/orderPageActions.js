@@ -22,7 +22,6 @@ const searchPo = async (orderPage, po) => {
             selectDropDown.value = "PO";
             console.log(poNum[0], "PO NUM");
             input.value = poNum[0];
-            debugger;
             submitBtn.click();
         }, 500)
         // FROM HERE WE CAN GET INFORMATION AND ALWAYS GO BACK TO INGRAM ORDER
@@ -35,7 +34,6 @@ const searchPo = async (orderPage, po) => {
 const navigateToAndScrapeBookInfo = async (page, link) => {
     const bookInfo = {};
     await page.goto(link, { waitUntil: 'networkidle0' });
-    console.log("WITHIN NAVIGATE TO BOOK INFO", link);
     const data = await page.evaluate(bookInfo => {
         const productDetails = Array.from(document.querySelectorAll(".productDetailElements"));
         bookInfo.author = document.querySelector(".doContributorSearch span").innerText;
