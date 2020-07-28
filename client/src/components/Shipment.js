@@ -40,7 +40,7 @@ function Shipment(props) {
             const deliveryStatusInfo = props.invoiceInfo[4].deliveryStatusInfo;
             const styled = { color: "teal" };
             return deliveryStatusInfo.length > 0 ? deliveryStatusInfo.map((line, idx) => {
-                return <span style={idx === 0 ? styled : { fontWeight: "bold" }} key={idx}>{line}</span> 
+                return <span style={idx === 1 ? styled : { fontWeight: "bold" }} key={idx}>{line}</span> 
             }) : <span style={styled}>{props.invoiceInfo[4].deliveryStatus}</span>
         } else {
             return false;
@@ -80,7 +80,7 @@ function Shipment(props) {
 
     return (
         <div className='shipment'>
-            <h3>Shipment {props.num}: <a href='#'>Invoice</a></h3>
+            <h3>Shipment {props.num + 1}: <a href='#'>Invoice</a></h3>
                 {trackingNum}
             <h5>Ship Date:
                 <span>
