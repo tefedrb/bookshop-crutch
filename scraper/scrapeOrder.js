@@ -6,11 +6,9 @@ const scrapeOrder = async (page) => {
     /**** COLLECT ORDER INFO ****/
     return await page.evaluate(() => {
         if(document.querySelector(".errorMessage")){
-            console.log("yes!")
             const queryError = document.querySelector(".errorMessage").innerText.trim();
             return { error: queryError }
         } else {
-            console.log("doesn't work");
             const orders = [];
             const filterOrders = (orderRows, hasBackOrders) => {
                 return orderRows.filter((row, idx) => {

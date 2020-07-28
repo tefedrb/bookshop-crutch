@@ -13,7 +13,7 @@ function writeToTxtFile(data, fileName){
     });
 }
 
-const writeFileFromString= (yourString, fileName) => {
+const writeFileFromString = (yourString, fileName) => {
     fs.writeFile(`${fileName}.txt`, yourString, (err) => {
         if(err) throw err;
         console.log("saved");

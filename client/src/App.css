@@ -230,6 +230,7 @@ th {
 .clipBoard img {
     padding-left: 1em;
     height: 1.5em;
+    width: 1.5em;
 }
 .clipBoard img:hover {
     cursor: pointer;

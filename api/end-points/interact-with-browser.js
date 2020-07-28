@@ -67,7 +67,7 @@ router.post('/scrape-po-info', async (req, res) => {
             .then(async browser => (await browser.pages())[0]);
         // Create a method that checks if logged out
         const orderData = await scrapeOrder(page);
-        console.log(orderData, "ORDER DATA IN INTERACT WITH BROWSAAHH")
+        console.log(orderData, "order data")
         if(orderData.error){
             res.json(orderData);
         } else {

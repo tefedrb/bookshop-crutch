@@ -29,7 +29,7 @@ const OrderDisplay = (props) => {
     const name = nameAndAddyStr ? nameRegEx.exec(invoiceInfo[0][1])[0].trim() : "Invoice Info Pending";
     const address = nameAndAddyStr?.substring(name.length, nameAndAddyStr.length) || "Invoice Info Pending";
     const poNumber = shipments?.length > 0 ? shipments[0][0]["Po Number"][0] : unshipped[0]["Po Number"][0];
-    const shipmentHeader = shipments?.length ? <h3 id='ship-head'>Shipment{shipments?.length > 1 ? `s (${shipments?.length})` : ''}</h3> : '';
+    const shipmentHeader = shipments?.length ? <h3 id='ship-head'>Shipments{` (${shipments?.length})`}</h3> : '';
 
     return (  
         <div className='order'>

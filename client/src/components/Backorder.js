@@ -63,10 +63,11 @@ function Backorder(props) {
             </tr>
         )
     })
-    // <h3>{props.title}{props.data.length > 1 ? `s (${props.data.length})` : ''}</h3>
+    const unshippedHeader = <h3>{unshipped?.length > 0 ? `Unshipped (${unshipped.length})` : ''}</h3>
+    
     return (
         <div className='backorders'>
-            <h3>{unshipped.length > 1 ? `Unshipped (${unshipped.length})` : ''}</h3>
+            {unshippedHeader}
             <table>
                 <tbody>
                     <tr>
