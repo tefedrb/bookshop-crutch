@@ -42,9 +42,9 @@ const navigateToAndScrapeBookInfo = async (page, link) => {
             const text = detail.innerText;
             return text.includes("Pub Date") && !text.includes("Copyright Date") || text.includes("Release Date");
         })
+
         const afterColonReg = /(?<=(: )).*$/g;
         bookInfo.pubDate = parsePubDate[0].innerText.match(afterColonReg)[0];
-
 
         const getStockTable = document.querySelector(".newStockCheckTable");
         const stockTableCells = Array.from(getStockTable.querySelectorAll("tr"));
@@ -54,6 +54,7 @@ const navigateToAndScrapeBookInfo = async (page, link) => {
             const onOrder = parseInt(innerTextStr.substring(innerTextStr.match(firstNumber).length).replace(/,/g,''));
             return [onHand, onOrder];
         }
+        
         const primaryDCStr = stockTableCells[1].innerText.substring(2).trim();
         const primaryDC = getStockNumbers(primaryDCStr);
         const secondaryDCStr = stockTableCells[2].innerText.substring(2).trim();
