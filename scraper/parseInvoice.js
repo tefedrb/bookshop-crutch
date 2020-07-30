@@ -64,10 +64,18 @@ const getTracking = async (poInput, buffer, getAddress) => {
             // THIS NEEDS TO BE REPLACED WITH REGEX
             let addressIndex;
             let address = null;
+            let name = null;
             if(getAddress){
                 let counter = poIndex;
-                while(counter !== 0){        
+                while(counter !== 0){  
+                    /* 
+                        We've already narrowed down our target order within the invoice 
+                        with our capturedMatch variable (regex search).
+                        This sequence is here to check whether we can narrow down where the closest instance of this 
+                        is near our current position in the invoice (the poNumber): "FOR DELIVERY TO:"
+                    */       
                     let colon = testText[counter] === ":" ? true : false;
+                    
                     if(colon){
                         // Check series
                         if(
@@ -79,8 +87,8 @@ const getTracking = async (poInput, buffer, getAddress) => {
                             testText[counter-7] === "V" &&
                             testText[counter-13] === "R"
                         ){
-                            // Gets the index right after :
-                            addressIndex = counter + 1;
+                            // Gets the index right after when counter + 1:
+                            addressIndex = counter;
                             counter = 0;
                         }
                     } else {
@@ -88,9 +96,18 @@ const getTracking = async (poInput, buffer, getAddress) => {
                     }
                 }
                 // Cut string down to get address
-                address = testText.slice(addressIndex, poIndex - 22)
-                            .replace(/\s+/g,' ')
-                            .trim();
+                // address = testText.slice(addressIndex, poIndex - 22)
+                //             .replace(/\s+/g,' ')
+                //             .trim();
+
+                const nameAndAddress = testText.slice(addressIndex, poIndex - 22);
+                // This regex is matching everything within a line of text after ":"
+                const nameAfterColon = /(?<=:)\s\w+.+/m;
+
+                name = nameAndAddress.match(nameAfterColon)[0];
+                // Getting the address after getting the name within nameAndAddress using name length
+                address = nameAndAddress.substr(name.length).trim();  
+                name = name.trim();
             }
 
             // Slice this to a smaller size...
@@ -111,7 +128,7 @@ const getTracking = async (poInput, buffer, getAddress) => {
             // Return usps or ups tracking
             const uspsTracking = sliced.match(trackingFormat.usps);
             let tracking = uspsTracking ? uspsTracking[0] : sliced.match(trackingFormat.ups)[0];
-            return [tracking || "No Tracking Found", address, meterDate];
+            return [tracking || "No Tracking Found", { address: address, name: name }, meterDate];
         } else {
             return false;
         }
@@ -160,11 +177,11 @@ const getAllTracking = async (orderData, page, getAddress) => {
             const pdfString = await readPdf(order, page);
             const pdfBuffer = Buffer.from(pdfString, 'binary');
             // Push here or push in getTrackingNum...
-           const tracking =  await getTracking(order["Po Number"][0], pdfBuffer, address);
+            const tracking =  await getTracking(order["Po Number"][0], pdfBuffer, address);
 
-           console.log(address, "after await getTracking");
-           console.log(tracking, "Tracking for order " + i);
-           trackingNumbers.push([i, ...tracking]);
+            console.log(address, "after await getTracking");
+            console.log(tracking, "Tracking for order " + i);
+            trackingNumbers.push([i, ...tracking]);
         }
     }
     return trackingNumbers;
