@@ -88,11 +88,11 @@ function Shipment(props) {
     const trackingNum = props?.invoiceInfo?.[0] ? (
         <div className="trackingNum">
             <h4>Tracking:</h4>
-            <span>{props.invoiceInfo[0]}</span>
+            <a href={`${props.invoiceInfo?.[4]?.link}`} target="_blank" rel="noopener noreferrer">{props.invoiceInfo[0]}</a>
             <img onClick={copyToClipboard} src="https://img.icons8.com/windows/32/000000/clipboard--v1.png"/>
         </div>
     ) : "Loading... "
-
+console.log(props.invoiceInfo, "INVOICE")
     return (
         <div className='shipment'>
             <h3>Shipment {props.num + 1}: <a href='#'>Invoice</a></h3>
