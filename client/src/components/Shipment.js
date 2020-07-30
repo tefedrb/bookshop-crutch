@@ -38,7 +38,7 @@ function Shipment(props) {
     const formatDeliveryInfo = () => {
         if(props.invoiceInfo?.[4]?.deliveryStatus){
             const deliveryStatusInfo = props.invoiceInfo?.[4].deliveryStatusInfo;
-            const styled = { color: "teal" };
+            const styled = { color: "rgb(255, 68, 0)" };
             return deliveryStatusInfo.length > 0 ? deliveryStatusInfo.map((line, idx) => {
                 return <span style={idx === 1 ? styled : { fontWeight: "bold" }} key={idx}>{line}</span> 
             }) : <span style={styled}>{props.invoiceInfo[4].deliveryStatus}</span>
@@ -53,7 +53,7 @@ function Shipment(props) {
             return (
                 <>
                     <span style={{ fontWeight: "bold" }}>{deliveryStatusInfo?.date}</span>
-                    <span style={{ color: "teal" }}>{deliveryStatusInfo?.status}</span>
+                    <span style={{ color: "red" }}>{deliveryStatusInfo?.status}</span>
                     <span>{deliveryStatusInfo?.location}</span>
                 </>
             )
@@ -88,7 +88,14 @@ function Shipment(props) {
     const trackingNum = props?.invoiceInfo?.[0] ? (
         <div className="trackingNum">
             <h4>Tracking:</h4>
-            <a href={`${props.invoiceInfo?.[4]?.link}`} target="_blank" rel="noopener noreferrer">{props.invoiceInfo[0]}</a>
+            {props.invoiceInfo?.[4]?.link 
+                ?
+                <a href={`${props.invoiceInfo?.[4]?.link}`} target="_blank" rel="noopener noreferrer">
+                    {props.invoiceInfo[0]}
+                </a> 
+                :
+                <span>{props.invoiceInfo[0]}</span>
+            }
             <img onClick={copyToClipboard} src="https://img.icons8.com/windows/32/000000/clipboard--v1.png"/>
         </div>
     ) : "Loading... "

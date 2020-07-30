@@ -118,7 +118,7 @@ function FindBy() {
     const validPo = (input) => (input?.length === 10 && input[0] === 'R' && !isNaN(input.split('R')[1])) || input?.includes('.') && input.split('.')[0].length === 10 ? true : false 
     
     return (
-        <div>
+        <div className="section-wrapper">
             <form onSubmit={handleSubmitSteps}>
                 <input onChange={handleChange} value={poInput}/>
                 {validPo(poInput) ? <button>FIND</button> : !poInput ? <div id='waiting'>Enter PO</div> : <div id='invalid'>INVALID</div>}
