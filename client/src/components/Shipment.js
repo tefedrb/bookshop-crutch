@@ -36,12 +36,27 @@ function Shipment(props) {
     );
 
     const formatDeliveryInfo = () => {
-        if(props.invoiceInfo?.[4].deliveryStatus){
-            const deliveryStatusInfo = props.invoiceInfo[4].deliveryStatusInfo;
+        if(props.invoiceInfo?.[4]?.deliveryStatus){
+            const deliveryStatusInfo = props.invoiceInfo?.[4].deliveryStatusInfo;
             const styled = { color: "teal" };
             return deliveryStatusInfo.length > 0 ? deliveryStatusInfo.map((line, idx) => {
                 return <span style={idx === 1 ? styled : { fontWeight: "bold" }} key={idx}>{line}</span> 
             }) : <span style={styled}>{props.invoiceInfo[4].deliveryStatus}</span>
+        } else {
+            return false;
+        }
+    }
+
+    const formatUPSInfo = () => {
+        const deliveryStatusInfo = props?.invoiceInfo?.[4]?.feed?.[0];
+        if(props?.invoiceInfo?.[0]?.substring(0, 2) === "1Z" && deliveryStatusInfo){
+            return (
+                <>
+                    <span style={{ fontWeight: "bold" }}>{deliveryStatusInfo?.date}</span>
+                    <span style={{ color: "teal" }}>{deliveryStatusInfo?.status}</span>
+                    <span>{deliveryStatusInfo?.location}</span>
+                </>
+            )
         } else {
             return false;
         }
@@ -94,7 +109,7 @@ function Shipment(props) {
                 </li>
                 <li>
                     <span onClick={toggleTrackingInfo}>Status</span>
-                    {formatDeliveryInfo() || "Loading..."}
+                    {formatDeliveryInfo() || formatUPSInfo() || "Loading..."}
                 </li>
             </ul>
             {moreTrackingInfo ? <TrackingModal data={props?.invoiceInfo?.[4].feed} toggleInfo={toggleTrackingInfo} /> : ''}

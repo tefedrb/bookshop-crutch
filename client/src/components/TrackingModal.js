@@ -12,7 +12,7 @@ const TrackingModal = (props) => {
         modal.appendChild(el);
         window.addEventListener('keydown', testKeyPress);
         return () => {
-            modal.removeChild(el)
+            modal.removeChild(el);
             window.removeEventListener('keydown', testKeyPress);
         };
     }, [])

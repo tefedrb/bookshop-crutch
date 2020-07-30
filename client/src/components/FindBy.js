@@ -3,6 +3,7 @@ import { Context } from '../context';
 import GetOrdersByPo from '../components/ApiCalls/GetOrdersByPo';
 import { StartLoadingBar, StopLoadingBar } from '../components/LoadingBar';
 // import { parsedShipments } from '../components/ApiCalls/TestData';
+import RegexPatterns from '../RegexPatterns';
 import OrderDisplay from './OrderDisplay';
 import Spinner from './Spinner';
 
@@ -11,6 +12,7 @@ import ScrapePoPage from './ApiCalls/ScrapePoPage';
 import GetAllInvoiceInfo from './ApiCalls/GetAllInvoiceInfo';
 import AddAllBookInfo from './ApiCalls/AddAllBookInfo';
 import ScrapeUSPSTracking from './ApiCalls/ScrapeUSPSTracking';
+import ScrapeUPSTracking from './ApiCalls/ScrapeUPSTracking'
 
 function FindBy() {
     const context = useContext(Context);
@@ -48,26 +50,42 @@ function FindBy() {
     const handleSubmitSteps = async (e) => {
         e.preventDefault();
         if(validPo(poInput)){
-            
+            // Removing data from current order (which is displayed)
             setCurrentOrderInfo(false);
+            // Turning on loading toggle, consequently rendering divs
             setIsLoading(true);
+            // Creating and saving an interval, while starting loading bar animation.
             const loadingBar = StartLoadingBar();
+            // Manipulating the browser associated with the browserEndpoint - searching po
             await SearchByPo(poInput, browserEndpoint);
-            
+            // Manipulating same browser with endpoint - scraping order data
             const orderData = await ScrapePoPage(browserEndpoint);
+            // Stopping interval - subsequently stopping loading animation
             StopLoadingBar(loadingBar);
+            // Turning off loading toggle, consequently removing divs
             setIsLoading(false);
             console.log(orderData,)
+            // Saving / setting current order data in context
             setCurrentOrderInfo(orderData);
+            // Evaluate error
             if(!orderData.error){
                 const invoiceInfo = await GetAllInvoiceInfo(orderData, browserEndpoint);
-                console.log(invoiceInfo, "INVOICE INFO");
-                // NEED TO ITERATE OVER INVOICE INFO GRABBING EACH TRACKING NUMBER
+                // Saving raw invoiceData before scraping / adding tracking numbers
+                orderData.invoiceInfo = invoiceInfo;
+                setCurrentOrderInfo(orderData);
+                // ITERATE OVER INVOICE INFO GRABBING EACH TRACKING NUMBER
+                // HERE WE HAVE TO DETERMINE WHETHER TRACKING IS UPS OR NOT
                 for(let i = 0; i < invoiceInfo.length; i++){
-                    const trackingData = await ScrapeUSPSTracking(invoiceInfo[i][0], browserEndpoint);
-                    console.log(trackingData, "TRACKING DATA IN FINDBY");
-                    invoiceInfo[i].push(trackingData);
+                    const isUps = invoiceInfo[i][0].match(RegexPatterns.ups);
+                    let trackingFeed;
+                    if(isUps){
+                        trackingFeed = await ScrapeUPSTracking(invoiceInfo[i][0], browserEndpoint);
+                    } else {
+                        trackingFeed = await ScrapeUSPSTracking(invoiceInfo[i][0], browserEndpoint);
+                    }
+                    invoiceInfo[i].push(trackingFeed);
                 }
+                // Adding invoice info with tracking Data
                 orderData.invoiceInfo = invoiceInfo;
                 setCurrentOrderInfo(orderData);
                 const bookDataAdded = await AddAllBookInfo(orderData, browserEndpoint);
