@@ -40,17 +40,35 @@ h2 {
     color: black;
 }
 
+a {
+    text-decoration: none;
+}
 .link:hover {
     background: black;
     color: white;
 }
 
 .link:active {
-    color: rgb(157, 157, 202);
+    color: rgba(157, 157, 202);
 }
 
 .order {
+    max-width: 1050px;
+    min-width: 500px;
+    margin-top: 22px;
     padding: 2em;
+    border: solid rgba(163, 163, 223, 0.153);
+    background-color: rgba(163, 163, 223, 0.098);
+}
+
+.section-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section-wrapper form {
+    width: 100%;
 }
 
 #invalid {
@@ -368,7 +386,7 @@ th {
 .tracking-entry {
     display: flex;
     flex-direction: column;
-    padding: 1em 0;
+    padding: 1em 2em;
     align-items: center;
     border: solid rgba(163, 163, 223, 0.5) 1px;
 }

@@ -146,9 +146,7 @@ router.post('/get-data-from-ups-tracking', async (req, res) => {
         const trackingNumber = req.body.upsTracking;
         const upsUrl = `https://www.ups.com/track?loc=en_US&tracknum=${trackingNumber}&requester=WT/trackdetails`;
         await newPage.goto(upsUrl, { waitUntil: 'load' });
-        console.log("WE MADE IT HERE THOUGH?!?!")
         const upsTrackingData = await scrapeUPSTracking(newPage);
-        console.log(upsTrackingData, "TRACKING!!")
         await newPage.close();
         res.json(upsTrackingData);
     } catch(err){

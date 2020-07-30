@@ -46,11 +46,11 @@ const scrapeUSPSTracking = async (page) => {
             return uspsData;
         }
     });
+    uspsData.link = page.url();
     return uspsData;
 }
 
 const scrapeUPSTracking = async (page) => {
-    console.log("HERE WE ARE RIGHT BEFORE A FAILURE");
     const upsData = await page.evaluate(() => {
         class TrackingEntry {
             constructor(status = "", date = "", location = "", other = "") {
@@ -87,9 +87,6 @@ const scrapeUPSTracking = async (page) => {
                 }
                 if(statusFeed[i].length === 3){
                     const [date, location, scan] = statusFeed[i];
-                    console.log(date, "date");
-                    console.log(location, "location");
-                    console.log(scan, "Scan");
                     const lastEntry = entries[entries.length-1];
                     lastEntry.date = date.trim();
                     lastEntry.location = location.trim();
@@ -101,6 +98,7 @@ const scrapeUPSTracking = async (page) => {
         data.feed = saveUPSFeed()
         return data;
     });
+    upsData.link = page.url();
     return upsData;
 }
 
