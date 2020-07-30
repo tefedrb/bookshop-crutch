@@ -7,7 +7,7 @@ const { parseOutShipments } = require('../../scraper/mutateOrderData');
 const { getAllShipmentInvoiceInfo } = require('../../scraper/parseInvoice');
 const { searchPo, navigateToAndScrapeBookInfo,  } = require('../../scraper/orderPageActions');
 const { verifyStillLoggedIn } = require('../../scraper/check-if-logged-out');
-const { scrapeUSPSTracking } = require('../../scraper/postal-service-scrape');
+const { scrapeUSPSTracking, scrapeUPSTracking } = require('../../scraper/postal-service-scrape');
 const { json } = require('express');
 
 router.post('/connect', async (req, res) => {
@@ -135,7 +135,24 @@ router.post('/get-data-from-usps-tracking', async (req, res) => {
         await newPage.close();
         res.json(uspsTrackingData);
     } catch(err){
-        res.json({ message: 'ERROR in get-data-from-usps-tracking: ' + err.message })
+        res.json({ message: 'ERROR in get-data-from-usps-tracking: ' + err.message });
+    }
+})
+
+router.post('/get-data-from-ups-tracking', async (req, res) => {
+    try {
+        const browser = await connect.connectToBrowser(req.body.wsUrl);
+        const newPage = await browser.newPage();
+        const trackingNumber = req.body.upsTracking;
+        const upsUrl = `https://www.ups.com/track?loc=en_US&tracknum=${trackingNumber}&requester=WT/trackdetails`;
+        await newPage.goto(upsUrl, { waitUntil: 'load' });
+        console.log("WE MADE IT HERE THOUGH?!?!")
+        const upsTrackingData = await scrapeUPSTracking(newPage);
+        console.log(upsTrackingData, "TRACKING!!")
+        await newPage.close();
+        res.json(upsTrackingData);
+    } catch(err){
+        res.json({ message: 'ERROR in get-data-from-ups-tracking: ' + err.message });
     }
 })
 

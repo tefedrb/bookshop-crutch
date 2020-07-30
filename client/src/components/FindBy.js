@@ -3,6 +3,7 @@ import { Context } from '../context';
 import GetOrdersByPo from '../components/ApiCalls/GetOrdersByPo';
 import { StartLoadingBar, StopLoadingBar } from '../components/LoadingBar';
 // import { parsedShipments } from '../components/ApiCalls/TestData';
+import RegexPatterns from '../RegexPatterns';
 import OrderDisplay from './OrderDisplay';
 import Spinner from './Spinner';
 
@@ -11,6 +12,7 @@ import ScrapePoPage from './ApiCalls/ScrapePoPage';
 import GetAllInvoiceInfo from './ApiCalls/GetAllInvoiceInfo';
 import AddAllBookInfo from './ApiCalls/AddAllBookInfo';
 import ScrapeUSPSTracking from './ApiCalls/ScrapeUSPSTracking';
+import ScrapeUPSTracking from './ApiCalls/ScrapeUPSTracking'
 
 function FindBy() {
     const context = useContext(Context);
@@ -72,9 +74,16 @@ function FindBy() {
                 orderData.invoiceInfo = invoiceInfo;
                 setCurrentOrderInfo(orderData);
                 // ITERATE OVER INVOICE INFO GRABBING EACH TRACKING NUMBER
+                // HERE WE HAVE TO DETERMINE WHETHER TRACKING IS UPS OR NOT
                 for(let i = 0; i < invoiceInfo.length; i++){
-                    const trackingData = await ScrapeUSPSTracking(invoiceInfo[i][0], browserEndpoint);
-                    invoiceInfo[i].push(trackingData);
+                    const isUps = invoiceInfo[i][0].match(RegexPatterns.ups);
+                    let trackingFeed;
+                    if(isUps){
+                        trackingFeed = await ScrapeUPSTracking(invoiceInfo[i][0], browserEndpoint);
+                    } else {
+                        trackingFeed = await ScrapeUSPSTracking(invoiceInfo[i][0], browserEndpoint);
+                    }
+                    invoiceInfo[i].push(trackingFeed);
                 }
                 // Adding invoice info with tracking Data
                 orderData.invoiceInfo = invoiceInfo;

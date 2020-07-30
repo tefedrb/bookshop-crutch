@@ -10,7 +10,7 @@ const OrderDisplay = (props) => {
     /*
         { shipments: [{},{}], unshipped: [{}] }
     */
-
+    console.log(invoiceInfo, "INVOICE")
     const shipmentsArr = shipments?.map((shipment, index) => 
         <Shipment 
             key={index} 

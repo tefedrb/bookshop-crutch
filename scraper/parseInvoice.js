@@ -109,11 +109,9 @@ const getTracking = async (poInput, buffer, getAddress) => {
                 usps: /\d{22}/
             }
             // Return usps or ups tracking
-            let tracking = sliced.match(trackingFormat.usps)[0];
-            if(!tracking){
-                tracking = sliced.match(trackingFormat.ups)[0];
-            }
-            return [tracking, address, meterDate];
+            const uspsTracking = sliced.match(trackingFormat.usps);
+            let tracking = uspsTracking ? uspsTracking[0] : sliced.match(trackingFormat.ups)[0];
+            return [tracking || "No Tracking Found", address, meterDate];
         } else {
             return false;
         }
