@@ -33,13 +33,9 @@ const scrapeOrder = async (page) => {
 
             // If .innerBoundryBox contains 6 children elements - it has backorders (checkboxes)
             const hasBackOrders = orderTable.length === 6 ? true : false;
+            if(hasBackOrders) labels.unshift("Select");
             let allRows = Array.from(orderTable[hasBackOrders ? 4 : 3].firstElementChild.children);
         
-            if(hasBackOrders) {
-                allRows = Array.from(orderTable[4].firstElementChild.children);
-                labels.unshift("Select");
-            }
-
             // Filter out rows with no EAN
             const orderRows = filterOrders(allRows, hasBackOrders);
             
@@ -49,6 +45,7 @@ const scrapeOrder = async (page) => {
                 // Target each COLUMN and save to orders -
                 for(let i = 0; i < row.children.length; i++){
                     const entry = row.children[i];
+                    console.log(entry, "ENTRY LOOKING FOR SELECT")
                     const entryHasHref = entry.firstChild.href || (entry.firstElementChild && entry.firstElementChild.href);
                     if(entryHasHref && labels[i]){
                         saveOrder[labels[i]] = [row.children[i].innerText.trim(), row.children[i].firstChild.href || entry.firstElementChild.href]

@@ -3,8 +3,6 @@ const puppeteer = require('puppeteer');
 const ingramLogin = process.env.INGRAM_LOGIN_URL;
 
 const loginToIngram = async (login) => {
-    console.log(ingramLogin, "INGRAM LOGIN");
-    console.log(login, "LOGIN!! BEFORE EVAL");
 
     // Notes: I can pass parameters into the launch function - {headless: false} means browser gui will open 
     const browser = await puppeteer.launch({headless: false});

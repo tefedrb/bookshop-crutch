@@ -4,7 +4,7 @@ import Backorder from './Backorder';
 
 // shipments: [[{},{}], [{},{}]]
 const OrderDisplay = (props) => {
-    const { shipments, unshipped, invoiceInfo } = props.order;
+    const { shipments, unshipped, invoiceInfo, orderUrl } = props.order;
     // Function that iterates and sets orders up
     
     /*
@@ -34,7 +34,7 @@ const OrderDisplay = (props) => {
     return (  
         <div className='order'>
             <div className='general-info'>
-                <h1>{poNumber}</h1>
+                <h1><a href={`${orderUrl}`} target="_blank" rel="noopener noreferrer">{poNumber}</a></h1>
                 <ul>
                     <li>Name: {name}</li>
                     <li>Address: {address}</li>

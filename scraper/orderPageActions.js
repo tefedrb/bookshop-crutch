@@ -31,6 +31,28 @@ const searchPo = async (orderPage, po) => {
     return orderPage;
 }
 
+const beginBackOrderCancel = async (page, rowInfo) => {
+    const targetRow = [rowInfo];
+    await page.evaluate(targetRow => {
+        try {
+            const isolateEan = /\d+/m;
+            const checkboxes = document.querySelectorAll("input[name='cancelItemCheckBox']");
+            const targetRowElements = checkboxes[targetRow.idx].parentNode.parentNode.children;
+            const matchEan = targetRowElements[3].innerText.match(isolateEan);
+            const isolatedEan = matchEan[0].trim();
+            // Performing a hard check of targetRow
+            if(isolatedEan === targetRow["ean"]){
+                const isolatedCheckBox = checkboxes[targetRow.idx];
+                isolatedCheckBox.click();
+                const cancelSelectedBtn = document.querySelector("img[title='Cancel Selected Items'").parentNode;
+                cancelSelectedBtn.click();
+            }
+        } catch(err){
+            console.log("Error in beginBackOrderCancel " + err)
+        }
+    }, targetRow)
+}
+
 const navigateToAndScrapeBookInfo = async (page, link) => {
     const bookInfo = {};
     await page.goto(link, { waitUntil: 'networkidle0' });
@@ -66,7 +88,6 @@ const navigateToAndScrapeBookInfo = async (page, link) => {
         bookInfo.onOrder = (primaryDC[1] + secondaryDC[1]);
         return bookInfo;
     }, bookInfo);
-    console.log(data, "Data IN BOOKINFO");
     return data;
 }
 

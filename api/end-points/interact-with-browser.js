@@ -71,7 +71,9 @@ router.post('/scrape-po-info', async (req, res) => {
         if(orderData.error){
             res.json(orderData);
         } else {
+            // I feel like here we should check for backorder data?
             const parsedShipments = parseOutShipments(orderData);
+            parsedShipments.orderUrl = page.url();
             res.json(parsedShipments);
         }
     } catch(err){
