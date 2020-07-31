@@ -7,7 +7,6 @@ function Backorder(props) {
     const [selectedModal, setSelectedModalInfo] = useState("");
     const { unshipped } = props;
 
-    
     const toggleInfo = (event) => {
         // Find book in unshipped that event relates to 
         let target = event.target.innerText;
@@ -33,25 +32,11 @@ function Backorder(props) {
     //     price
     // } = props.data
 
-
-    // modalInfo: {
-        // author: "Kendi, Ibram X"
-        // onHand: 0
-        // onOrder: 8499
-        // pubDate: "June 16, 2020"
-        // NEED TO GET ARRIVAL DATE
-    // }
-    // useEffect(() => {
-    //     console.log(unshipped[0].modalInfo, "MODAL INFO");
-    //     if(unshipped[0].modalInfo){
-    //         setModalInfo(true);
-    //     }
-    // }, [unshipped])
+    // const cancelBackorder = status === "Backordered" ? <button className="btn">Cancel Backorder</button> : "";
 
     const rows = unshipped?.map((book, idx) => {
         const { 'Product Name': productName, 'Pub Date': pubDate, "Status": status} = book;
         const { onHand, onOrder } = book.modalInfo || {};
-    
         return (
             <tr key={idx}>
                 <td className='more-info' onClick={toggleInfo}>{productName}</td>
