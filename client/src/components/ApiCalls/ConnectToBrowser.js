@@ -12,7 +12,6 @@ const ConnectToBrowser = async (wsEndpoint) => {
                 })
             })
         const browser = await res.json();
-        console.log(browser, "BROWSER RES??")
         return browser;
     } catch (err){
         console.log("Error in ConnectToBrowser: ", err.message);

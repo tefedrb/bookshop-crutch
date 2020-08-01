@@ -2,8 +2,23 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // RETURNS ARRAY
-const scrapeOrder = async (page) => {
+const scrapeOrder = async (page, po) => {
     /**** COLLECT ORDER INFO ****/
+    if(po){
+        const produceUrl = (po) => {
+            return `https://ipage.ingramcontent.com/ipage/servlet/ibg.customer.orderstatus
+                .OrderStatusSearchCICSServlet?pageDestination=or102&EB027__SRT__CD=1&EB027
+                __START__ORD__DT__IN=01%2F01%2F0001&EB027__END__ORD__DT__IN=12%2F31%2F9999&EB027
+                __OE__NBR__IN=+&EB027__PO__NBR__IN=${po}&EB027__PROD__ID__IN=+&EB027__EAN__ID__IN
+                =+&EB027__TITLE__IN=+&EB027__WHSE__IN=+&EB027__INV__NBR__IN=+&EB027__TOC__NBR__IN
+                =+&EB027__LE__ORD__DT=+&EB027__LE__OE__NBR=+&EB027__LE__CUST__PO=+&EB027__LE__ISBN
+                =+&EB027__LE__TITLE=+&EB027__LE__DC=+&EB027__LE__EAN=+&ipsInd=N&fromPOSumm=N&EB027
+                __PURCHASER__NAME__IN=+&kioskInd=N&searchAllShipToAccts=N&EB027__STATUS__CRITERIA=
+                A&EB027__SEARCH__CRITERIA=PO&CriteriaValue=${po}&StartDate=&EndDate=&Submit.x=0&Submit.y=0`
+        }
+        await page.goto(produceUrl);
+        await page.waitForNavigation();
+    }
     return await page.evaluate(() => {
         if(document.querySelector(".errorMessage")){
             const queryError = document.querySelector(".errorMessage").innerText.trim();

@@ -24,12 +24,14 @@ const LoginIngram = (props) => {
     const executeLogin = async (event) => {
         event.preventDefault();
         const saveBrowser = await PostIngramLogin({ingramU: user, ingramP: password});
-        const [wsEndpoint, currentUrl] = saveBrowser;
-        if(currentUrl.includes("administration")){
+        if(saveBrowser){
+            const [wsEndpoint] = saveBrowser;
             saveBrowserEndpoint(wsEndpoint);
             setLoggedIn();
             // ConnectToBrowser(wsEndpoint);
-        } else alert("Bad User/Pass");
+        } else {
+            alert("Bad User/Pass");
+        }
     }
 
     return (
