@@ -19,4 +19,16 @@ const connectToBrowser = async (wsEndpoint, terminate, cb) => {
     }
 }
 
+const checkBrowserConnection = async (wsEndpoint) => {
+    try {
+        const didConnect = await puppeteer.connect({ browserWSEndpoint: wsEndpoint })
+            .then(() => "connected", () => "disconnected");
+        return didConnect;
+    } catch(err) {
+        console.log("Error in checkBrowserConnection: " + err.message);
+        return false;
+    }
+}
+
 exports.connectToBrowser = connectToBrowser;
+exports.checkBrowserConnection = checkBrowserConnection;
