@@ -22,8 +22,6 @@ export const Provider = (props) => {
 
     const [state, setState] = contextState;
 
-    console.log(state, "STATE");
-
     const saveBrowserEndpoint = (wsEndpoint) => {
         setState(prevState => {
                 return {...prevState, browserEndpoint: wsEndpoint}
@@ -45,9 +43,9 @@ export const Provider = (props) => {
         }
     }
 
-    const setLoggedIn = () => {
+    const setLoggedIn = (input) => {
         setState(prevState => {
-                return {...prevState, loggedIn: !state.loggedIn}
+                return {...prevState, loggedIn: input === undefined ? !state.loggedIn : input}
             }
         );
     }

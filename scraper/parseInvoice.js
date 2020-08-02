@@ -205,8 +205,9 @@ const getAllShipmentInvoiceInfo = async (page, orderData, getAddress) => {
     let address = getAddress;
     for(let i = 0; i < orderData.shipments.length; i++){
         const shipment = orderData.shipments[i];
-        console.log(shipment, "SHIPMENT!!!!!!!!!!!!!")
+        // console.log(shipment, "SHIPMENT!!!!!!!!!!!!!")
         const trackingOutput = await getTrackingByOrder(page, shipment[0], address);
+        console.log(trackingOutput, "TRACKING OUTPUT!!")
         /* 
            Here I am adding the idx of the shipment within orderData.shipments to our
            output 

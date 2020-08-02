@@ -36,7 +36,7 @@ router.post('/connect', async (req, res) => {
     } catch(err){
         res.json({ message: err });
     }
-})
+});
 
 // CREATE MIDDLEWARE FUNCTION, LIKE VERIFY, THAT INSERTS CONNECT TO BROWSER FUNC
 router.post('/search-by-po', async (req, res) => {
@@ -58,7 +58,7 @@ router.post('/search-by-po', async (req, res) => {
      } catch(err){
          res.json({ message: err });
      }
- })
+ });
 
 // Returns order data - parsedoutshipments
 router.post('/scrape-po-info', async (req, res) => {
@@ -79,7 +79,7 @@ router.post('/scrape-po-info', async (req, res) => {
     } catch(err){
         res.json({ message: err });
     }
-})
+});
 
 // returns [[tracking, address, shipment_idx], [tracking, address, shipment_idx] ...]
 router.post('/get-all-invoice-info', async (req, res) => {
@@ -92,7 +92,7 @@ router.post('/get-all-invoice-info', async (req, res) => {
     } catch(err){
         res.json({ message: err.message });
     }
-})
+});
 
 router.post('/get-all-book-info', async (req, res) => {
     // HERE WE ARE ADDING A .MODALINFO TO EACH BOOK OBJECT - EACH BOOK IS GETTING THE SCRAPE - navigateToAndScrapeBookInfo
@@ -122,7 +122,7 @@ router.post('/get-all-book-info', async (req, res) => {
     } catch(err){
         res.json({ message: "get-all-book-info: " + err.message });
     }
-})
+});
 
 router.post('/get-data-from-usps-tracking', async (req, res) => {
     // Create a new page, go to page and scrape. close page.
@@ -139,7 +139,7 @@ router.post('/get-data-from-usps-tracking', async (req, res) => {
     } catch(err){
         res.json({ message: 'ERROR in get-data-from-usps-tracking: ' + err.message });
     }
-})
+});
 
 router.post('/get-data-from-ups-tracking', async (req, res) => {
     try {
@@ -154,6 +154,16 @@ router.post('/get-data-from-ups-tracking', async (req, res) => {
     } catch(err){
         res.json({ message: 'ERROR in get-data-from-ups-tracking: ' + err.message });
     }
-})
+});
+
+router.post('/check-browser-connection/', async (req, res) => {
+    try {
+        const wsEndpoint = req.body.wsUrl;
+        const browserCheck = await connect.checkBrowserConnection(wsEndpoint);
+        res.send({ browserStatus: browserCheck });
+    } catch(err){
+        res.json({ message: 'ERROR in check-browser-connection' + err.message });
+    }
+});
 
 module.exports = router;

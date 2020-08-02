@@ -1,7 +1,5 @@
 const PostIngramLogin = async (body) => {
     try {
-        console.log("Ingram Login...")
-        console.log(body, "body")
         const res = 
             await fetch('http://localhost:9000/login-ingram/', {
                 method: 'post',
@@ -13,7 +11,11 @@ const PostIngramLogin = async (body) => {
                     ingramP: body.ingramP
                 })
             })
-        return res.json();
+        if(res.status !== 200){
+            return false
+        } else {
+            return res.json();
+        }
     } catch (err){
         console.log("Error in PostIngramLogin: ", err.message);
     }

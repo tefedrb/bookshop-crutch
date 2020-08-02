@@ -75,15 +75,19 @@ function FindBy() {
                 setCurrentOrderInfo(orderData);
                 // ITERATE OVER INVOICE INFO GRABBING EACH TRACKING NUMBER
                 // HERE WE HAVE TO DETERMINE WHETHER TRACKING IS UPS OR NOT
-                for(let i = 0; i < invoiceInfo.length; i++){
-                    const isUps = invoiceInfo[i][0].match(RegexPatterns.ups);
-                    let trackingFeed;
-                    if(isUps){
-                        trackingFeed = await ScrapeUPSTracking(invoiceInfo[i][0], browserEndpoint);
-                    } else {
-                        trackingFeed = await ScrapeUSPSTracking(invoiceInfo[i][0], browserEndpoint);
+                try {
+                    for(let i = 0; i < invoiceInfo.length; i++){
+                        const isUps = invoiceInfo[i][0].match(RegexPatterns.ups);
+                        let trackingFeed;
+                        if(isUps){
+                            trackingFeed = await ScrapeUPSTracking(invoiceInfo[i][0], browserEndpoint);
+                        } else {
+                            trackingFeed = await ScrapeUSPSTracking(invoiceInfo[i][0], browserEndpoint);
+                        }
+                        invoiceInfo[i].push(trackingFeed);
                     }
-                    invoiceInfo[i].push(trackingFeed);
+                } catch(err){
+                    console.log("Error iterating invoice");
                 }
                 // Adding invoice info with tracking Data
                 orderData.invoiceInfo = invoiceInfo;
