@@ -32,14 +32,6 @@ const OrderDisplay = (props) => {
     const poNumber = shipments?.length > 0 ? shipments[0][0]["Po Number"][0] : unshipped[0]["Po Number"][0];
     const shipmentHeader = shipments?.length ? <h3 id='ship-head'>Shipments{` (${shipments?.length})`}</h3> : '';
 
-    const checkConnection = async () => {
-        const browserRes = await ConnectToBrowser();
-        console.log("browserRes", browserRes)
-        if(browserRes.message === "not connected"){
-            localStorage.clear();
-            window.location.reload();
-        }
-    }
     return (  
         <div className='order'>
             <div className='general-info'>
@@ -50,7 +42,6 @@ const OrderDisplay = (props) => {
                     <li>Date Ordered: {orderDate}</li>
                 </ul>
             </div>
-                <button onClick={checkConnection}>CHECK CONNECTION</button>
             <div>
                 {notOnShipment}
             </div>

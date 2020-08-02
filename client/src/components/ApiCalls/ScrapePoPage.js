@@ -1,4 +1,4 @@
-const ScrapePoPage = async (wsUrl) => {
+const ScrapePoPage = async (wsUrl, po) => {
     try {
         console.log("Scraping po page...")
         const res = 
@@ -8,7 +8,8 @@ const ScrapePoPage = async (wsUrl) => {
                     'Content-Type' : 'application/json'
                 },
                 body: JSON.stringify({
-                    wsUrl: wsUrl
+                    wsUrl: wsUrl,
+                    po: po
                 })
             })
         console.log(res)

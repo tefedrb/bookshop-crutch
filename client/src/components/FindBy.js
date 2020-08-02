@@ -57,14 +57,18 @@ function FindBy() {
             // Creating and saving an interval, while starting loading bar animation.
             const loadingBar = StartLoadingBar();
             // Manipulating the browser associated with the browserEndpoint - searching po
-            await SearchByPo(poInput, browserEndpoint);
+            
+            // await SearchByPo(poInput, browserEndpoint);
+
             // Manipulating same browser with endpoint - scraping order data
-            const orderData = await ScrapePoPage(browserEndpoint);
+            const orderData = await ScrapePoPage(browserEndpoint, poInput);
             // Stopping interval - subsequently stopping loading animation
             StopLoadingBar(loadingBar);
             // Turning off loading toggle, consequently removing divs
             setIsLoading(false);
-            console.log(orderData,)
+
+            // console.log(orderData,)
+
             // Saving / setting current order data in context
             setCurrentOrderInfo(orderData);
             // Evaluate error
