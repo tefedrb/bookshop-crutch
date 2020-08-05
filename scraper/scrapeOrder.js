@@ -9,8 +9,7 @@ const goToOrder = async (wsUrl, po) => {
         return `https://ipage.ingramcontent.com/ipage/servlet/ibg.customer.orderstatus.OrderStatusSearchCICSServlet?pageDestination=or102&EB027__SRT__CD=1&EB027__START__ORD__DT__IN=01%2F01%2F0001&EB027__END__ORD__DT__IN=12%2F31%2F9999&EB027__OE__NBR__IN=+&EB027__PO__NBR__IN=${po}&EB027__PROD__ID__IN=+&EB027__EAN__ID__IN=+&EB027__TITLE__IN=+&EB027__WHSE__IN=+&EB027__INV__NBR__IN=+&EB027__TOC__NBR__IN=+&EB027__LE__ORD__DT=+&EB027__LE__OE__NBR=+&EB027__LE__CUST__PO=+&EB027__LE__ISBN=+&EB027__LE__TITLE=+&EB027__LE__DC=+&EB027__LE__EAN=+&ipsInd=N&fromPOSumm=N&EB027__PURCHASER__NAME__IN=+&kioskInd=N&searchAllShipToAccts=N&EB027__STATUS__CRITERIA=A&EB027__SEARCH__CRITERIA=PO&CriteriaValue=${po}&StartDate=&EndDate=&Submit.x=0&Submit.y=0`
     }
     try {
-        await page.goto(produceUrl(po), { waitUntil: 'networkidle0' });
-        
+        await page.goto(produceUrl(po), { waitUntil: 'networkidle0' });  
     } catch(err){
         console.log("Error in goToOrder " + err.message)
     }
@@ -21,10 +20,17 @@ const scrapeOrder = async (page) => {
     /**** COLLECT ORDER INFO ****/
     console.log("IN SCRAPE ORDER")
     return await page.evaluate(() => {
-        console.log("in here")
-        if(document.querySelector(".errorMessage")){
-            const queryError = document.querySelector(".errorMessage").innerText.trim();
-            return { error: queryError }
+        console.log("in here");
+        const queryError = document.querySelector(".errorMessage");
+        const loginForm = document.querySelector("form[name='login']");
+        if(queryError || loginForm){
+            let errorMessage;
+            if(queryError){
+                errorMessage = queryError.innerText.trim();
+            } else {
+                errorMessage = "Logged Out";
+            }
+            return { error: errorMessage }
         } else {
             const orders = [];
             const filterOrders = (orderRows, hasBackOrders) => {

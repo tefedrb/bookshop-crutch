@@ -17,7 +17,7 @@ router.post('/connect', async (req, res) => {
 
     try {
         console.log('in try catch for interact w/ browser...')
-        const browser = await connect.connectToBrowser(req.body.wsUrl);
+        const browser = await connect.connectToBrowser(req.body.wsUrl, res.body.terminate || null);
         // const ingramLogin = await login.loginToIngram(req.body)
         //     .then(async browser => {
         //         const page = (await browser.pages())[1]
@@ -68,6 +68,7 @@ router.post('/scrape-po-info', async (req, res) => {
         // // Create a method that checks if logged out
         // Manipulate page from within the 
         await goToOrder(req.body.wsUrl, req.body.po);
+
         const page = await connect.connectToBrowser(req.body.wsUrl)
             .then(async browser => (await browser.pages())[0]);
 
@@ -76,7 +77,6 @@ router.post('/scrape-po-info', async (req, res) => {
         if(orderData.error){
             res.json(orderData);
         } else {
-            // I feel like here we should check for backorder data?
             const parsedShipments = parseOutShipments(orderData);
             parsedShipments.orderUrl = page.url();
             res.json(parsedShipments);
