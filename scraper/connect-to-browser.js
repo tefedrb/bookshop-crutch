@@ -11,7 +11,7 @@ const connectToBrowser = async (wsEndpoint, terminate, cb) => {
         }
     } catch(err) {
         if(cb & err.type){
-            console.log("using cb...")
+            console.log("using cb...");
             await cb();
         } else {
             console.log("Error in connect-to-browser: ", err.message);

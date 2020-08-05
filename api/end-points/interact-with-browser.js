@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const verify = require('./tokenVerification');
 const connect = require('../../scraper/connect-to-browser');
-const { scrapeOrder } = require('../../scraper/scrapeOrder');
+const { scrapeOrder, goToOrder } = require('../../scraper/scrapeOrder');
 const { parseOutShipments } = require('../../scraper/mutateOrderData');
 const { getAllShipmentInvoiceInfo } = require('../../scraper/parseInvoice');
 const { searchPo, navigateToAndScrapeBookInfo,  } = require('../../scraper/orderPageActions');
@@ -17,7 +17,7 @@ router.post('/connect', async (req, res) => {
 
     try {
         console.log('in try catch for interact w/ browser...')
-        const browser = await connect.connectToBrowser(req.body.wsUrl);
+        const browser = await connect.connectToBrowser(req.body.wsUrl, res.body.terminate || null);
         // const ingramLogin = await login.loginToIngram(req.body)
         //     .then(async browser => {
         //         const page = (await browser.pages())[1]
@@ -39,11 +39,13 @@ router.post('/connect', async (req, res) => {
 });
 
 // CREATE MIDDLEWARE FUNCTION, LIKE VERIFY, THAT INSERTS CONNECT TO BROWSER FUNC
+
+// THIS METHOD IS BEING PHASED OUT - SEARCHPO
 router.post('/search-by-po', async (req, res) => {
     // I need to make sure I am navigating to the order page b4 moving on
     try { 
-         const page = await connect.connectToBrowser(req.body.wsUrl, )
-                 .then(async browser => (await browser.pages())[0]);
+         const page = await connect.connectToBrowser(req.body.wsUrl)
+                .then(async browser => (await browser.pages())[0]);
      
          await page.goto(process.env.INGRAM_ORDER_PAGE, { waitUntil: 'networkidle0' });
         
@@ -56,22 +58,25 @@ router.post('/search-by-po', async (req, res) => {
         //     res.json({ message:"Logged Out Of Ingram" })
         //  }
      } catch(err){
-         res.json({ message: err });
+        res.json({ message: err });
      }
  });
 
 // Returns order data - parsedoutshipments
 router.post('/scrape-po-info', async (req, res) => {
     try {
+        // // Create a method that checks if logged out
+        // Manipulate page from within the 
+        await goToOrder(req.body.wsUrl, req.body.po);
+
         const page = await connect.connectToBrowser(req.body.wsUrl)
             .then(async browser => (await browser.pages())[0]);
-        // Create a method that checks if logged out
+
         const orderData = await scrapeOrder(page);
-        console.log(orderData, "order data")
+        
         if(orderData.error){
             res.json(orderData);
         } else {
-            // I feel like here we should check for backorder data?
             const parsedShipments = parseOutShipments(orderData);
             parsedShipments.orderUrl = page.url();
             res.json(parsedShipments);

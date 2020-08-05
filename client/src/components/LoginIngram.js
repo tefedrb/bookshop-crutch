@@ -23,12 +23,11 @@ const LoginIngram = (props) => {
     
     const executeLogin = async (event) => {
         event.preventDefault();
-        const saveBrowser = await PostIngramLogin({ingramU: user, ingramP: password});
+        const saveBrowser = await PostIngramLogin({ ingramU: user, ingramP: password });
         if(saveBrowser){
             const [wsEndpoint] = saveBrowser;
             saveBrowserEndpoint(wsEndpoint);
             setLoggedIn();
-            // ConnectToBrowser(wsEndpoint);
         } else {
             alert("Bad User/Pass");
         }
@@ -37,8 +36,8 @@ const LoginIngram = (props) => {
     return (
         <div className="login-form">
             <form onSubmit={executeLogin}>
-                <input name="user" type="text" value={user} onChange={handleChange}></input>
-                <input name="password" type="password" value={password} onChange={handleChange}></input>
+                <input placeholder="Ingram User" name="user" type="text" value={user} onChange={handleChange}></input>
+                <input placeholder="Ingram Password" name="password" type="password" value={password} onChange={handleChange}></input>
                 <input type="submit" value="Submit" />
             </form>
         </div>

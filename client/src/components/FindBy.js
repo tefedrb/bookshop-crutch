@@ -12,7 +12,8 @@ import ScrapePoPage from './ApiCalls/ScrapePoPage';
 import GetAllInvoiceInfo from './ApiCalls/GetAllInvoiceInfo';
 import AddAllBookInfo from './ApiCalls/AddAllBookInfo';
 import ScrapeUSPSTracking from './ApiCalls/ScrapeUSPSTracking';
-import ScrapeUPSTracking from './ApiCalls/ScrapeUPSTracking'
+import ScrapeUPSTracking from './ApiCalls/ScrapeUPSTracking';
+import ConnectToBrowser from './ApiCalls/ConnectToBrowser';
 
 function FindBy() {
     const context = useContext(Context);
@@ -22,7 +23,6 @@ function FindBy() {
     const [poInput, setPoInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     
-
     const findOrderByPo = async (po) => {
         const orderData = await GetOrdersByPo(po);
         return orderData;
@@ -57,14 +57,25 @@ function FindBy() {
             // Creating and saving an interval, while starting loading bar animation.
             const loadingBar = StartLoadingBar();
             // Manipulating the browser associated with the browserEndpoint - searching po
-            await SearchByPo(poInput, browserEndpoint);
+            
+            // await SearchByPo(poInput, browserEndpoint);
+
             // Manipulating same browser with endpoint - scraping order data
-            const orderData = await ScrapePoPage(browserEndpoint);
+            const orderData = await ScrapePoPage(browserEndpoint, poInput);
+            if(orderData && orderData.errorMessage){
+                // logout - check connectToBrowser - in interact with browser
+                ConnectToBrowser(browserEndpoint, "terminate");
+                alert("Logged Out");
+                setLoggedIn(false);
+                return;
+            }
             // Stopping interval - subsequently stopping loading animation
             StopLoadingBar(loadingBar);
             // Turning off loading toggle, consequently removing divs
             setIsLoading(false);
-            console.log(orderData,)
+
+            // console.log(orderData,)
+
             // Saving / setting current order data in context
             setCurrentOrderInfo(orderData);
             // Evaluate error
