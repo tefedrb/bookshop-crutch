@@ -62,10 +62,11 @@ function FindBy() {
 
             // Manipulating same browser with endpoint - scraping order data
             const orderData = await ScrapePoPage(browserEndpoint, poInput);
-            if(orderData && orderData.errorMessage){
+            if(orderData && orderData.error === "Logged Out"){
+                StopLoadingBar(loadingBar);
                 // logout - check connectToBrowser - in interact with browser
                 ConnectToBrowser(browserEndpoint, "terminate");
-                alert("Logged Out");
+                alert("You've been logged out");
                 setLoggedIn(false);
                 return;
             }
