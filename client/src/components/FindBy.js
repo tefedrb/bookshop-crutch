@@ -65,7 +65,7 @@ function FindBy() {
             if(orderData && orderData.error === "Logged Out"){
                 StopLoadingBar(loadingBar);
                 // logout - check connectToBrowser - in interact with browser
-                ConnectToBrowser(browserEndpoint, "terminate");
+                await ConnectToBrowser(browserEndpoint, "terminate");
                 alert("You've been logged out");
                 setLoggedIn(false);
                 return;

@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useContext } from 'react';
 import PostIngramLogin from './ApiCalls/PostIngramLogin';
 import ConnectToBrowser from './ApiCalls/ConnectToBrowser';
+import CheckBrowserConnection from './ApiCalls/CheckBrowserConnection'
 import { Context } from '../context';
 
 // Create api call here
@@ -23,14 +24,22 @@ const LoginIngram = (props) => {
     
     const executeLogin = async (event) => {
         event.preventDefault();
-        const saveBrowser = await PostIngramLogin({ ingramU: user, ingramP: password });
+        // Check browser connection
+        const browserStatus = state?.browserEndpoint ? await CheckBrowserConnection(state?.browserEndpoint) : null;
+        let saveBrowser;
+        if(browserStatus?.browserStatus === "connected"){
+            saveBrowser = 
+                await PostIngramLogin({ ingramU: user, ingramP: password }, { browserStatus: "connected", wsEndpoint: state?.browserEndpoint});
+        } else {
+            saveBrowser = await PostIngramLogin({ ingramU: user, ingramP: password });
+        }
         if(saveBrowser){
             const [wsEndpoint] = saveBrowser;
             saveBrowserEndpoint(wsEndpoint);
             setLoggedIn();
         } else {
             alert("Bad User/Pass");
-        }
+        }     
     }
 
     return (

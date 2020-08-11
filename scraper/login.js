@@ -1,12 +1,21 @@
 const puppeteer = require('puppeteer');
+const { connectToBrowser } = require('./connect-to-browser');
 
 const ingramLogin = process.env.INGRAM_LOGIN_URL;
 
 const loginToIngram = async (login) => {
-
     // Notes: I can pass parameters into the launch function - {headless: false} means browser gui will open 
-    const browser = await puppeteer.launch({headless: false});
-    const page = await browser.newPage();
+    // login.browser
+    let browser;
+    let page;
+    if(login?.browserStatus === "connected"){
+        browser = await connectToBrowser(login.wsEndpoint);
+        // MIGHT NEED THIS TO BE PAGES()[1]
+        page = (await browser.pages())[0];
+    } else {
+        browser = await puppeteer.launch({headless: false});
+        page = await browser.newPage();
+    }
 
     try {
         await page.goto(ingramLogin);
@@ -18,7 +27,6 @@ const loginToIngram = async (login) => {
             const userInput = formElements[0].firstChild.nextSibling;
             const passwordInput = formElements[1].firstChild.nextSibling;
             const loginBtn = formElements[2].firstChild.nextSibling;
-            console.log(login, "LOGIN!!");
             //Enter login info
             userInput.value = login.ingramU;
             passwordInput.value = login.ingramP;
