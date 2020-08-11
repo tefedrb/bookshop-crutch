@@ -1,4 +1,6 @@
-const PostIngramLogin = async (body) => {
+const PostIngramLogin = async (body, browser) => {
+    const browserStatus = browser?.browserStatus === "connected" ? "connected" : "disconnected";
+    const wsEndpoint = browser ? browser.wsEndpoint : null;
     try {
         const res = 
             await fetch('http://localhost:9000/login-ingram/', {
@@ -8,7 +10,9 @@ const PostIngramLogin = async (body) => {
                 },
                 body: JSON.stringify({
                     ingramU: body.ingramU,
-                    ingramP: body.ingramP
+                    ingramP: body.ingramP,
+                    browser: browserStatus,
+                    wsEndpoint: wsEndpoint
                 })
             })
         if(res.status !== 200){
