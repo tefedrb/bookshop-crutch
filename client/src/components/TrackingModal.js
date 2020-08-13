@@ -25,7 +25,7 @@ const TrackingModal = (props) => {
                     idx === 0 ? styled = { fontWeight: 'bold' } :
                     idx === 1 ? styled = { color: 'red' } :
                     idx === 3 ? styled = { color:  'rgb(166, 166, 226)'} :
-                    styled = { color: 'black'}
+                    styled = { color: 'black', textAlign: 'center', maxWidth: '800px'}
                     return  <p key={idx} style={styled}>{entry[1]}</p> 
                 })
             }

@@ -28,6 +28,7 @@ const LoginIngram = (props) => {
         const browserStatus = state?.browserEndpoint ? await CheckBrowserConnection(state?.browserEndpoint) : null;
         let saveBrowser;
         if(browserStatus?.browserStatus === "connected"){
+            console.log("browser status = connected")
             saveBrowser = 
                 await PostIngramLogin({ ingramU: user, ingramP: password }, { browserStatus: "connected", wsEndpoint: state?.browserEndpoint});
         } else {
