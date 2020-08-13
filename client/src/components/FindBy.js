@@ -62,6 +62,7 @@ function FindBy() {
 
             // Manipulating same browser with endpoint - scraping order data
             const orderData = await ScrapePoPage(browserEndpoint, poInput);
+            console.log(orderData, "FROM SCRAPE PO PAGE")
             if(orderData && orderData.error === "Logged Out"){
                 StopLoadingBar(loadingBar);
                 // logout - check connectToBrowser - in interact with browser

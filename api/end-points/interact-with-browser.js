@@ -10,6 +10,14 @@ const { verifyStillLoggedIn } = require('../../scraper/check-if-logged-out');
 const { scrapeUSPSTracking, scrapeUPSTracking } = require('../../scraper/postal-service-scrape');
 const { json } = require('express');
 
+router.post('/verify-login', async (req, res) => {
+    try {
+        
+    } catch (err){
+        res.json({ message: err })
+    }
+})
+
 router.post('/connect', async (req, res) => {
     // Here instead of using an environment var, we are trying to use
     // a URL parameter
@@ -49,14 +57,14 @@ router.post('/search-by-po', async (req, res) => {
      
          await page.goto(process.env.INGRAM_ORDER_PAGE, { waitUntil: 'networkidle0' });
         
-        //  const verified = await verifyStillLoggedIn(page);
-        //  console.log(verified, "VERIFIED")
-        //  if(verified.loggedIn){
-        await searchPo(page, req.body.poNum);
-        res.json({ message: "ok" });
-        //  } else {
-        //     res.json({ message:"Logged Out Of Ingram" })
-        //  }
+         const verified = await verifyStillLoggedIn(page);
+         console.log(verified, "VERIFIED")
+         if(verified.loggedIn){
+            await searchPo(page, req.body.poNum);
+            res.json({ message: "ok" });
+         } else {
+            res.json({ message:"Logged Out Of Ingram" })
+         }
      } catch(err){
         res.json({ message: err });
      }
@@ -72,14 +80,20 @@ router.post('/scrape-po-info', async (req, res) => {
         const page = await connect.connectToBrowser(req.body.wsUrl)
             .then(async browser => (await browser.pages())[0]);
 
-        const orderData = await scrapeOrder(page);
-        
-        if(orderData.error){
-            res.json(orderData);
+            const verified = await verifyStillLoggedIn(page);
+            console.log(verified, "VERIFIED")
+        if(verified?.loggedIn){
+            const orderData = await scrapeOrder(page);
+            
+            if(orderData.error){
+                res.json(orderData);
+            } else {
+                const parsedShipments = parseOutShipments(orderData);
+                parsedShipments.orderUrl = page.url();
+                res.json(parsedShipments);
+            }
         } else {
-            const parsedShipments = parseOutShipments(orderData);
-            parsedShipments.orderUrl = page.url();
-            res.json(parsedShipments);
+            res.json({ error: "Logged Out" })
         }
     } catch(err){
         res.json({ message: err });
