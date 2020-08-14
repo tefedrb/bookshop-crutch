@@ -8,13 +8,13 @@ const EnterApp = () => {
     const context = useContext(Context);
     const { loggedIn, browserEndpoint } = context.state;
     const display = loggedIn ? <LoggedIn /> : <LoginIngram />
+    // EnterApp - need to be connected - ALSO check to see if you are logged in to ingram
     
-
     useEffect(() => {
         const checkBrowser = async () => {
             const browserConnection = await CheckBrowserConnection(browserEndpoint);
             console.log(browserConnection, "browser")
-            if(browserConnection.browserStatus === "disconnected"){
+            if(browserConnection?.browserStatus === "disconnected"){
                 context.setLoggedIn(false);
             }
             return browserConnection;

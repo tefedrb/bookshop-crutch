@@ -24,6 +24,7 @@ const LoginIngram = (props) => {
     
     const executeLogin = async (event) => {
         event.preventDefault();
+        console.log("here we are... loginingram")
         // Check browser connection
         const browserStatus = state?.browserEndpoint ? await CheckBrowserConnection(state?.browserEndpoint) : null;
         let saveBrowser;
