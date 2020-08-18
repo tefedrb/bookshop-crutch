@@ -55,7 +55,6 @@ export const Provider = (props) => {
             {props.children}
         </Context.Provider>
     )
-    
 }
 
 export const Consumer = Context.Consumer;
