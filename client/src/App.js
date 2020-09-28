@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import EnterApp from './components/EnterApp'
-import { Provider } from './context'
+import EnterApp from './components/EnterApp';
+import { Provider } from './context';
 
 function App() {
   return (

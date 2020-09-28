@@ -13,7 +13,7 @@ const loginToIngram = async (login) => {
         // MIGHT NEED THIS TO BE PAGES()[1]
         page = (await browser.pages())[0];
     } else {
-        browser = await puppeteer.launch({headless: false});
+        browser = await puppeteer.launch();
         page = await browser.newPage();
     }
 
