@@ -7,9 +7,9 @@ const verifyStillLoggedIn = async (page) => {
         const ingramForm = document.querySelector("form[name='login']");
         // const bgText = document.querySelector(".textWhiteBG");
         const expired = document.querySelector(".errorMessage");
-
+        const badQuery = expired?.innerText === "No information matches your query";
         const verification = { loggedIn: true, processed: false };
-        if(expired || ingramForm){
+        if(expired && !badQuery || ingramForm){
             verification.loggedIn = false;
             // verification.what = String(ingramForm);
             // verification.the = String(bgText);

@@ -5,9 +5,8 @@ import { StartLoadingBar, StopLoadingBar } from '../components/LoadingBar';
 // import { parsedShipments } from '../components/ApiCalls/TestData';
 import RegexPatterns from '../RegexPatterns';
 import OrderDisplay from './OrderDisplay';
-import Spinner from './Spinner';
+// import Spinner from './Spinner';
 
-import SearchByPo from './ApiCalls/SearchByPo';
 import ScrapePoPage from './ApiCalls/ScrapePoPage';
 import GetAllInvoiceInfo from './ApiCalls/GetAllInvoiceInfo';
 import AddAllBookInfo from './ApiCalls/AddAllBookInfo';

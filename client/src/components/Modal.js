@@ -2,9 +2,6 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 const Modal = (props) => {
-
-    // const { ean, format, qty, price, modalInfo, pubDate } = props.data;
-
     const el = document.createElement('div')
     const modal = document.getElementById('modal-root')
 

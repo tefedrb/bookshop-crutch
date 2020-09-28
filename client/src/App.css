@@ -1,3 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Merienda+One&display=swap');
+
+@font-face {
+    src: url('https://fonts.googleapis.com/css2?family=Merienda+One&display=swap');
+    font-family: 'Merienda One', cursive;
+}
+
+.logo {
+    font-family: 'Merienda One', cursive;
+    color:  black;
+    text-align: center;
+    background: rgb(163, 163, 223);
+    margin: 0;
+    padding: 10px;
+}
+
 nav {
     display: grid;
     grid-template: 1fr / 1fr 1fr 1fr;

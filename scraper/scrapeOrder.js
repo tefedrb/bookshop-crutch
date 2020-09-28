@@ -55,9 +55,12 @@ const scrapeOrder = async (page) => {
             const orderTable = orderTableContainer.firstElementChild.children;
 
             // If .innerBoundryBox contains 6 children elements - it has backorders (checkboxes)
-            const hasBackOrders = orderTable.length === 6 ? true : false;
+            // const hasBackOrders = orderTable.length === 6 ? true : false;
+            const hasBackOrders = orderTable.length === 5 ? true : false;
+
             if(hasBackOrders) labels.unshift("Select");
-            let allRows = Array.from(orderTable[hasBackOrders ? 4 : 3].firstElementChild.children);
+            // let allRows = Array.from(orderTable[hasBackOrders ? 4 : 3].firstElementChild.children);
+            let allRows = Array.from(orderTable[hasBackOrders ? 3 : 2].firstElementChild.children);
         
             // Filter out rows with no EAN
             const orderRows = filterOrders(allRows, hasBackOrders);

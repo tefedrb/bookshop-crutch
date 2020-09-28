@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Provider, Context } from '../context';
+import { Context } from '../context';
 import LoggedIn from './LoggedIn';
 import LoginIngram from './LoginIngram';
 import CheckBrowserConnection from './ApiCalls/CheckBrowserConnection';
