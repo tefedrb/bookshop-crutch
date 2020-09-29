@@ -351,17 +351,24 @@ th {
     transition: .5s all ease-in;
 }
 
-.login-form {
-    background-color: rgb(163, 163, 223);
+.login-form-wrap {
     height: 100vh;
-    width: 100vw;
+    width: 100%;
+    background-color: rgb(163, 163, 223);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.login-form form {
+.login-form-wrap form {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
+    margin-bottom: 60px;
+}
+.login-form-wrap p {
+    margin: 20px;
 }
 
 .trackingNum {

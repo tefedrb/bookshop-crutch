@@ -2,7 +2,7 @@ require('dotenv').config();
 const { loginToIngram } = require('./login');
 const { scrapeOrder } = require('./scrapeOrder');
 // const { searchPo } = require('./searchPo');
-const parseInvoice = require('./parseInvoice');
+const parseInvoice = require('./InvoiceParsing/parseInvoice');
 const { searchPo } = require('./orderPageActions');
 const { parseOutShipments, addTrackingAndAddress } = require('./mutateOrderData');
 

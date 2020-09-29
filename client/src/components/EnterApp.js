@@ -7,7 +7,7 @@ import CheckBrowserConnection from './ApiCalls/CheckBrowserConnection';
 const EnterApp = () => {
     const context = useContext(Context);
     const { loggedIn, browserEndpoint } = context.state;
-    const display = loggedIn ? <LoggedIn /> : <LoginIngram />
+    const display = loggedIn ? <LoggedIn /> : <LoginIngram />;
     // EnterApp - need to be connected - ALSO check to see if you are logged in to ingram
     
     useEffect(() => {
