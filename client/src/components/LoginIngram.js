@@ -46,11 +46,24 @@ const LoginIngram = (props) => {
 
     return (
         <div className="login-form">
-            <form onSubmit={executeLogin}>
-                <input placeholder="Ingram User" name="user" type="text" value={user} onChange={handleChange}></input>
-                <input placeholder="Ingram Password" name="password" type="password" value={password} onChange={handleChange}></input>
-                <input type="submit" value="Submit" />
-            </form>
+            <div className="login-form-wrap">
+                <p class="logo">BOOKSHOP-CRUTCH</p>
+                <form onSubmit={executeLogin}>
+                    <input 
+                        placeholder="Ingram User" 
+                        name="user" type="text" 
+                        value={user} onChange={handleChange}
+                    />
+                    <input 
+                        placeholder="Ingram Password" 
+                        name="password" 
+                        type="password" 
+                        value={password} 
+                        onChange={handleChange}
+                    />
+                    <input type="submit" value="Submit" />
+                </form>
+            </div>
         </div>
     )
 }

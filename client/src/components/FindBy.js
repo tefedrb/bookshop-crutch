@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Context } from '../context';
-import GetOrdersByPo from '../components/ApiCalls/GetOrdersByPo';
+// import GetOrdersByPo from '../components/ApiCalls/GetOrdersByPo';
 import { StartLoadingBar, StopLoadingBar } from '../components/LoadingBar';
 // import { parsedShipments } from '../components/ApiCalls/TestData';
 import RegexPatterns from '../RegexPatterns';
@@ -22,29 +22,29 @@ function FindBy() {
     const [poInput, setPoInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     
-    const findOrderByPo = async (po) => {
-        const orderData = await GetOrdersByPo(po);
-        return orderData;
-    }
+    // const findOrderByPo = async (po) => {
+    //     const orderData = await GetOrdersByPo(po);
+    //     return orderData;
+    // }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (validPo(poInput)) {
-            setCurrentOrderInfo(false);
-            setIsLoading(true);
-            // const loadingBar = StartLoadingBar();
-            await findOrderByPo(poInput).then(data => {
-                setIsLoading(false); 
-                setCurrentOrderInfo(data);
-                // StopLoadingBar(loadingBar)
-                console.log(data, "DATA IN FINDORDERBYPO")   
-            }).catch(err => {
-                console.log("Error finding order by po: " + err.message);
-            }).finally();
-            // const loadingBar = StartLoadingBar();
-            // Might need to look into repaint hook  
-        } else alert('no');
-    }
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     if (validPo(poInput)) {
+    //         setCurrentOrderInfo(false);
+    //         setIsLoading(true);
+    //         // const loadingBar = StartLoadingBar();
+    //         await findOrderByPo(poInput).then(data => {
+    //             setIsLoading(false); 
+    //             setCurrentOrderInfo(data);
+    //             // StopLoadingBar(loadingBar)
+    //             console.log(data, "DATA IN FINDORDERBYPO")   
+    //         }).catch(err => {
+    //             console.log("Error finding order by po: " + err.message);
+    //         }).finally();
+    //         // const loadingBar = StartLoadingBar();
+    //         // Might need to look into repaint hook  
+    //     } else alert('no');
+    // }
 
     const handleSubmitSteps = async (e) => {
         e.preventDefault();
@@ -111,23 +111,23 @@ function FindBy() {
         } else alert('no');
     }
 
-    const handleSubmitTestData = async (e) => {
-        e.preventDefault();
-        if(validPo(poInput)){
-            // setCurrentOrderInfo(false);
-            // setIsLoading(true);
-            // const loadingBar = StartLoadingBar();
+    // const handleSubmitTestData = async (e) => {
+    //     e.preventDefault();
+    //     if(validPo(poInput)){
+    //         // setCurrentOrderInfo(false);
+    //         // setIsLoading(true);
+    //         // const loadingBar = StartLoadingBar();
 
-            // setCurrentOrderInfo(parsedShipments);
+    //         // setCurrentOrderInfo(parsedShipments);
 
-            // setTimeout(() => {
-            //     setIsLoading(false);
-            //     StopLoadingBar(loadingBar);
-            //     console.log("made it");
-            // }, 1000);
-        } 
-        else alert('no');
-    }
+    //         // setTimeout(() => {
+    //         //     setIsLoading(false);
+    //         //     StopLoadingBar(loadingBar);
+    //         //     console.log("made it");
+    //         // }, 1000);
+    //     } 
+    //     else alert('no');
+    // }
 
     const handleChange = e => setPoInput(e.target.value);
     const errorMessage = currentOrderInfo?.error ? <div id='errorMessage'>{currentOrderInfo.error}</div> : "";
