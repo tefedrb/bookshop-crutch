@@ -128,14 +128,18 @@ router.post('/get-all-book-info', async (req, res) => {
                     console.log(orderData.shipments[i][j].Ean[1], "this link....");
                     const bookInfo = 
                         await navigateToAndScrapeBookInfo(page, orderData.shipments[i][j].Ean[1]);
+
                     orderData.shipments[i][j].modalInfo = bookInfo;
+                    console.log(bookInfo, "< bookinfo")
                 }
             }
         }
         for(let i = 0; i < orderData.unshipped.length; i++){
             const bookInfo = 
                 await navigateToAndScrapeBookInfo(page, orderData.unshipped[i].Ean[1]);
+                
             orderData.unshipped[i].modalInfo = bookInfo;
+            console.log(bookInfo, "IN UNSHIPPED BOOKS")
         }
         res.json(orderData);
     } catch(err){

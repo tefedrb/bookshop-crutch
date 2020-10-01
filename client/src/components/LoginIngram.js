@@ -47,7 +47,7 @@ const LoginIngram = (props) => {
     return (
         <div className="login-form">
             <div className="login-form-wrap">
-                <p class="logo">BOOKSHOP-CRUTCH</p>
+                <p className="logo">BOOKSHOP-CRUTCH</p>
                 <form onSubmit={executeLogin}>
                     <input 
                         placeholder="Ingram User" 
