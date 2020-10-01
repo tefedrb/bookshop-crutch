@@ -55,8 +55,12 @@ const beginBackOrderCancel = async (page, rowInfo) => {
 
 const navigateToAndScrapeBookInfo = async (page, link) => {
     const bookInfo = {};
+
     await page.goto(link, { waitUntil: 'networkidle0' });
-    const data = await page.evaluate(bookInfo => {
+
+    let data; 
+     try {
+        data = await page.evaluate(bookInfo => {
         const productDetails = Array.from(document.querySelectorAll(".productDetailElements"));
         bookInfo.author = document.querySelector(".doContributorSearch span").innerText;
         
@@ -69,7 +73,9 @@ const navigateToAndScrapeBookInfo = async (page, link) => {
         bookInfo.pubDate = parsePubDate[0].innerText.match(afterColonReg)[0];
 
         const getStockTable = document.querySelector(".newStockCheckTable");
-        const stockTableCells = Array.from(getStockTable.querySelectorAll("tr"));
+
+        const stockTableCells = getStockTable ? Array.from(getStockTable.querySelectorAll("tr")) : null;
+        
         const getStockNumbers = (innerTextStr) => {
             const firstNumber = /([^\s]+)/;
             const onHand = parseInt(innerTextStr.match(firstNumber)[0].replace(/,/g,''));
@@ -77,17 +83,31 @@ const navigateToAndScrapeBookInfo = async (page, link) => {
             return [onHand, onOrder];
         }
         
-        const primaryDCStr = stockTableCells[1].innerText.substring(2).trim();
-        const primaryDC = getStockNumbers(primaryDCStr);
-        const secondaryDCStr = stockTableCells[2].innerText.substring(2).trim();
-        const secondaryDC = getStockNumbers(secondaryDCStr);
-        
         // Check if item has an arrival date - 
+        if(stockTableCells){
+            const primaryDCStr = stockTableCells[1].innerText.substring(2).trim();
+            const primaryDC = getStockNumbers(primaryDCStr);
+            const secondaryDCStr = stockTableCells[2].innerText.substring(2).trim();
+            const secondaryDC = getStockNumbers(secondaryDCStr);
+            bookInfo.onHand = (primaryDC[0] + secondaryDC[0]);
+            bookInfo.onOrder = (primaryDC[1] + secondaryDC[1]);
+        } else {
+            bookInfo.onHand = "Book Not Available From Ingram - Check Link"
+            bookInfo.onOrder = "Book Not Available From Ingram - Check Link"
+        }
         
-        bookInfo.onHand = (primaryDC[0] + secondaryDC[0]);
-        bookInfo.onOrder = (primaryDC[1] + secondaryDC[1]);
         return bookInfo;
     }, bookInfo);
+    } catch (err){
+        console.log(err.message);
+        data = {
+            author: "Error Parsing Page - Use Link For Info",
+            pubDate: "Error Parsing Page - Use Link For Info",
+            onHand: 0,
+            onOrder: 0
+        }
+    }
+
     return data;
 }
 
