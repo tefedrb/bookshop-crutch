@@ -1,16 +1,16 @@
 import React from 'react';
 import { useState, useContext } from 'react';
 import PostIngramLogin from './ApiCalls/PostIngramLogin';
-import ConnectToBrowser from './ApiCalls/ConnectToBrowser';
 import CheckBrowserConnection from './ApiCalls/CheckBrowserConnection'
+import { StartLoadingBar, StopLoadingBar } from '../components/LoadingBar';
+
 import { Context } from '../context';
 
 // Create api call here
-const LoginIngram = (props) => {
+const LoginIngram = () => {
     const [user, updateUser] = useState("");
     const [password, updatePassword] = useState("");
-    const context = useContext(Context);
-    const { saveBrowserEndpoint, setLoggedIn, state } = context;
+    const { saveBrowserEndpoint, setLoggedIn, state } = useContext(Context);
 
     const handleChange = (event) => {
         event.persist();
@@ -28,6 +28,7 @@ const LoginIngram = (props) => {
         // Check browser connection
         const browserStatus = state?.browserEndpoint ? await CheckBrowserConnection(state?.browserEndpoint) : null;
         let saveBrowser;
+        const loadingBar = StartLoadingBar();
         if(browserStatus?.browserStatus === "connected"){
             console.log("browser status = connected")
             saveBrowser = 
@@ -39,9 +40,11 @@ const LoginIngram = (props) => {
             const [wsEndpoint] = saveBrowser;
             saveBrowserEndpoint(wsEndpoint);
             setLoggedIn();
+            StopLoadingBar(loadingBar);
         } else {
+            StopLoadingBar(loadingBar);
             alert("Bad User/Pass");
-        }     
+        }
     }
 
     return (
@@ -61,8 +64,10 @@ const LoginIngram = (props) => {
                         value={password} 
                         onChange={handleChange}
                     />
-                    <input type="submit" value="Submit" />
+                    <input type="submit" value="Submit" />  
                 </form>
+                <div id="loading"></div>
+                <div className='loading' id='elapsed'></div>
             </div>
         </div>
     )
