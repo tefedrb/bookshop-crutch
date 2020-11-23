@@ -44,7 +44,7 @@ function Backorder(props) {
                 <td>{pubDate}</td>
                 <td>{onHand != undefined ? onHand : "Loading..."}</td>
                 <td>{onOrder != undefined ? onOrder : "Loading..."}</td>
-                <td>Loading...</td>
+                {/* <td>Loading...</td> */}
             </tr>
         )
     })
@@ -61,7 +61,7 @@ function Backorder(props) {
                         <th>Published</th>
                         <th>On Hand</th>
                         <th>On Order</th>
-                        <th>Arrival Date</th>
+                        {/* <th>Arrival Date</th> */}
                     </tr>
                     {rows}
                 </tbody>

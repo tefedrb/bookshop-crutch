@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 const Modal = (props) => {
-    const el = document.createElement('div')
-    const modal = document.getElementById('modal-root')
+    const el = document.createElement('div');
+    el.setAttribute("id", "modal-body");
+    const modal = document.getElementById('modal-root');
 
     const { 
         DC, 'Date Ordered': dateOrdered, 
@@ -32,7 +33,7 @@ const Modal = (props) => {
         modal.appendChild(el);
         window.addEventListener('keydown', testKeyPress);
         return () => {
-            modal.removeChild(el)
+            modal.removeChild(el);
             window.removeEventListener('keydown', testKeyPress);
         };
     }, [])
@@ -47,7 +48,7 @@ const Modal = (props) => {
     const onHand = modalInfo ? formatNum(modalInfo.onHand) : "Loading...";
 
     return ReactDOM.createPortal(
-        <div id='modal-body'>
+        <>
             <div className='clickable-background' onClick={props.toggleInfo}></div>
             <div id='modal-div'>
                 Modal Body for Shipment
@@ -63,7 +64,7 @@ const Modal = (props) => {
                 </ul>
                 <div id='exit' onClick={props.toggleInfo}>X</div>
             </div>
-        </div>
+        </>
     , el);
 }
 

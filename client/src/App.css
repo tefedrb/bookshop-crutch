@@ -104,6 +104,10 @@ a {
 
 #loading {
     padding-top: 50px;
+    min-height: 28px;
+}
+#elapsed {
+    min-height: 18px;
 }
 
 table {
@@ -365,7 +369,6 @@ th {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 60px;
 }
 .login-form-wrap p {
     margin: 20px;
