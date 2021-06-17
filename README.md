@@ -1,4 +1,5 @@
 # Bookshop-Crutch
+(A link to the video presentation of this project: https://youtu.be/ToyXG-Ym67c)
 Bookshop-Crutch is a customer service assistance tool that aggregates a customer's order information and displays it in one place. I decided to build this for myself while working as a contractor for Bookshop, after realizing how cumbersome the process was to get the information I needed. The data was not only spread out accross different websites, but also required navigating through a dated customer portal and parsing through a PDF file in order to find the relavent information. This app cuts a 6+ step process down to one.
 
 ## 🚨 This is a proprietary tool!
